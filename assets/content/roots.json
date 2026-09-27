@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "R-01",
+      "kind": "paraphrase",
+      "topic": "mind",
+      "seonsaLine": "생각을 멈추려고 애쓰지 마라. 애쓰는 것도 생각이다.",
+      "plainExplanation": "하루가 어땠는지는 대개 일이 정하지 않는다. 그 일을 무엇으로 보고 있었는지가 정한다. 마음을 없애라는 말이 아니다. 마음이 먼저 앞서간다는 걸 알고 있으면, 뒤따라오는 하루가 조금 덜 끌려간다.",
+      "scripture": {
+        "name": "법구경",
+        "ref": "1장(쌍품) 1게",
+        "paraphraseKo": "모든 일은 마음이 앞서간다. 마음이 주인이고 마음이 만든다. 흐린 마음으로 말하거나 행하면, 수레바퀴가 소의 발을 따르듯 괴로움이 따라온다.",
+        "sourceNote": "Dhammapada 1, Yamakavagga. 대조 번역: F. Max Müller, The Dhammapada (SBE 10, 1881) — 저작권 만료. 팔리 원문 및 CC0 영역본: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/dhp1-20"
+      },
+      "sourceStatus": "verified",
+      "originalContext": "쌍(雙)으로 된 게송을 모은 첫 장. 1게와 2게가 흐린 마음과 맑은 마음을 짝지어 대비한다.",
+      "traditionNote": "여기서 '마음(mano)'은 감정이 아니라 인식하고 의도하는 작용을 가리킨다. '마음먹기 나름'이라는 자기계발식 해석과는 결이 다르다.",
+      "smallAction": {
+        "text": "지금 머리에 앞서 있는 생각 한 줄만 적기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-02",
+      "kind": "paraphrase",
+      "topic": "resentment",
+      "seonsaLine": "어제 일로 오늘을 갚고 있냐.",
+      "plainExplanation": "억울한 일은 실제로 있었다. 없던 일로 하자는 게 아니다. 다만 그 장면을 하루에 열 번 다시 트는 건 상대가 하는 일이 아니라 내가 하는 일이다. 틀어놓은 걸 한 번 끄는 것부터가 시작이다.",
+      "scripture": {
+        "name": "법구경",
+        "ref": "1장(쌍품) 3~4게",
+        "paraphraseKo": "'그가 나를 욕했다, 나를 때렸다, 나를 이겼다, 내 것을 빼앗았다.' 이 생각을 품고 있는 사람에게는 원한이 가라앉지 않는다. 이 생각을 품지 않는 사람에게는 원한이 가라앉는다.",
+        "sourceNote": "Dhammapada 3-4, Yamakavagga. 대조 번역: F. Max Müller, The Dhammapada (SBE 10, 1881) — 저작권 만료. 팔리 원문: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/dhp1-20"
+      },
+      "sourceStatus": "verified",
+      "originalContext": "3게와 4게가 같은 문장을 긍정·부정으로 짝지어 반복한다. 바로 뒤 5게로 이어진다.",
+      "traditionNote": "'품지 않는다'는 것은 참는다는 뜻이 아니라 그 생각을 반복해 쥐고 있지 않는다는 뜻으로 읽는 주석 전통이 있다.",
+      "smallAction": {
+        "text": "오늘 다시 튼 장면 한 줄 적고 태우기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-03",
+      "kind": "paraphrase",
+      "topic": "anger",
+      "seonsaLine": "화를 화로 끄려고 하냐. 그건 불에 기름이다.",
+      "plainExplanation": "받아치면 잠깐 시원하다. 그 다음이 있다. 되돌아온 말을 또 곱씹느라 밤이 간다. 참으라는 게 아니라, 불로 불을 끄는 방법만 빼자는 얘기다.",
+      "scripture": {
+        "name": "법구경",
+        "ref": "1장(쌍품) 5게",
+        "paraphraseKo": "원한은 원한으로 결코 가라앉지 않는다. 원한을 내려놓을 때 가라앉는다. 이것은 오래된 법이다.",
+        "sourceNote": "Dhammapada 5, Yamakavagga. 대조 번역: F. Max Müller, The Dhammapada (SBE 10, 1881) — 저작권 만료. 팔리 원문: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/dhp1-20"
+      },
+      "sourceStatus": "verified",
+      "originalContext": "3~4게의 '품는 마음'에 이어, 원한이 어떻게 그치는지를 한 게송으로 맺는다.",
+      "traditionNote": "'내려놓음(averena)'은 상대를 용서하라는 명령이 아니라 원한이라는 상태를 연료로 쓰지 않는다는 뜻에 가깝다.",
+      "smallAction": {
+        "text": "받아치고 싶었던 말 한 줄 적고 태우기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-04",
+      "kind": "paraphrase",
+      "topic": "self",
+      "seonsaLine": "오늘 실수 하나로 너를 다 계산하지 마라.",
+      "plainExplanation": "밖에서 이기는 일은 끝이 없다. 정작 하루를 망치는 건 대개 나와의 싸움이다. 이기라는 말이 아니라, 상대가 나라는 걸 알고 있으라는 말이다. 알면 좀 덜 때린다.",
+      "scripture": {
+        "name": "법구경",
+        "ref": "8장(천품) 103게",
+        "paraphraseKo": "싸움터에서 천 명을 천 번 이긴 사람보다, 자기 하나를 이긴 사람이 참으로 가장 뛰어난 승자다.",
+        "sourceNote": "Dhammapada 103, Sahassavagga. 대조 번역: F. Max Müller, The Dhammapada (SBE 10, 1881) — 저작권 만료. 팔리 원문: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/dhp100-115"
+      },
+      "sourceStatus": "verified",
+      "originalContext": "숫자를 견주는 게송들이 모인 장. 백·천이라는 큰 수와 '하나'를 나란히 놓는 형식이 반복된다.",
+      "traditionNote": "'자기를 이긴다'는 자기혐오나 극기 훈련이 아니라 습관적 반응을 알아차려 따라가지 않는 것을 가리킨다.",
+      "smallAction": {
+        "text": "오늘 나한테 한 말 중 제일 심한 말 한 줄 적기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-05",
+      "kind": "paraphrase",
+      "topic": "comparison",
+      "seonsaLine": "남 눈치 보느라 네 눈은 어디 뒀냐.",
+      "plainExplanation": "남의 잘못은 크게 보이고 내 잘못은 잘 안 보인다. 눈이 나빠서가 아니라 방향이 그래서다. 남을 그만 보라는 게 아니라, 같은 밝기로 나도 한 번 보라는 얘기다.",
+      "scripture": {
+        "name": "법구경",
+        "ref": "18장(구예품) 252게",
+        "paraphraseKo": "남의 허물은 쉽게 보이고 자기 허물은 보기 어렵다. 남의 허물은 쭉정이 까부르듯 흩뿌리면서, 자기 허물은 노름꾼이 나쁜 패를 숨기듯 감춘다.",
+        "sourceNote": "Dhammapada 252, Malavagga. 대조 번역: F. Max Müller, The Dhammapada (SBE 10, 1881) — 저작권 만료. 팔리 원문: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/dhp235-255"
+      },
+      "sourceStatus": "verified",
+      "originalContext": "'때(垢)'를 주제로 한 장. 겉의 더러움이 아니라 마음에 끼는 것을 다룬다.",
+      "traditionNote": "비유에 쓰인 '쭉정이 까부르기'와 '노름꾼의 패'는 당시 일상 장면이다. 현대어로 옮기면 비유의 생생함이 줄어든다.",
+      "smallAction": {
+        "text": "오늘 비교한 상대 대신, 내 얘기 한 줄 적기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-06",
+      "kind": "paraphrase",
+      "topic": "impermanence",
+      "seonsaLine": "붙잡으면 무겁고 놓으면 가볍다. 아는데 안 되지. 안다.",
+      "plainExplanation": "지금 제일 무거운 것도 모양이 계속 바뀐다. 허무하다는 말이 아니다. 바뀌는 걸 안 바뀌게 쥐고 있으니 팔이 아픈 거다. 그 사실 하나만 알아도 힘이 조금 빠진다.",
+      "scripture": {
+        "name": "금강경",
+        "ref": "제32분 응화비진분",
+        "paraphraseKo": "지어진 모든 것은 꿈 같고 환영 같고 물거품 같고 그림자 같으며, 이슬 같고 번개 같으니, 이와 같이 보아야 한다.",
+        "sourceNote": "금강반야바라밀경 제32분 사구게(일체유위법 여몽환포영). 대조 번역: F. Max Müller 영역, Buddhist Mahâyâna Texts (Sacred Books of the East 49, 1894) — 저작권 만료. 구텐베르크 판본 번호는 미확인",
+        "sourceUrl": "https://www.gutenberg.org/ebooks/search/?query=Buddhist+Mahayana+Texts"
+      },
+      "sourceStatus": "unverified",
+      "originalContext": "경을 맺는 마지막 분의 사구게. 앞의 긴 문답 전체를 네 구로 되짚는 자리다.",
+      "traditionNote": "'유위법(有爲法)'은 조건에 의해 지어진 것을 가리키는 말이다. '세상은 헛되다'는 허무주의로 읽지 않는 것이 전통 주석의 입장이다.",
+      "smallAction": {
+        "text": "지금 제일 꽉 쥐고 있는 것 한 줄 적기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-07",
+      "kind": "paraphrase",
+      "topic": "acceptance",
+      "seonsaLine": "아픈 데를 미워하지 마라. 거기도 너다.",
+      "plainExplanation": "괴로운 부분을 잘라내려 할수록 더 붙는다. 없애야 할 적으로 두지 않는 것만으로 무게가 조금 준다. 참으라는 게 아니라, 싸움을 하나 줄이자는 얘기다.",
+      "scripture": {
+        "name": "반야심경",
+        "ref": "관자재보살 장 / 색즉시공 구절",
+        "paraphraseKo": "관자재보살이 깊은 지혜를 행할 때, 몸과 마음을 이루는 다섯 무더기가 모두 고정된 실체가 없음을 비추어 보고 온갖 괴로움을 건넜다. 물질이 곧 비어 있음이고 비어 있음이 곧 물질이다.",
+        "sourceNote": "반야바라밀다심경(현장 역) 첫 단락. 대조 번역: F. Max Müller 영역 Prajñâ-pâramitâ-hridaya-sûtra, Buddhist Mahâyâna Texts (SBE 49, 1894) — 저작권 만료. 구텐베르크 판본 번호는 미확인",
+        "sourceUrl": "https://www.gutenberg.org/ebooks/search/?query=Buddhist+Mahayana+Texts"
+      },
+      "sourceStatus": "unverified",
+      "originalContext": "짧은 경의 도입부. 이어지는 부분에서 '공(空)'을 여러 항목에 걸쳐 되풀이해 적용한다.",
+      "traditionNote": "'공'은 '없다'가 아니라 '고정된 실체로 성립하지 않는다'는 뜻이다. 자기 부정이나 감정 무시로 옮기면 뜻이 크게 어긋난다.",
+      "smallAction": {
+        "text": "없애고 싶은 마음 하나에 이름만 붙여 적기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "R-08",
+      "kind": "paraphrase",
+      "topic": "worry",
+      "seonsaLine": "아픈 건 아픈 거다. 거기에 생각을 더 얹지 마라.",
+      "plainExplanation": "일어난 일이 첫 번째 화살이다. '왜 하필 나냐, 그때 그러지 말걸'이 두 번째 화살이다. 첫 번째는 못 피한다. 두 번째는 대개 내가 쏜다.",
+      "scripture": {
+        "name": "잡아함경",
+        "ref": "제470경 전경(箭經) / 상응부 36.6 살라타 숫타 대응",
+        "paraphraseKo": "배우지 못한 이는 괴로운 느낌을 만나면 슬퍼하고 원망하며 어쩔 줄 몰라 한다. 몸의 느낌 위에 마음의 느낌을 하나 더 겪는다. 두 번째 화살을 맞는 것과 같다. 배운 이는 첫 화살은 맞아도 두 번째 화살은 맞지 않는다.",
+        "sourceNote": "雜阿含經 470 箭經, 팔리 대응 경전 SN 36.6 Sallatha Sutta. 팔리 원문 및 CC0 영역본: SuttaCentral",
+        "sourceUrl": "https://suttacentral.net/sn36.6"
+      },
+      "sourceStatus": "partial",
+      "originalContext": "느낌(受)을 주제로 한 상응. 몸의 느낌과 그에 대한 반응을 구분해 설명하는 대목이다.",
+      "traditionNote": "잡아함 470과 SN 36.6의 대응 관계는 널리 인정되나 세부 문장과 경 번호는 판본에 따라 차이가 있다. 확인 필요.",
+      "smallAction": {
+        "text": "두 번째 화살로 쏜 말 한 줄 적고 태우기",
+        "link": "session_setup?prefillWorry=1&len=180"
+      },
+      "doNotUse": ["chip:heavy", "safety"],
+      "reviewStatus": "draft"
+    }
+  ]
+}

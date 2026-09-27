@@ -1,6 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 세션 종료·재방문 알림 (FR-2.3, FR-7). Android 13+ 런타임 권한.
+         정확한 알람(SCHEDULE_EXACT_ALARM)은 쓰지 않는다 — 지연을 허용한다. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 기기 재시작 후에도 예약된 종료 알림을 되살린다. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
-        android:label="bucheo_handsome"
+        android:label="부처핸섬"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -40,6 +47,16 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- 위기 상담 연락처 걸기 (SA-1). -->
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+            <data android:scheme="tel"/>
+        </intent>
+        <!-- 관심 등록 폼·원문 링크 (FR-8.1, FR-5.2). -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
         </intent>
     </queries>
 </manifest>

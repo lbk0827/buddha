@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
-import '../avatar/monk_figure.dart';
+import '../avatar/buddha_figure.dart';
 import '../session/session_controller.dart';
 import 'home_controller.dart';
 
@@ -105,6 +105,13 @@ class _TopBar extends StatelessWidget {
           ),
           const Spacer(),
           _RoundButton(
+            icon: Icons.checkroom_outlined,
+            surface: surface,
+            tooltip: '꾸미기',
+            onTap: () => context.push(Routes.wardrobe),
+          ),
+          const SizedBox(width: 8),
+          _RoundButton(
             icon: Icons.person_outline,
             surface: surface,
             tooltip: '프로필',
@@ -167,8 +174,8 @@ class _Stage extends ConsumerWidget {
       children: [
         const Spacer(),
         GestureDetector(
-          onTap: () => context.push(Routes.sessionSetup),
-          child: MonkFigure(
+          onTap: () => context.push(Routes.wardrobe),
+          child: BuddhaFigure(
             equip: state.equip,
             size: 200,
             breathing: true,

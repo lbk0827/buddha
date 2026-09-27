@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/avatar/wardrobe_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/character_onboard_screen.dart';
 import '../features/onboarding/ordination_screen.dart';
@@ -53,6 +54,7 @@ class Routes {
   static const checkin = '/checkin';
   static const profile = '/profile';
   static const settings = '/settings';
+  static const wardrobe = '/wardrobe';
   static const ordination = '/onboard/ordination';
   static const characterOnboard = '/onboard/character';
 
@@ -121,6 +123,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           builder: (_, _) => const TestResultScreen()),
       GoRoute(path: Routes.checkin, builder: (_, _) => const CheckinScreen()),
       GoRoute(path: Routes.profile, builder: (_, _) => const ProfileScreen()),
+      GoRoute(
+          path: Routes.wardrobe, builder: (_, _) => const WardrobeScreen()),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsScreen()),
       GoRoute(
           path: Routes.ordination,

@@ -12,7 +12,7 @@ import '../../core/time_utils.dart';
 import '../../data/db/database.dart';
 import '../home/home_controller.dart';
 import '../ordination/dharma_rank.dart';
-import '../ordination/monk_avatar.dart';
+import '../avatar/buddha_figure.dart';
 
 /// v3 온보딩 — 가상 출가.
 /// 안 믿어도 된다. 셀카 한 장이면 된다. 사진 없이도 출가할 수 있다.
@@ -135,7 +135,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                   ),
                   Column(
                     children: [
-                      const MonkAvatar(size: 112),
+                      const BuddhaFigure(size: 96),
                       const SizedBox(height: 8),
                       Text('법명 · $_name',
                           style: const TextStyle(

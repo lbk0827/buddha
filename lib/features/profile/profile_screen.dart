@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../avatar/avatar_equip.dart';
-import '../avatar/monk_figure.dart';
+import '../avatar/buddha_figure.dart';
 import '../home/home_controller.dart';
 import '../ordination/dharma_rank.dart';
 
@@ -29,7 +29,7 @@ class ProfileScreen extends ConsumerWidget {
             Center(
               child: Column(
                 children: [
-                  MonkFigure(equip: home?.equip ?? kDefaultEquip, size: 130),
+                  BuddhaFigure(equip: home?.equip ?? kDefaultEquip, size: 130),
                   const SizedBox(height: 10),
                   Text(home?.dharmaName ?? '법명 없음',
                       style: text.displayMedium?.copyWith(fontSize: 26)),

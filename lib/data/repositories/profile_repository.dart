@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
+import '../../features/avatar/avatar_equip.dart';
 import '../db/database.dart';
 
 /// 설정 키 (FR-8.3).
@@ -98,6 +99,39 @@ class ProfileRepository {
 
   Future<void> setRecoveryPref(String? pref) =>
       _write(ProfilesCompanion(recoveryPref: Value(pref)));
+
+  AvatarEquip equipOf(Profile p) {
+    final e = AvatarEquip.decode(p.equipJson);
+    return e.isEmpty ? kDefaultEquip : e;
+  }
+
+  Set<String> ownedItemsOf(Profile p) {
+    try {
+      final d = jsonDecode(p.ownedItemsJson);
+      if (d is! List) return {};
+      return d.whereType<String>().toSet();
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> setEquip(AvatarEquip equip) =>
+      _write(ProfilesCompanion(equipJson: Value(equip.encode())));
+
+  /// 공덕을 치르고 옷장 아이템을 연다. 공덕이 모자라면 false.
+  Future<bool> buyItem(WardrobeItem item) async {
+    final p = await ensure();
+    final owned = ownedItemsOf(p);
+    if (owned.contains(item.id)) return true;
+    if (p.merit < item.meritCost) return false;
+
+    owned.add(item.id);
+    await _write(ProfilesCompanion(
+      ownedItemsJson: Value(jsonEncode(owned.toList())),
+      merit: Value(p.merit - item.meritCost),
+    ));
+    return true;
+  }
 
   /// 회복 기본값은 첫 3회만 적용한다 (FR-6.5).
   Future<void> bumpDefaultsApplied() async {

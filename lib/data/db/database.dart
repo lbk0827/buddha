@@ -97,6 +97,12 @@ class Profiles extends Table {
   /// 엎어둔 시간 누적(초).
   IntColumn get faceDownSec => integer().withDefault(const Constant(0))();
 
+  /// 아바타 착용 상태. 슬롯 → 아이템 ID JSON.
+  TextColumn get equipJson => text().withDefault(const Constant('{}'))();
+
+  /// 공덕으로 연 옷장 아이템 ID 목록 JSON.
+  TextColumn get ownedItemsJson => text().withDefault(const Constant('[]'))();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -190,9 +196,9 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(executor ?? driftDatabase(name: 'bucheo_handsome'));
 
-  /// 2 — v3 「가상 출가」: 법명·공덕·번뇌·증표 추가.
+  /// 3 — 아바타 옷장(착용 상태·보유 아이템) 추가.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -208,6 +214,10 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(profiles, profiles.faceDownSec);
             await m.createTable(worries);
             await m.createTable(tokenUnlocks);
+          }
+          if (from < 3) {
+            await m.addColumn(profiles, profiles.equipJson);
+            await m.addColumn(profiles, profiles.ownedItemsJson);
           }
         },
         beforeOpen: (details) async {

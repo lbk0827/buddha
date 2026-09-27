@@ -1461,6 +1461,30 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _equipJsonMeta = const VerificationMeta(
+    'equipJson',
+  );
+  @override
+  late final GeneratedColumn<String> equipJson = GeneratedColumn<String>(
+    'equip_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _ownedItemsJsonMeta = const VerificationMeta(
+    'ownedItemsJson',
+  );
+  @override
+  late final GeneratedColumn<String> ownedItemsJson = GeneratedColumn<String>(
+    'owned_items_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1485,6 +1509,8 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     burnedCount,
     bowCount,
     faceDownSec,
+    equipJson,
+    ownedItemsJson,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1669,6 +1695,21 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('equip_json')) {
+      context.handle(
+        _equipJsonMeta,
+        equipJson.isAcceptableOrUnknown(data['equip_json']!, _equipJsonMeta),
+      );
+    }
+    if (data.containsKey('owned_items_json')) {
+      context.handle(
+        _ownedItemsJsonMeta,
+        ownedItemsJson.isAcceptableOrUnknown(
+          data['owned_items_json']!,
+          _ownedItemsJsonMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1766,6 +1807,14 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.int,
         data['${effectivePrefix}face_down_sec'],
       )!,
+      equipJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}equip_json'],
+      )!,
+      ownedItemsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}owned_items_json'],
+      )!,
     );
   }
 
@@ -1820,6 +1869,12 @@ class Profile extends DataClass implements Insertable<Profile> {
 
   /// 엎어둔 시간 누적(초).
   final int faceDownSec;
+
+  /// 아바타 착용 상태. 슬롯 → 아이템 ID JSON.
+  final String equipJson;
+
+  /// 공덕으로 연 옷장 아이템 ID 목록 JSON.
+  final String ownedItemsJson;
   const Profile({
     required this.id,
     required this.creditedDays,
@@ -1843,6 +1898,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     required this.burnedCount,
     required this.bowCount,
     required this.faceDownSec,
+    required this.equipJson,
+    required this.ownedItemsJson,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1885,6 +1942,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     map['burned_count'] = Variable<int>(burnedCount);
     map['bow_count'] = Variable<int>(bowCount);
     map['face_down_sec'] = Variable<int>(faceDownSec);
+    map['equip_json'] = Variable<String>(equipJson);
+    map['owned_items_json'] = Variable<String>(ownedItemsJson);
     return map;
   }
 
@@ -1928,6 +1987,8 @@ class Profile extends DataClass implements Insertable<Profile> {
       burnedCount: Value(burnedCount),
       bowCount: Value(bowCount),
       faceDownSec: Value(faceDownSec),
+      equipJson: Value(equipJson),
+      ownedItemsJson: Value(ownedItemsJson),
     );
   }
 
@@ -1965,6 +2026,8 @@ class Profile extends DataClass implements Insertable<Profile> {
       burnedCount: serializer.fromJson<int>(json['burnedCount']),
       bowCount: serializer.fromJson<int>(json['bowCount']),
       faceDownSec: serializer.fromJson<int>(json['faceDownSec']),
+      equipJson: serializer.fromJson<String>(json['equipJson']),
+      ownedItemsJson: serializer.fromJson<String>(json['ownedItemsJson']),
     );
   }
   @override
@@ -1993,6 +2056,8 @@ class Profile extends DataClass implements Insertable<Profile> {
       'burnedCount': serializer.toJson<int>(burnedCount),
       'bowCount': serializer.toJson<int>(bowCount),
       'faceDownSec': serializer.toJson<int>(faceDownSec),
+      'equipJson': serializer.toJson<String>(equipJson),
+      'ownedItemsJson': serializer.toJson<String>(ownedItemsJson),
     };
   }
 
@@ -2019,6 +2084,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     int? burnedCount,
     int? bowCount,
     int? faceDownSec,
+    String? equipJson,
+    String? ownedItemsJson,
   }) => Profile(
     id: id ?? this.id,
     creditedDays: creditedDays ?? this.creditedDays,
@@ -2046,6 +2113,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     burnedCount: burnedCount ?? this.burnedCount,
     bowCount: bowCount ?? this.bowCount,
     faceDownSec: faceDownSec ?? this.faceDownSec,
+    equipJson: equipJson ?? this.equipJson,
+    ownedItemsJson: ownedItemsJson ?? this.ownedItemsJson,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
@@ -2107,6 +2176,10 @@ class Profile extends DataClass implements Insertable<Profile> {
       faceDownSec: data.faceDownSec.present
           ? data.faceDownSec.value
           : this.faceDownSec,
+      equipJson: data.equipJson.present ? data.equipJson.value : this.equipJson,
+      ownedItemsJson: data.ownedItemsJson.present
+          ? data.ownedItemsJson.value
+          : this.ownedItemsJson,
     );
   }
 
@@ -2134,7 +2207,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('merit: $merit, ')
           ..write('burnedCount: $burnedCount, ')
           ..write('bowCount: $bowCount, ')
-          ..write('faceDownSec: $faceDownSec')
+          ..write('faceDownSec: $faceDownSec, ')
+          ..write('equipJson: $equipJson, ')
+          ..write('ownedItemsJson: $ownedItemsJson')
           ..write(')'))
         .toString();
   }
@@ -2163,6 +2238,8 @@ class Profile extends DataClass implements Insertable<Profile> {
     burnedCount,
     bowCount,
     faceDownSec,
+    equipJson,
+    ownedItemsJson,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2189,7 +2266,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.merit == this.merit &&
           other.burnedCount == this.burnedCount &&
           other.bowCount == this.bowCount &&
-          other.faceDownSec == this.faceDownSec);
+          other.faceDownSec == this.faceDownSec &&
+          other.equipJson == this.equipJson &&
+          other.ownedItemsJson == this.ownedItemsJson);
 }
 
 class ProfilesCompanion extends UpdateCompanion<Profile> {
@@ -2215,6 +2294,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<int> burnedCount;
   final Value<int> bowCount;
   final Value<int> faceDownSec;
+  final Value<String> equipJson;
+  final Value<String> ownedItemsJson;
   const ProfilesCompanion({
     this.id = const Value.absent(),
     this.creditedDays = const Value.absent(),
@@ -2238,6 +2319,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.burnedCount = const Value.absent(),
     this.bowCount = const Value.absent(),
     this.faceDownSec = const Value.absent(),
+    this.equipJson = const Value.absent(),
+    this.ownedItemsJson = const Value.absent(),
   });
   ProfilesCompanion.insert({
     this.id = const Value.absent(),
@@ -2262,6 +2345,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.burnedCount = const Value.absent(),
     this.bowCount = const Value.absent(),
     this.faceDownSec = const Value.absent(),
+    this.equipJson = const Value.absent(),
+    this.ownedItemsJson = const Value.absent(),
   });
   static Insertable<Profile> custom({
     Expression<int>? id,
@@ -2286,6 +2371,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<int>? burnedCount,
     Expression<int>? bowCount,
     Expression<int>? faceDownSec,
+    Expression<String>? equipJson,
+    Expression<String>? ownedItemsJson,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2312,6 +2399,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (burnedCount != null) 'burned_count': burnedCount,
       if (bowCount != null) 'bow_count': bowCount,
       if (faceDownSec != null) 'face_down_sec': faceDownSec,
+      if (equipJson != null) 'equip_json': equipJson,
+      if (ownedItemsJson != null) 'owned_items_json': ownedItemsJson,
     });
   }
 
@@ -2338,6 +2427,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<int>? burnedCount,
     Value<int>? bowCount,
     Value<int>? faceDownSec,
+    Value<String>? equipJson,
+    Value<String>? ownedItemsJson,
   }) {
     return ProfilesCompanion(
       id: id ?? this.id,
@@ -2363,6 +2454,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       burnedCount: burnedCount ?? this.burnedCount,
       bowCount: bowCount ?? this.bowCount,
       faceDownSec: faceDownSec ?? this.faceDownSec,
+      equipJson: equipJson ?? this.equipJson,
+      ownedItemsJson: ownedItemsJson ?? this.ownedItemsJson,
     );
   }
 
@@ -2437,6 +2530,12 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (faceDownSec.present) {
       map['face_down_sec'] = Variable<int>(faceDownSec.value);
     }
+    if (equipJson.present) {
+      map['equip_json'] = Variable<String>(equipJson.value);
+    }
+    if (ownedItemsJson.present) {
+      map['owned_items_json'] = Variable<String>(ownedItemsJson.value);
+    }
     return map;
   }
 
@@ -2464,7 +2563,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('merit: $merit, ')
           ..write('burnedCount: $burnedCount, ')
           ..write('bowCount: $bowCount, ')
-          ..write('faceDownSec: $faceDownSec')
+          ..write('faceDownSec: $faceDownSec, ')
+          ..write('equipJson: $equipJson, ')
+          ..write('ownedItemsJson: $ownedItemsJson')
           ..write(')'))
         .toString();
   }
@@ -5386,6 +5487,8 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   Value<int> burnedCount,
   Value<int> bowCount,
   Value<int> faceDownSec,
+  Value<String> equipJson,
+  Value<String> ownedItemsJson,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<int> id,
@@ -5410,6 +5513,8 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<int> burnedCount,
   Value<int> bowCount,
   Value<int> faceDownSec,
+  Value<String> equipJson,
+  Value<String> ownedItemsJson,
 });
 
 class $$ProfilesTableFilterComposer
@@ -5528,6 +5633,16 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<int> get faceDownSec => $composableBuilder(
     column: $table.faceDownSec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get equipJson => $composableBuilder(
+    column: $table.equipJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ownedItemsJson => $composableBuilder(
+    column: $table.ownedItemsJson,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5650,6 +5765,16 @@ class $$ProfilesTableOrderingComposer
     column: $table.faceDownSec,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get equipJson => $composableBuilder(
+    column: $table.equipJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ownedItemsJson => $composableBuilder(
+    column: $table.ownedItemsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ProfilesTableAnnotationComposer
@@ -5762,6 +5887,14 @@ class $$ProfilesTableAnnotationComposer
     column: $table.faceDownSec,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get equipJson =>
+      $composableBuilder(column: $table.equipJson, builder: (column) => column);
+
+  GeneratedColumn<String> get ownedItemsJson => $composableBuilder(
+    column: $table.ownedItemsJson,
+    builder: (column) => column,
+  );
 }
 
 class $$ProfilesTableTableManager
@@ -5814,6 +5947,8 @@ class $$ProfilesTableTableManager
                 Value<int> burnedCount = const Value.absent(),
                 Value<int> bowCount = const Value.absent(),
                 Value<int> faceDownSec = const Value.absent(),
+                Value<String> equipJson = const Value.absent(),
+                Value<String> ownedItemsJson = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
                 creditedDays: creditedDays,
@@ -5837,6 +5972,8 @@ class $$ProfilesTableTableManager
                 burnedCount: burnedCount,
                 bowCount: bowCount,
                 faceDownSec: faceDownSec,
+                equipJson: equipJson,
+                ownedItemsJson: ownedItemsJson,
               ),
           createCompanionCallback:
               ({
@@ -5862,6 +5999,8 @@ class $$ProfilesTableTableManager
                 Value<int> burnedCount = const Value.absent(),
                 Value<int> bowCount = const Value.absent(),
                 Value<int> faceDownSec = const Value.absent(),
+                Value<String> equipJson = const Value.absent(),
+                Value<String> ownedItemsJson = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
                 creditedDays: creditedDays,
@@ -5885,6 +6024,8 @@ class $$ProfilesTableTableManager
                 burnedCount: burnedCount,
                 bowCount: bowCount,
                 faceDownSec: faceDownSec,
+                equipJson: equipJson,
+                ownedItemsJson: ownedItemsJson,
               ),
           withReferenceMapper: (p0) => p0
               .map(

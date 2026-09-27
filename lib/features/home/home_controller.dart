@@ -8,6 +8,7 @@ import '../../data/content/content_repository.dart';
 import '../../data/content/models.dart';
 import '../../data/repositories/dialogue_repository.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../avatar/avatar_equip.dart';
 import '../gate/temple_gate.dart';
 import '../ordination/dharma_rank.dart';
 import '../tokens/token_catalog.dart';
@@ -35,6 +36,9 @@ class TempleHomeState {
   final Set<String> unlockedTokens;
   final TokenDef? nextToken;
 
+  /// 아바타 착용 상태.
+  final AvatarEquip equip;
+
   const TempleHomeState({
     required this.greeting,
     required this.dailyCard,
@@ -50,6 +54,7 @@ class TempleHomeState {
     required this.stats,
     required this.unlockedTokens,
     required this.nextToken,
+    required this.equip,
   });
 
   /// 108배 진행. 108을 넘기면 다시 0부터 센다.
@@ -111,6 +116,7 @@ final homeStateProvider = FutureProvider<TempleHomeState>((ref) async {
     stats: stats,
     unlockedTokens: unlocked,
     nextToken: nextToUnlock(stats, unlocked),
+    equip: profileRepo.equipOf(profile),
   );
 
   // 방문 기록은 위 판정이 모두 끝난 뒤에 쓴다.

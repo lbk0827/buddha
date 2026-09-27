@@ -73,8 +73,68 @@ class Profiles extends Table {
   /// 낙엽 연출을 이미 처리한 복귀 날짜 (FR-4.4).
   TextColumn get leavesClearedDate => text().nullable()();
 
+  // --- v3 「가상 출가」와 놀이 경제 ---
+
+  /// 법명 전체. 출가할 때 받는다 (예: 무념).
+  TextColumn get dharmaName => text().nullable()();
+
+  /// 법명 진화 단계. 0 사미 → 1 대사 → 2 선사 → 3 (미정).
+  IntColumn get dharmaRank => integer().withDefault(const Constant(0))();
+
+  /// 출가 셀카. 기기 안에만 둔다. 서버로 보내지 않는다.
+  TextColumn get avatarPath => text().nullable()();
+  DateTimeColumn get ordainedAt => dateTime().nullable()();
+
+  /// 공덕. 번뇌를 태우거나 엎어둘 때 쌓인다.
+  IntColumn get merit => integer().withDefault(const Constant(0))();
+
+  /// 태운 번뇌 누적. 108개가 「108번뇌 완파」 조건이다.
+  IntColumn get burnedCount => integer().withDefault(const Constant(0))();
+
+  /// 엎어둔 횟수 누적(108배).
+  IntColumn get bowCount => integer().withDefault(const Constant(0))();
+
+  /// 엎어둔 시간 누적(초).
+  IntColumn get faceDownSec => integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {id};
+}
+
+/// 번뇌 한 건. 세션과 별개로 「놀이 · 번뇌 태우기」에서 쌓인다.
+/// 텍스트는 기기 안에만 남고 사용자만 열람한다 (FR-3.3, SA-4).
+class Worries extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// 번뇌 한 줄. Drift의 Table.text와 이름이 겹쳐 body로 둔다.
+  TextColumn get body => text()();
+
+  /// 탐(貪) / 진(嗔) / 치(癡). 강제하지 않는다.
+  TextColumn get kind => text().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get burnedAt => dateTime().nullable()();
+
+  /// 죽비 — 선사가 돌려준 한마디.
+  TextColumn get seonsaLine => text().nullable()();
+
+  /// 「인정. 태운다」를 눌렀는가. 반박하면 죽비가 한 번 더 온다.
+  BoolColumn get accepted => boolean().withDefault(const Constant(false))();
+  IntColumn get rebuttalCount => integer().withDefault(const Constant(0))();
+
+  /// 위기 신호 감지 여부. 감지되면 선사 대사 없이 안내만 간다 (SA-1).
+  BoolColumn get safetyFlagged => boolean().withDefault(const Constant(false))();
+
+  TextColumn get localDate => text()();
+}
+
+/// 해제된 증표. 수행 이력이 열쇠다.
+class TokenUnlocks extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get tokenId => text().unique()();
+  DateTimeColumn get unlockedAt => dateTime()();
+
+  /// 해제 연출을 이미 보여줬는가.
+  BoolColumn get seen => boolean().withDefault(const Constant(false))();
 }
 
 class TestResults extends Table {
@@ -123,16 +183,33 @@ class AnalyticsEvents extends Table {
   TestResults,
   DialogueExposures,
   AnalyticsEvents,
+  Worries,
+  TokenUnlocks,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
       : super(executor ?? driftDatabase(name: 'bucheo_handsome'));
 
+  /// 2 — v3 「가상 출가」: 법명·공덕·번뇌·증표 추가.
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.addColumn(profiles, profiles.dharmaName);
+            await m.addColumn(profiles, profiles.dharmaRank);
+            await m.addColumn(profiles, profiles.avatarPath);
+            await m.addColumn(profiles, profiles.ordainedAt);
+            await m.addColumn(profiles, profiles.merit);
+            await m.addColumn(profiles, profiles.burnedCount);
+            await m.addColumn(profiles, profiles.bowCount);
+            await m.addColumn(profiles, profiles.faceDownSec);
+            await m.createTable(worries);
+            await m.createTable(tokenUnlocks);
+          }
+        },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
           if (details.wasCreated) {

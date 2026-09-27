@@ -5,6 +5,7 @@ import '../data/db/database.dart';
 import '../data/repositories/dialogue_repository.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/session_repository.dart';
+import '../data/repositories/worry_repository.dart';
 import '../features/safety/safety_detector.dart';
 import '../services/notification_service.dart';
 
@@ -29,6 +30,12 @@ final profileRepositoryProvider =
 
 final dialogueRepositoryProvider = Provider<DialogueRepository>(
     (ref) => DialogueRepository(ref.watch(databaseProvider)));
+
+final worryRepositoryProvider =
+    Provider<WorryRepository>((ref) => WorryRepository(ref.watch(databaseProvider)));
+
+final tokenRepositoryProvider =
+    Provider<TokenRepository>((ref) => TokenRepository(ref.watch(databaseProvider)));
 
 final analyticsProvider =
     Provider<AnalyticsLog>((ref) => AnalyticsLog(ref.watch(databaseProvider)));

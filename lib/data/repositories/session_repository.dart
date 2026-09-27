@@ -1,9 +1,13 @@
 import 'package:drift/drift.dart';
 
 import '../../core/time_utils.dart';
+import '../../features/ordination/dharma_rank.dart';
 import '../../features/session/session_timing.dart';
 import '../../features/temple/temple_stage.dart';
 import '../db/database.dart';
+
+/// 엎어둔 1분에 공덕 10. 유효 세션만 센다 (v3).
+int meritForSession(int practicedSec) => (practicedSec ~/ 60) * 10;
 
 /// 세션 종료 결과. 완료 화면 연출에 필요한 것만 담는다.
 class SessionFinishResult {
@@ -136,19 +140,31 @@ class SessionRepository {
       var creditedDays = profile.creditedDays;
       TempleStage? newStage;
 
+      // 유효한 엎기는 108배와 공덕에 바로 반영된다 (v3).
+      var bowCount = profile.bowCount;
+      var merit = profile.merit;
+      if (valid) {
+        bowCount += 1;
+        merit += meritForSession(practicedSec);
+      }
+
       if (creditedToday) {
         final before = stageForCreditedDays(creditedDays);
         creditedDays += 1;
         final after = stageForCreditedDays(creditedDays);
         if (after > before) newStage = stageAt(after);
-
-        await (_db.update(_db.profiles)..where((t) => t.id.equals(1)))
-            .write(ProfilesCompanion(
-          creditedDays: Value(creditedDays),
-          templeStage: Value(after),
-          dharmaStage: Value(dharmaLastSyllable(creditedDays) == null ? 0 : 1),
-        ));
       }
+
+      await (_db.update(_db.profiles)..where((t) => t.id.equals(1)))
+          .write(ProfilesCompanion(
+        creditedDays: Value(creditedDays),
+        templeStage: Value(stageForCreditedDays(creditedDays)),
+        dharmaStage: Value(dharmaLastSyllable(creditedDays) == null ? 0 : 1),
+        bowCount: Value(bowCount),
+        merit: Value(merit),
+        faceDownSec: Value(profile.faceDownSec + practicedSec),
+        dharmaRank: Value(rankForBows(bowCount).index),
+      ));
 
       return SessionFinishResult(
         session: session,
@@ -238,6 +254,25 @@ class SessionRepository {
           ..where(_db.dayRecords.credited.equals(true)))
         .getSingle();
     return row.read(count) ?? 0;
+  }
+
+  /// 절 문 연속 계산용 (v3). 인정된 날짜 키 전부.
+  Future<Set<String>> creditedDateKeys() async {
+    final rows = await (_db.select(_db.dayRecords)
+          ..where((t) => t.credited.equals(true)))
+        .get();
+    return rows.map((r) => r.localDate).toSet();
+  }
+
+  /// 오늘 엎어둔 시간 합(초).
+  Future<int> faceDownSecondsOn(String dateKey) async {
+    final sum = _db.sessions.practicedSec.sum();
+    final row = await (_db.selectOnly(_db.sessions)
+          ..addColumns([sum])
+          ..where(_db.sessions.localDate.equals(dateKey) &
+              _db.sessions.outcome.isNotNull()))
+        .getSingle();
+    return row.read(sum) ?? 0;
   }
 
   /// 완주 후 "지난번 그 얘기" 화면용 (FR-3.2).

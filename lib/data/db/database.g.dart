@@ -1370,6 +1370,97 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _dharmaNameMeta = const VerificationMeta(
+    'dharmaName',
+  );
+  @override
+  late final GeneratedColumn<String> dharmaName = GeneratedColumn<String>(
+    'dharma_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dharmaRankMeta = const VerificationMeta(
+    'dharmaRank',
+  );
+  @override
+  late final GeneratedColumn<int> dharmaRank = GeneratedColumn<int>(
+    'dharma_rank',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _avatarPathMeta = const VerificationMeta(
+    'avatarPath',
+  );
+  @override
+  late final GeneratedColumn<String> avatarPath = GeneratedColumn<String>(
+    'avatar_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ordainedAtMeta = const VerificationMeta(
+    'ordainedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> ordainedAt = GeneratedColumn<DateTime>(
+    'ordained_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _meritMeta = const VerificationMeta('merit');
+  @override
+  late final GeneratedColumn<int> merit = GeneratedColumn<int>(
+    'merit',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _burnedCountMeta = const VerificationMeta(
+    'burnedCount',
+  );
+  @override
+  late final GeneratedColumn<int> burnedCount = GeneratedColumn<int>(
+    'burned_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _bowCountMeta = const VerificationMeta(
+    'bowCount',
+  );
+  @override
+  late final GeneratedColumn<int> bowCount = GeneratedColumn<int>(
+    'bow_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _faceDownSecMeta = const VerificationMeta(
+    'faceDownSec',
+  );
+  @override
+  late final GeneratedColumn<int> faceDownSec = GeneratedColumn<int>(
+    'face_down_sec',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1386,6 +1477,14 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     lastVisitAt,
     characterOnboardShown,
     leavesClearedDate,
+    dharmaName,
+    dharmaRank,
+    avatarPath,
+    ordainedAt,
+    merit,
+    burnedCount,
+    bowCount,
+    faceDownSec,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1516,6 +1615,60 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('dharma_name')) {
+      context.handle(
+        _dharmaNameMeta,
+        dharmaName.isAcceptableOrUnknown(data['dharma_name']!, _dharmaNameMeta),
+      );
+    }
+    if (data.containsKey('dharma_rank')) {
+      context.handle(
+        _dharmaRankMeta,
+        dharmaRank.isAcceptableOrUnknown(data['dharma_rank']!, _dharmaRankMeta),
+      );
+    }
+    if (data.containsKey('avatar_path')) {
+      context.handle(
+        _avatarPathMeta,
+        avatarPath.isAcceptableOrUnknown(data['avatar_path']!, _avatarPathMeta),
+      );
+    }
+    if (data.containsKey('ordained_at')) {
+      context.handle(
+        _ordainedAtMeta,
+        ordainedAt.isAcceptableOrUnknown(data['ordained_at']!, _ordainedAtMeta),
+      );
+    }
+    if (data.containsKey('merit')) {
+      context.handle(
+        _meritMeta,
+        merit.isAcceptableOrUnknown(data['merit']!, _meritMeta),
+      );
+    }
+    if (data.containsKey('burned_count')) {
+      context.handle(
+        _burnedCountMeta,
+        burnedCount.isAcceptableOrUnknown(
+          data['burned_count']!,
+          _burnedCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('bow_count')) {
+      context.handle(
+        _bowCountMeta,
+        bowCount.isAcceptableOrUnknown(data['bow_count']!, _bowCountMeta),
+      );
+    }
+    if (data.containsKey('face_down_sec')) {
+      context.handle(
+        _faceDownSecMeta,
+        faceDownSec.isAcceptableOrUnknown(
+          data['face_down_sec']!,
+          _faceDownSecMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1581,6 +1734,38 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.string,
         data['${effectivePrefix}leaves_cleared_date'],
       ),
+      dharmaName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dharma_name'],
+      ),
+      dharmaRank: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dharma_rank'],
+      )!,
+      avatarPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}avatar_path'],
+      ),
+      ordainedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}ordained_at'],
+      ),
+      merit: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}merit'],
+      )!,
+      burnedCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}burned_count'],
+      )!,
+      bowCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bow_count'],
+      )!,
+      faceDownSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}face_down_sec'],
+      )!,
     );
   }
 
@@ -1613,6 +1798,28 @@ class Profile extends DataClass implements Insertable<Profile> {
 
   /// 낙엽 연출을 이미 처리한 복귀 날짜 (FR-4.4).
   final String? leavesClearedDate;
+
+  /// 법명 전체. 출가할 때 받는다 (예: 무념).
+  final String? dharmaName;
+
+  /// 법명 진화 단계. 0 사미 → 1 대사 → 2 선사 → 3 (미정).
+  final int dharmaRank;
+
+  /// 출가 셀카. 기기 안에만 둔다. 서버로 보내지 않는다.
+  final String? avatarPath;
+  final DateTime? ordainedAt;
+
+  /// 공덕. 번뇌를 태우거나 엎어둘 때 쌓인다.
+  final int merit;
+
+  /// 태운 번뇌 누적. 108개가 「108번뇌 완파」 조건이다.
+  final int burnedCount;
+
+  /// 엎어둔 횟수 누적(108배).
+  final int bowCount;
+
+  /// 엎어둔 시간 누적(초).
+  final int faceDownSec;
   const Profile({
     required this.id,
     required this.creditedDays,
@@ -1628,6 +1835,14 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.lastVisitAt,
     required this.characterOnboardShown,
     this.leavesClearedDate,
+    this.dharmaName,
+    required this.dharmaRank,
+    this.avatarPath,
+    this.ordainedAt,
+    required this.merit,
+    required this.burnedCount,
+    required this.bowCount,
+    required this.faceDownSec,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1656,6 +1871,20 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || leavesClearedDate != null) {
       map['leaves_cleared_date'] = Variable<String>(leavesClearedDate);
     }
+    if (!nullToAbsent || dharmaName != null) {
+      map['dharma_name'] = Variable<String>(dharmaName);
+    }
+    map['dharma_rank'] = Variable<int>(dharmaRank);
+    if (!nullToAbsent || avatarPath != null) {
+      map['avatar_path'] = Variable<String>(avatarPath);
+    }
+    if (!nullToAbsent || ordainedAt != null) {
+      map['ordained_at'] = Variable<DateTime>(ordainedAt);
+    }
+    map['merit'] = Variable<int>(merit);
+    map['burned_count'] = Variable<int>(burnedCount);
+    map['bow_count'] = Variable<int>(bowCount);
+    map['face_down_sec'] = Variable<int>(faceDownSec);
     return map;
   }
 
@@ -1685,6 +1914,20 @@ class Profile extends DataClass implements Insertable<Profile> {
       leavesClearedDate: leavesClearedDate == null && nullToAbsent
           ? const Value.absent()
           : Value(leavesClearedDate),
+      dharmaName: dharmaName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dharmaName),
+      dharmaRank: Value(dharmaRank),
+      avatarPath: avatarPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(avatarPath),
+      ordainedAt: ordainedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ordainedAt),
+      merit: Value(merit),
+      burnedCount: Value(burnedCount),
+      bowCount: Value(bowCount),
+      faceDownSec: Value(faceDownSec),
     );
   }
 
@@ -1714,6 +1957,14 @@ class Profile extends DataClass implements Insertable<Profile> {
       leavesClearedDate: serializer.fromJson<String?>(
         json['leavesClearedDate'],
       ),
+      dharmaName: serializer.fromJson<String?>(json['dharmaName']),
+      dharmaRank: serializer.fromJson<int>(json['dharmaRank']),
+      avatarPath: serializer.fromJson<String?>(json['avatarPath']),
+      ordainedAt: serializer.fromJson<DateTime?>(json['ordainedAt']),
+      merit: serializer.fromJson<int>(json['merit']),
+      burnedCount: serializer.fromJson<int>(json['burnedCount']),
+      bowCount: serializer.fromJson<int>(json['bowCount']),
+      faceDownSec: serializer.fromJson<int>(json['faceDownSec']),
     );
   }
   @override
@@ -1734,6 +1985,14 @@ class Profile extends DataClass implements Insertable<Profile> {
       'lastVisitAt': serializer.toJson<DateTime?>(lastVisitAt),
       'characterOnboardShown': serializer.toJson<bool>(characterOnboardShown),
       'leavesClearedDate': serializer.toJson<String?>(leavesClearedDate),
+      'dharmaName': serializer.toJson<String?>(dharmaName),
+      'dharmaRank': serializer.toJson<int>(dharmaRank),
+      'avatarPath': serializer.toJson<String?>(avatarPath),
+      'ordainedAt': serializer.toJson<DateTime?>(ordainedAt),
+      'merit': serializer.toJson<int>(merit),
+      'burnedCount': serializer.toJson<int>(burnedCount),
+      'bowCount': serializer.toJson<int>(bowCount),
+      'faceDownSec': serializer.toJson<int>(faceDownSec),
     };
   }
 
@@ -1752,6 +2011,14 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<DateTime?> lastVisitAt = const Value.absent(),
     bool? characterOnboardShown,
     Value<String?> leavesClearedDate = const Value.absent(),
+    Value<String?> dharmaName = const Value.absent(),
+    int? dharmaRank,
+    Value<String?> avatarPath = const Value.absent(),
+    Value<DateTime?> ordainedAt = const Value.absent(),
+    int? merit,
+    int? burnedCount,
+    int? bowCount,
+    int? faceDownSec,
   }) => Profile(
     id: id ?? this.id,
     creditedDays: creditedDays ?? this.creditedDays,
@@ -1771,6 +2038,14 @@ class Profile extends DataClass implements Insertable<Profile> {
     leavesClearedDate: leavesClearedDate.present
         ? leavesClearedDate.value
         : this.leavesClearedDate,
+    dharmaName: dharmaName.present ? dharmaName.value : this.dharmaName,
+    dharmaRank: dharmaRank ?? this.dharmaRank,
+    avatarPath: avatarPath.present ? avatarPath.value : this.avatarPath,
+    ordainedAt: ordainedAt.present ? ordainedAt.value : this.ordainedAt,
+    merit: merit ?? this.merit,
+    burnedCount: burnedCount ?? this.burnedCount,
+    bowCount: bowCount ?? this.bowCount,
+    faceDownSec: faceDownSec ?? this.faceDownSec,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
@@ -1812,6 +2087,26 @@ class Profile extends DataClass implements Insertable<Profile> {
       leavesClearedDate: data.leavesClearedDate.present
           ? data.leavesClearedDate.value
           : this.leavesClearedDate,
+      dharmaName: data.dharmaName.present
+          ? data.dharmaName.value
+          : this.dharmaName,
+      dharmaRank: data.dharmaRank.present
+          ? data.dharmaRank.value
+          : this.dharmaRank,
+      avatarPath: data.avatarPath.present
+          ? data.avatarPath.value
+          : this.avatarPath,
+      ordainedAt: data.ordainedAt.present
+          ? data.ordainedAt.value
+          : this.ordainedAt,
+      merit: data.merit.present ? data.merit.value : this.merit,
+      burnedCount: data.burnedCount.present
+          ? data.burnedCount.value
+          : this.burnedCount,
+      bowCount: data.bowCount.present ? data.bowCount.value : this.bowCount,
+      faceDownSec: data.faceDownSec.present
+          ? data.faceDownSec.value
+          : this.faceDownSec,
     );
   }
 
@@ -1831,13 +2126,21 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('firstLaunchAt: $firstLaunchAt, ')
           ..write('lastVisitAt: $lastVisitAt, ')
           ..write('characterOnboardShown: $characterOnboardShown, ')
-          ..write('leavesClearedDate: $leavesClearedDate')
+          ..write('leavesClearedDate: $leavesClearedDate, ')
+          ..write('dharmaName: $dharmaName, ')
+          ..write('dharmaRank: $dharmaRank, ')
+          ..write('avatarPath: $avatarPath, ')
+          ..write('ordainedAt: $ordainedAt, ')
+          ..write('merit: $merit, ')
+          ..write('burnedCount: $burnedCount, ')
+          ..write('bowCount: $bowCount, ')
+          ..write('faceDownSec: $faceDownSec')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     creditedDays,
     templeStage,
@@ -1852,7 +2155,15 @@ class Profile extends DataClass implements Insertable<Profile> {
     lastVisitAt,
     characterOnboardShown,
     leavesClearedDate,
-  );
+    dharmaName,
+    dharmaRank,
+    avatarPath,
+    ordainedAt,
+    merit,
+    burnedCount,
+    bowCount,
+    faceDownSec,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1870,7 +2181,15 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.firstLaunchAt == this.firstLaunchAt &&
           other.lastVisitAt == this.lastVisitAt &&
           other.characterOnboardShown == this.characterOnboardShown &&
-          other.leavesClearedDate == this.leavesClearedDate);
+          other.leavesClearedDate == this.leavesClearedDate &&
+          other.dharmaName == this.dharmaName &&
+          other.dharmaRank == this.dharmaRank &&
+          other.avatarPath == this.avatarPath &&
+          other.ordainedAt == this.ordainedAt &&
+          other.merit == this.merit &&
+          other.burnedCount == this.burnedCount &&
+          other.bowCount == this.bowCount &&
+          other.faceDownSec == this.faceDownSec);
 }
 
 class ProfilesCompanion extends UpdateCompanion<Profile> {
@@ -1888,6 +2207,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<DateTime?> lastVisitAt;
   final Value<bool> characterOnboardShown;
   final Value<String?> leavesClearedDate;
+  final Value<String?> dharmaName;
+  final Value<int> dharmaRank;
+  final Value<String?> avatarPath;
+  final Value<DateTime?> ordainedAt;
+  final Value<int> merit;
+  final Value<int> burnedCount;
+  final Value<int> bowCount;
+  final Value<int> faceDownSec;
   const ProfilesCompanion({
     this.id = const Value.absent(),
     this.creditedDays = const Value.absent(),
@@ -1903,6 +2230,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.lastVisitAt = const Value.absent(),
     this.characterOnboardShown = const Value.absent(),
     this.leavesClearedDate = const Value.absent(),
+    this.dharmaName = const Value.absent(),
+    this.dharmaRank = const Value.absent(),
+    this.avatarPath = const Value.absent(),
+    this.ordainedAt = const Value.absent(),
+    this.merit = const Value.absent(),
+    this.burnedCount = const Value.absent(),
+    this.bowCount = const Value.absent(),
+    this.faceDownSec = const Value.absent(),
   });
   ProfilesCompanion.insert({
     this.id = const Value.absent(),
@@ -1919,6 +2254,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.lastVisitAt = const Value.absent(),
     this.characterOnboardShown = const Value.absent(),
     this.leavesClearedDate = const Value.absent(),
+    this.dharmaName = const Value.absent(),
+    this.dharmaRank = const Value.absent(),
+    this.avatarPath = const Value.absent(),
+    this.ordainedAt = const Value.absent(),
+    this.merit = const Value.absent(),
+    this.burnedCount = const Value.absent(),
+    this.bowCount = const Value.absent(),
+    this.faceDownSec = const Value.absent(),
   });
   static Insertable<Profile> custom({
     Expression<int>? id,
@@ -1935,6 +2278,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<DateTime>? lastVisitAt,
     Expression<bool>? characterOnboardShown,
     Expression<String>? leavesClearedDate,
+    Expression<String>? dharmaName,
+    Expression<int>? dharmaRank,
+    Expression<String>? avatarPath,
+    Expression<DateTime>? ordainedAt,
+    Expression<int>? merit,
+    Expression<int>? burnedCount,
+    Expression<int>? bowCount,
+    Expression<int>? faceDownSec,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1953,6 +2304,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (characterOnboardShown != null)
         'character_onboard_shown': characterOnboardShown,
       if (leavesClearedDate != null) 'leaves_cleared_date': leavesClearedDate,
+      if (dharmaName != null) 'dharma_name': dharmaName,
+      if (dharmaRank != null) 'dharma_rank': dharmaRank,
+      if (avatarPath != null) 'avatar_path': avatarPath,
+      if (ordainedAt != null) 'ordained_at': ordainedAt,
+      if (merit != null) 'merit': merit,
+      if (burnedCount != null) 'burned_count': burnedCount,
+      if (bowCount != null) 'bow_count': bowCount,
+      if (faceDownSec != null) 'face_down_sec': faceDownSec,
     });
   }
 
@@ -1971,6 +2330,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<DateTime?>? lastVisitAt,
     Value<bool>? characterOnboardShown,
     Value<String?>? leavesClearedDate,
+    Value<String?>? dharmaName,
+    Value<int>? dharmaRank,
+    Value<String?>? avatarPath,
+    Value<DateTime?>? ordainedAt,
+    Value<int>? merit,
+    Value<int>? burnedCount,
+    Value<int>? bowCount,
+    Value<int>? faceDownSec,
   }) {
     return ProfilesCompanion(
       id: id ?? this.id,
@@ -1988,6 +2355,14 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       characterOnboardShown:
           characterOnboardShown ?? this.characterOnboardShown,
       leavesClearedDate: leavesClearedDate ?? this.leavesClearedDate,
+      dharmaName: dharmaName ?? this.dharmaName,
+      dharmaRank: dharmaRank ?? this.dharmaRank,
+      avatarPath: avatarPath ?? this.avatarPath,
+      ordainedAt: ordainedAt ?? this.ordainedAt,
+      merit: merit ?? this.merit,
+      burnedCount: burnedCount ?? this.burnedCount,
+      bowCount: bowCount ?? this.bowCount,
+      faceDownSec: faceDownSec ?? this.faceDownSec,
     );
   }
 
@@ -2038,6 +2413,30 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (leavesClearedDate.present) {
       map['leaves_cleared_date'] = Variable<String>(leavesClearedDate.value);
     }
+    if (dharmaName.present) {
+      map['dharma_name'] = Variable<String>(dharmaName.value);
+    }
+    if (dharmaRank.present) {
+      map['dharma_rank'] = Variable<int>(dharmaRank.value);
+    }
+    if (avatarPath.present) {
+      map['avatar_path'] = Variable<String>(avatarPath.value);
+    }
+    if (ordainedAt.present) {
+      map['ordained_at'] = Variable<DateTime>(ordainedAt.value);
+    }
+    if (merit.present) {
+      map['merit'] = Variable<int>(merit.value);
+    }
+    if (burnedCount.present) {
+      map['burned_count'] = Variable<int>(burnedCount.value);
+    }
+    if (bowCount.present) {
+      map['bow_count'] = Variable<int>(bowCount.value);
+    }
+    if (faceDownSec.present) {
+      map['face_down_sec'] = Variable<int>(faceDownSec.value);
+    }
     return map;
   }
 
@@ -2057,7 +2456,15 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('firstLaunchAt: $firstLaunchAt, ')
           ..write('lastVisitAt: $lastVisitAt, ')
           ..write('characterOnboardShown: $characterOnboardShown, ')
-          ..write('leavesClearedDate: $leavesClearedDate')
+          ..write('leavesClearedDate: $leavesClearedDate, ')
+          ..write('dharmaName: $dharmaName, ')
+          ..write('dharmaRank: $dharmaRank, ')
+          ..write('avatarPath: $avatarPath, ')
+          ..write('ordainedAt: $ordainedAt, ')
+          ..write('merit: $merit, ')
+          ..write('burnedCount: $burnedCount, ')
+          ..write('bowCount: $bowCount, ')
+          ..write('faceDownSec: $faceDownSec')
           ..write(')'))
         .toString();
   }
@@ -3424,6 +3831,926 @@ class AnalyticsEventsCompanion extends UpdateCompanion<AnalyticsEvent> {
   }
 }
 
+class $WorriesTable extends Worries with TableInfo<$WorriesTable, Worry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _burnedAtMeta = const VerificationMeta(
+    'burnedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> burnedAt = GeneratedColumn<DateTime>(
+    'burned_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seonsaLineMeta = const VerificationMeta(
+    'seonsaLine',
+  );
+  @override
+  late final GeneratedColumn<String> seonsaLine = GeneratedColumn<String>(
+    'seonsa_line',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _acceptedMeta = const VerificationMeta(
+    'accepted',
+  );
+  @override
+  late final GeneratedColumn<bool> accepted = GeneratedColumn<bool>(
+    'accepted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("accepted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _rebuttalCountMeta = const VerificationMeta(
+    'rebuttalCount',
+  );
+  @override
+  late final GeneratedColumn<int> rebuttalCount = GeneratedColumn<int>(
+    'rebuttal_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _safetyFlaggedMeta = const VerificationMeta(
+    'safetyFlagged',
+  );
+  @override
+  late final GeneratedColumn<bool> safetyFlagged = GeneratedColumn<bool>(
+    'safety_flagged',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("safety_flagged" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _localDateMeta = const VerificationMeta(
+    'localDate',
+  );
+  @override
+  late final GeneratedColumn<String> localDate = GeneratedColumn<String>(
+    'local_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    body,
+    kind,
+    createdAt,
+    burnedAt,
+    seonsaLine,
+    accepted,
+    rebuttalCount,
+    safetyFlagged,
+    localDate,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'worries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Worry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('burned_at')) {
+      context.handle(
+        _burnedAtMeta,
+        burnedAt.isAcceptableOrUnknown(data['burned_at']!, _burnedAtMeta),
+      );
+    }
+    if (data.containsKey('seonsa_line')) {
+      context.handle(
+        _seonsaLineMeta,
+        seonsaLine.isAcceptableOrUnknown(data['seonsa_line']!, _seonsaLineMeta),
+      );
+    }
+    if (data.containsKey('accepted')) {
+      context.handle(
+        _acceptedMeta,
+        accepted.isAcceptableOrUnknown(data['accepted']!, _acceptedMeta),
+      );
+    }
+    if (data.containsKey('rebuttal_count')) {
+      context.handle(
+        _rebuttalCountMeta,
+        rebuttalCount.isAcceptableOrUnknown(
+          data['rebuttal_count']!,
+          _rebuttalCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('safety_flagged')) {
+      context.handle(
+        _safetyFlaggedMeta,
+        safetyFlagged.isAcceptableOrUnknown(
+          data['safety_flagged']!,
+          _safetyFlaggedMeta,
+        ),
+      );
+    }
+    if (data.containsKey('local_date')) {
+      context.handle(
+        _localDateMeta,
+        localDate.isAcceptableOrUnknown(data['local_date']!, _localDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_localDateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Worry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Worry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      burnedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}burned_at'],
+      ),
+      seonsaLine: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}seonsa_line'],
+      ),
+      accepted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}accepted'],
+      )!,
+      rebuttalCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rebuttal_count'],
+      )!,
+      safetyFlagged: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}safety_flagged'],
+      )!,
+      localDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_date'],
+      )!,
+    );
+  }
+
+  @override
+  $WorriesTable createAlias(String alias) {
+    return $WorriesTable(attachedDatabase, alias);
+  }
+}
+
+class Worry extends DataClass implements Insertable<Worry> {
+  final int id;
+
+  /// 번뇌 한 줄. Drift의 Table.text와 이름이 겹쳐 body로 둔다.
+  final String body;
+
+  /// 탐(貪) / 진(嗔) / 치(癡). 강제하지 않는다.
+  final String? kind;
+  final DateTime createdAt;
+  final DateTime? burnedAt;
+
+  /// 죽비 — 선사가 돌려준 한마디.
+  final String? seonsaLine;
+
+  /// 「인정. 태운다」를 눌렀는가. 반박하면 죽비가 한 번 더 온다.
+  final bool accepted;
+  final int rebuttalCount;
+
+  /// 위기 신호 감지 여부. 감지되면 선사 대사 없이 안내만 간다 (SA-1).
+  final bool safetyFlagged;
+  final String localDate;
+  const Worry({
+    required this.id,
+    required this.body,
+    this.kind,
+    required this.createdAt,
+    this.burnedAt,
+    this.seonsaLine,
+    required this.accepted,
+    required this.rebuttalCount,
+    required this.safetyFlagged,
+    required this.localDate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['body'] = Variable<String>(body);
+    if (!nullToAbsent || kind != null) {
+      map['kind'] = Variable<String>(kind);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || burnedAt != null) {
+      map['burned_at'] = Variable<DateTime>(burnedAt);
+    }
+    if (!nullToAbsent || seonsaLine != null) {
+      map['seonsa_line'] = Variable<String>(seonsaLine);
+    }
+    map['accepted'] = Variable<bool>(accepted);
+    map['rebuttal_count'] = Variable<int>(rebuttalCount);
+    map['safety_flagged'] = Variable<bool>(safetyFlagged);
+    map['local_date'] = Variable<String>(localDate);
+    return map;
+  }
+
+  WorriesCompanion toCompanion(bool nullToAbsent) {
+    return WorriesCompanion(
+      id: Value(id),
+      body: Value(body),
+      kind: kind == null && nullToAbsent ? const Value.absent() : Value(kind),
+      createdAt: Value(createdAt),
+      burnedAt: burnedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(burnedAt),
+      seonsaLine: seonsaLine == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seonsaLine),
+      accepted: Value(accepted),
+      rebuttalCount: Value(rebuttalCount),
+      safetyFlagged: Value(safetyFlagged),
+      localDate: Value(localDate),
+    );
+  }
+
+  factory Worry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Worry(
+      id: serializer.fromJson<int>(json['id']),
+      body: serializer.fromJson<String>(json['body']),
+      kind: serializer.fromJson<String?>(json['kind']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      burnedAt: serializer.fromJson<DateTime?>(json['burnedAt']),
+      seonsaLine: serializer.fromJson<String?>(json['seonsaLine']),
+      accepted: serializer.fromJson<bool>(json['accepted']),
+      rebuttalCount: serializer.fromJson<int>(json['rebuttalCount']),
+      safetyFlagged: serializer.fromJson<bool>(json['safetyFlagged']),
+      localDate: serializer.fromJson<String>(json['localDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'body': serializer.toJson<String>(body),
+      'kind': serializer.toJson<String?>(kind),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'burnedAt': serializer.toJson<DateTime?>(burnedAt),
+      'seonsaLine': serializer.toJson<String?>(seonsaLine),
+      'accepted': serializer.toJson<bool>(accepted),
+      'rebuttalCount': serializer.toJson<int>(rebuttalCount),
+      'safetyFlagged': serializer.toJson<bool>(safetyFlagged),
+      'localDate': serializer.toJson<String>(localDate),
+    };
+  }
+
+  Worry copyWith({
+    int? id,
+    String? body,
+    Value<String?> kind = const Value.absent(),
+    DateTime? createdAt,
+    Value<DateTime?> burnedAt = const Value.absent(),
+    Value<String?> seonsaLine = const Value.absent(),
+    bool? accepted,
+    int? rebuttalCount,
+    bool? safetyFlagged,
+    String? localDate,
+  }) => Worry(
+    id: id ?? this.id,
+    body: body ?? this.body,
+    kind: kind.present ? kind.value : this.kind,
+    createdAt: createdAt ?? this.createdAt,
+    burnedAt: burnedAt.present ? burnedAt.value : this.burnedAt,
+    seonsaLine: seonsaLine.present ? seonsaLine.value : this.seonsaLine,
+    accepted: accepted ?? this.accepted,
+    rebuttalCount: rebuttalCount ?? this.rebuttalCount,
+    safetyFlagged: safetyFlagged ?? this.safetyFlagged,
+    localDate: localDate ?? this.localDate,
+  );
+  Worry copyWithCompanion(WorriesCompanion data) {
+    return Worry(
+      id: data.id.present ? data.id.value : this.id,
+      body: data.body.present ? data.body.value : this.body,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      burnedAt: data.burnedAt.present ? data.burnedAt.value : this.burnedAt,
+      seonsaLine: data.seonsaLine.present
+          ? data.seonsaLine.value
+          : this.seonsaLine,
+      accepted: data.accepted.present ? data.accepted.value : this.accepted,
+      rebuttalCount: data.rebuttalCount.present
+          ? data.rebuttalCount.value
+          : this.rebuttalCount,
+      safetyFlagged: data.safetyFlagged.present
+          ? data.safetyFlagged.value
+          : this.safetyFlagged,
+      localDate: data.localDate.present ? data.localDate.value : this.localDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Worry(')
+          ..write('id: $id, ')
+          ..write('body: $body, ')
+          ..write('kind: $kind, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('burnedAt: $burnedAt, ')
+          ..write('seonsaLine: $seonsaLine, ')
+          ..write('accepted: $accepted, ')
+          ..write('rebuttalCount: $rebuttalCount, ')
+          ..write('safetyFlagged: $safetyFlagged, ')
+          ..write('localDate: $localDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    body,
+    kind,
+    createdAt,
+    burnedAt,
+    seonsaLine,
+    accepted,
+    rebuttalCount,
+    safetyFlagged,
+    localDate,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Worry &&
+          other.id == this.id &&
+          other.body == this.body &&
+          other.kind == this.kind &&
+          other.createdAt == this.createdAt &&
+          other.burnedAt == this.burnedAt &&
+          other.seonsaLine == this.seonsaLine &&
+          other.accepted == this.accepted &&
+          other.rebuttalCount == this.rebuttalCount &&
+          other.safetyFlagged == this.safetyFlagged &&
+          other.localDate == this.localDate);
+}
+
+class WorriesCompanion extends UpdateCompanion<Worry> {
+  final Value<int> id;
+  final Value<String> body;
+  final Value<String?> kind;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> burnedAt;
+  final Value<String?> seonsaLine;
+  final Value<bool> accepted;
+  final Value<int> rebuttalCount;
+  final Value<bool> safetyFlagged;
+  final Value<String> localDate;
+  const WorriesCompanion({
+    this.id = const Value.absent(),
+    this.body = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.burnedAt = const Value.absent(),
+    this.seonsaLine = const Value.absent(),
+    this.accepted = const Value.absent(),
+    this.rebuttalCount = const Value.absent(),
+    this.safetyFlagged = const Value.absent(),
+    this.localDate = const Value.absent(),
+  });
+  WorriesCompanion.insert({
+    this.id = const Value.absent(),
+    required String body,
+    this.kind = const Value.absent(),
+    required DateTime createdAt,
+    this.burnedAt = const Value.absent(),
+    this.seonsaLine = const Value.absent(),
+    this.accepted = const Value.absent(),
+    this.rebuttalCount = const Value.absent(),
+    this.safetyFlagged = const Value.absent(),
+    required String localDate,
+  }) : body = Value(body),
+       createdAt = Value(createdAt),
+       localDate = Value(localDate);
+  static Insertable<Worry> custom({
+    Expression<int>? id,
+    Expression<String>? body,
+    Expression<String>? kind,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? burnedAt,
+    Expression<String>? seonsaLine,
+    Expression<bool>? accepted,
+    Expression<int>? rebuttalCount,
+    Expression<bool>? safetyFlagged,
+    Expression<String>? localDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (body != null) 'body': body,
+      if (kind != null) 'kind': kind,
+      if (createdAt != null) 'created_at': createdAt,
+      if (burnedAt != null) 'burned_at': burnedAt,
+      if (seonsaLine != null) 'seonsa_line': seonsaLine,
+      if (accepted != null) 'accepted': accepted,
+      if (rebuttalCount != null) 'rebuttal_count': rebuttalCount,
+      if (safetyFlagged != null) 'safety_flagged': safetyFlagged,
+      if (localDate != null) 'local_date': localDate,
+    });
+  }
+
+  WorriesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? body,
+    Value<String?>? kind,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? burnedAt,
+    Value<String?>? seonsaLine,
+    Value<bool>? accepted,
+    Value<int>? rebuttalCount,
+    Value<bool>? safetyFlagged,
+    Value<String>? localDate,
+  }) {
+    return WorriesCompanion(
+      id: id ?? this.id,
+      body: body ?? this.body,
+      kind: kind ?? this.kind,
+      createdAt: createdAt ?? this.createdAt,
+      burnedAt: burnedAt ?? this.burnedAt,
+      seonsaLine: seonsaLine ?? this.seonsaLine,
+      accepted: accepted ?? this.accepted,
+      rebuttalCount: rebuttalCount ?? this.rebuttalCount,
+      safetyFlagged: safetyFlagged ?? this.safetyFlagged,
+      localDate: localDate ?? this.localDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (burnedAt.present) {
+      map['burned_at'] = Variable<DateTime>(burnedAt.value);
+    }
+    if (seonsaLine.present) {
+      map['seonsa_line'] = Variable<String>(seonsaLine.value);
+    }
+    if (accepted.present) {
+      map['accepted'] = Variable<bool>(accepted.value);
+    }
+    if (rebuttalCount.present) {
+      map['rebuttal_count'] = Variable<int>(rebuttalCount.value);
+    }
+    if (safetyFlagged.present) {
+      map['safety_flagged'] = Variable<bool>(safetyFlagged.value);
+    }
+    if (localDate.present) {
+      map['local_date'] = Variable<String>(localDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorriesCompanion(')
+          ..write('id: $id, ')
+          ..write('body: $body, ')
+          ..write('kind: $kind, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('burnedAt: $burnedAt, ')
+          ..write('seonsaLine: $seonsaLine, ')
+          ..write('accepted: $accepted, ')
+          ..write('rebuttalCount: $rebuttalCount, ')
+          ..write('safetyFlagged: $safetyFlagged, ')
+          ..write('localDate: $localDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TokenUnlocksTable extends TokenUnlocks
+    with TableInfo<$TokenUnlocksTable, TokenUnlock> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TokenUnlocksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _tokenIdMeta = const VerificationMeta(
+    'tokenId',
+  );
+  @override
+  late final GeneratedColumn<String> tokenId = GeneratedColumn<String>(
+    'token_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _unlockedAtMeta = const VerificationMeta(
+    'unlockedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> unlockedAt = GeneratedColumn<DateTime>(
+    'unlocked_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _seenMeta = const VerificationMeta('seen');
+  @override
+  late final GeneratedColumn<bool> seen = GeneratedColumn<bool>(
+    'seen',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("seen" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, tokenId, unlockedAt, seen];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'token_unlocks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TokenUnlock> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('token_id')) {
+      context.handle(
+        _tokenIdMeta,
+        tokenId.isAcceptableOrUnknown(data['token_id']!, _tokenIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tokenIdMeta);
+    }
+    if (data.containsKey('unlocked_at')) {
+      context.handle(
+        _unlockedAtMeta,
+        unlockedAt.isAcceptableOrUnknown(data['unlocked_at']!, _unlockedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_unlockedAtMeta);
+    }
+    if (data.containsKey('seen')) {
+      context.handle(
+        _seenMeta,
+        seen.isAcceptableOrUnknown(data['seen']!, _seenMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TokenUnlock map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TokenUnlock(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      tokenId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}token_id'],
+      )!,
+      unlockedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}unlocked_at'],
+      )!,
+      seen: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}seen'],
+      )!,
+    );
+  }
+
+  @override
+  $TokenUnlocksTable createAlias(String alias) {
+    return $TokenUnlocksTable(attachedDatabase, alias);
+  }
+}
+
+class TokenUnlock extends DataClass implements Insertable<TokenUnlock> {
+  final int id;
+  final String tokenId;
+  final DateTime unlockedAt;
+
+  /// 해제 연출을 이미 보여줬는가.
+  final bool seen;
+  const TokenUnlock({
+    required this.id,
+    required this.tokenId,
+    required this.unlockedAt,
+    required this.seen,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['token_id'] = Variable<String>(tokenId);
+    map['unlocked_at'] = Variable<DateTime>(unlockedAt);
+    map['seen'] = Variable<bool>(seen);
+    return map;
+  }
+
+  TokenUnlocksCompanion toCompanion(bool nullToAbsent) {
+    return TokenUnlocksCompanion(
+      id: Value(id),
+      tokenId: Value(tokenId),
+      unlockedAt: Value(unlockedAt),
+      seen: Value(seen),
+    );
+  }
+
+  factory TokenUnlock.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TokenUnlock(
+      id: serializer.fromJson<int>(json['id']),
+      tokenId: serializer.fromJson<String>(json['tokenId']),
+      unlockedAt: serializer.fromJson<DateTime>(json['unlockedAt']),
+      seen: serializer.fromJson<bool>(json['seen']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'tokenId': serializer.toJson<String>(tokenId),
+      'unlockedAt': serializer.toJson<DateTime>(unlockedAt),
+      'seen': serializer.toJson<bool>(seen),
+    };
+  }
+
+  TokenUnlock copyWith({
+    int? id,
+    String? tokenId,
+    DateTime? unlockedAt,
+    bool? seen,
+  }) => TokenUnlock(
+    id: id ?? this.id,
+    tokenId: tokenId ?? this.tokenId,
+    unlockedAt: unlockedAt ?? this.unlockedAt,
+    seen: seen ?? this.seen,
+  );
+  TokenUnlock copyWithCompanion(TokenUnlocksCompanion data) {
+    return TokenUnlock(
+      id: data.id.present ? data.id.value : this.id,
+      tokenId: data.tokenId.present ? data.tokenId.value : this.tokenId,
+      unlockedAt: data.unlockedAt.present
+          ? data.unlockedAt.value
+          : this.unlockedAt,
+      seen: data.seen.present ? data.seen.value : this.seen,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TokenUnlock(')
+          ..write('id: $id, ')
+          ..write('tokenId: $tokenId, ')
+          ..write('unlockedAt: $unlockedAt, ')
+          ..write('seen: $seen')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, tokenId, unlockedAt, seen);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TokenUnlock &&
+          other.id == this.id &&
+          other.tokenId == this.tokenId &&
+          other.unlockedAt == this.unlockedAt &&
+          other.seen == this.seen);
+}
+
+class TokenUnlocksCompanion extends UpdateCompanion<TokenUnlock> {
+  final Value<int> id;
+  final Value<String> tokenId;
+  final Value<DateTime> unlockedAt;
+  final Value<bool> seen;
+  const TokenUnlocksCompanion({
+    this.id = const Value.absent(),
+    this.tokenId = const Value.absent(),
+    this.unlockedAt = const Value.absent(),
+    this.seen = const Value.absent(),
+  });
+  TokenUnlocksCompanion.insert({
+    this.id = const Value.absent(),
+    required String tokenId,
+    required DateTime unlockedAt,
+    this.seen = const Value.absent(),
+  }) : tokenId = Value(tokenId),
+       unlockedAt = Value(unlockedAt);
+  static Insertable<TokenUnlock> custom({
+    Expression<int>? id,
+    Expression<String>? tokenId,
+    Expression<DateTime>? unlockedAt,
+    Expression<bool>? seen,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tokenId != null) 'token_id': tokenId,
+      if (unlockedAt != null) 'unlocked_at': unlockedAt,
+      if (seen != null) 'seen': seen,
+    });
+  }
+
+  TokenUnlocksCompanion copyWith({
+    Value<int>? id,
+    Value<String>? tokenId,
+    Value<DateTime>? unlockedAt,
+    Value<bool>? seen,
+  }) {
+    return TokenUnlocksCompanion(
+      id: id ?? this.id,
+      tokenId: tokenId ?? this.tokenId,
+      unlockedAt: unlockedAt ?? this.unlockedAt,
+      seen: seen ?? this.seen,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (tokenId.present) {
+      map['token_id'] = Variable<String>(tokenId.value);
+    }
+    if (unlockedAt.present) {
+      map['unlocked_at'] = Variable<DateTime>(unlockedAt.value);
+    }
+    if (seen.present) {
+      map['seen'] = Variable<bool>(seen.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TokenUnlocksCompanion(')
+          ..write('id: $id, ')
+          ..write('tokenId: $tokenId, ')
+          ..write('unlockedAt: $unlockedAt, ')
+          ..write('seen: $seen')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3436,6 +4763,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AnalyticsEventsTable analyticsEvents = $AnalyticsEventsTable(
     this,
   );
+  late final $WorriesTable worries = $WorriesTable(this);
+  late final $TokenUnlocksTable tokenUnlocks = $TokenUnlocksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3447,6 +4776,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     testResults,
     dialogueExposures,
     analyticsEvents,
+    worries,
+    tokenUnlocks,
   ];
 }
 
@@ -4047,6 +5378,14 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   Value<DateTime?> lastVisitAt,
   Value<bool> characterOnboardShown,
   Value<String?> leavesClearedDate,
+  Value<String?> dharmaName,
+  Value<int> dharmaRank,
+  Value<String?> avatarPath,
+  Value<DateTime?> ordainedAt,
+  Value<int> merit,
+  Value<int> burnedCount,
+  Value<int> bowCount,
+  Value<int> faceDownSec,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<int> id,
@@ -4063,6 +5402,14 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<DateTime?> lastVisitAt,
   Value<bool> characterOnboardShown,
   Value<String?> leavesClearedDate,
+  Value<String?> dharmaName,
+  Value<int> dharmaRank,
+  Value<String?> avatarPath,
+  Value<DateTime?> ordainedAt,
+  Value<int> merit,
+  Value<int> burnedCount,
+  Value<int> bowCount,
+  Value<int> faceDownSec,
 });
 
 class $$ProfilesTableFilterComposer
@@ -4141,6 +5488,46 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<String> get leavesClearedDate => $composableBuilder(
     column: $table.leavesClearedDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dharmaName => $composableBuilder(
+    column: $table.dharmaName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get dharmaRank => $composableBuilder(
+    column: $table.dharmaRank,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get avatarPath => $composableBuilder(
+    column: $table.avatarPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get ordainedAt => $composableBuilder(
+    column: $table.ordainedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get merit => $composableBuilder(
+    column: $table.merit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get burnedCount => $composableBuilder(
+    column: $table.burnedCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get bowCount => $composableBuilder(
+    column: $table.bowCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get faceDownSec => $composableBuilder(
+    column: $table.faceDownSec,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -4223,6 +5610,46 @@ class $$ProfilesTableOrderingComposer
     column: $table.leavesClearedDate,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get dharmaName => $composableBuilder(
+    column: $table.dharmaName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get dharmaRank => $composableBuilder(
+    column: $table.dharmaRank,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get avatarPath => $composableBuilder(
+    column: $table.avatarPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get ordainedAt => $composableBuilder(
+    column: $table.ordainedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get merit => $composableBuilder(
+    column: $table.merit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get burnedCount => $composableBuilder(
+    column: $table.burnedCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get bowCount => $composableBuilder(
+    column: $table.bowCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get faceDownSec => $composableBuilder(
+    column: $table.faceDownSec,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$ProfilesTableAnnotationComposer
@@ -4299,6 +5726,42 @@ class $$ProfilesTableAnnotationComposer
     column: $table.leavesClearedDate,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get dharmaName => $composableBuilder(
+    column: $table.dharmaName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get dharmaRank => $composableBuilder(
+    column: $table.dharmaRank,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get avatarPath => $composableBuilder(
+    column: $table.avatarPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get ordainedAt => $composableBuilder(
+    column: $table.ordainedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get merit =>
+      $composableBuilder(column: $table.merit, builder: (column) => column);
+
+  GeneratedColumn<int> get burnedCount => $composableBuilder(
+    column: $table.burnedCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get bowCount =>
+      $composableBuilder(column: $table.bowCount, builder: (column) => column);
+
+  GeneratedColumn<int> get faceDownSec => $composableBuilder(
+    column: $table.faceDownSec,
+    builder: (column) => column,
+  );
 }
 
 class $$ProfilesTableTableManager
@@ -4343,6 +5806,14 @@ class $$ProfilesTableTableManager
                 Value<DateTime?> lastVisitAt = const Value.absent(),
                 Value<bool> characterOnboardShown = const Value.absent(),
                 Value<String?> leavesClearedDate = const Value.absent(),
+                Value<String?> dharmaName = const Value.absent(),
+                Value<int> dharmaRank = const Value.absent(),
+                Value<String?> avatarPath = const Value.absent(),
+                Value<DateTime?> ordainedAt = const Value.absent(),
+                Value<int> merit = const Value.absent(),
+                Value<int> burnedCount = const Value.absent(),
+                Value<int> bowCount = const Value.absent(),
+                Value<int> faceDownSec = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
                 creditedDays: creditedDays,
@@ -4358,6 +5829,14 @@ class $$ProfilesTableTableManager
                 lastVisitAt: lastVisitAt,
                 characterOnboardShown: characterOnboardShown,
                 leavesClearedDate: leavesClearedDate,
+                dharmaName: dharmaName,
+                dharmaRank: dharmaRank,
+                avatarPath: avatarPath,
+                ordainedAt: ordainedAt,
+                merit: merit,
+                burnedCount: burnedCount,
+                bowCount: bowCount,
+                faceDownSec: faceDownSec,
               ),
           createCompanionCallback:
               ({
@@ -4375,6 +5854,14 @@ class $$ProfilesTableTableManager
                 Value<DateTime?> lastVisitAt = const Value.absent(),
                 Value<bool> characterOnboardShown = const Value.absent(),
                 Value<String?> leavesClearedDate = const Value.absent(),
+                Value<String?> dharmaName = const Value.absent(),
+                Value<int> dharmaRank = const Value.absent(),
+                Value<String?> avatarPath = const Value.absent(),
+                Value<DateTime?> ordainedAt = const Value.absent(),
+                Value<int> merit = const Value.absent(),
+                Value<int> burnedCount = const Value.absent(),
+                Value<int> bowCount = const Value.absent(),
+                Value<int> faceDownSec = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
                 creditedDays: creditedDays,
@@ -4390,6 +5877,14 @@ class $$ProfilesTableTableManager
                 lastVisitAt: lastVisitAt,
                 characterOnboardShown: characterOnboardShown,
                 leavesClearedDate: leavesClearedDate,
+                dharmaName: dharmaName,
+                dharmaRank: dharmaRank,
+                avatarPath: avatarPath,
+                ordainedAt: ordainedAt,
+                merit: merit,
+                burnedCount: burnedCount,
+                bowCount: bowCount,
+                faceDownSec: faceDownSec,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -5176,6 +6671,488 @@ typedef $$AnalyticsEventsTableProcessedTableManager =
       AnalyticsEvent,
       PrefetchHooks Function()
     >;
+typedef $$WorriesTableCreateCompanionBuilder = WorriesCompanion Function({
+  Value<int> id,
+  required String body,
+  Value<String?> kind,
+  required DateTime createdAt,
+  Value<DateTime?> burnedAt,
+  Value<String?> seonsaLine,
+  Value<bool> accepted,
+  Value<int> rebuttalCount,
+  Value<bool> safetyFlagged,
+  required String localDate,
+});
+typedef $$WorriesTableUpdateCompanionBuilder = WorriesCompanion Function({
+  Value<int> id,
+  Value<String> body,
+  Value<String?> kind,
+  Value<DateTime> createdAt,
+  Value<DateTime?> burnedAt,
+  Value<String?> seonsaLine,
+  Value<bool> accepted,
+  Value<int> rebuttalCount,
+  Value<bool> safetyFlagged,
+  Value<String> localDate,
+});
+
+class $$WorriesTableFilterComposer
+    extends Composer<_$AppDatabase, $WorriesTable> {
+  $$WorriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get burnedAt => $composableBuilder(
+    column: $table.burnedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seonsaLine => $composableBuilder(
+    column: $table.seonsaLine,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get accepted => $composableBuilder(
+    column: $table.accepted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rebuttalCount => $composableBuilder(
+    column: $table.rebuttalCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get safetyFlagged => $composableBuilder(
+    column: $table.safetyFlagged,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get localDate => $composableBuilder(
+    column: $table.localDate,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WorriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $WorriesTable> {
+  $$WorriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get burnedAt => $composableBuilder(
+    column: $table.burnedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seonsaLine => $composableBuilder(
+    column: $table.seonsaLine,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get accepted => $composableBuilder(
+    column: $table.accepted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rebuttalCount => $composableBuilder(
+    column: $table.rebuttalCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get safetyFlagged => $composableBuilder(
+    column: $table.safetyFlagged,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get localDate => $composableBuilder(
+    column: $table.localDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WorriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WorriesTable> {
+  $$WorriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get burnedAt =>
+      $composableBuilder(column: $table.burnedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get seonsaLine => $composableBuilder(
+    column: $table.seonsaLine,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get accepted =>
+      $composableBuilder(column: $table.accepted, builder: (column) => column);
+
+  GeneratedColumn<int> get rebuttalCount => $composableBuilder(
+    column: $table.rebuttalCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get safetyFlagged => $composableBuilder(
+    column: $table.safetyFlagged,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get localDate =>
+      $composableBuilder(column: $table.localDate, builder: (column) => column);
+}
+
+class $$WorriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WorriesTable,
+          Worry,
+          $$WorriesTableFilterComposer,
+          $$WorriesTableOrderingComposer,
+          $$WorriesTableAnnotationComposer,
+          $$WorriesTableCreateCompanionBuilder,
+          $$WorriesTableUpdateCompanionBuilder,
+          (Worry, BaseReferences<_$AppDatabase, $WorriesTable, Worry>),
+          Worry,
+          PrefetchHooks Function()
+        > {
+  $$WorriesTableTableManager(_$AppDatabase db, $WorriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> body = const Value.absent(),
+                Value<String?> kind = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> burnedAt = const Value.absent(),
+                Value<String?> seonsaLine = const Value.absent(),
+                Value<bool> accepted = const Value.absent(),
+                Value<int> rebuttalCount = const Value.absent(),
+                Value<bool> safetyFlagged = const Value.absent(),
+                Value<String> localDate = const Value.absent(),
+              }) => WorriesCompanion(
+                id: id,
+                body: body,
+                kind: kind,
+                createdAt: createdAt,
+                burnedAt: burnedAt,
+                seonsaLine: seonsaLine,
+                accepted: accepted,
+                rebuttalCount: rebuttalCount,
+                safetyFlagged: safetyFlagged,
+                localDate: localDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String body,
+                Value<String?> kind = const Value.absent(),
+                required DateTime createdAt,
+                Value<DateTime?> burnedAt = const Value.absent(),
+                Value<String?> seonsaLine = const Value.absent(),
+                Value<bool> accepted = const Value.absent(),
+                Value<int> rebuttalCount = const Value.absent(),
+                Value<bool> safetyFlagged = const Value.absent(),
+                required String localDate,
+              }) => WorriesCompanion.insert(
+                id: id,
+                body: body,
+                kind: kind,
+                createdAt: createdAt,
+                burnedAt: burnedAt,
+                seonsaLine: seonsaLine,
+                accepted: accepted,
+                rebuttalCount: rebuttalCount,
+                safetyFlagged: safetyFlagged,
+                localDate: localDate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WorriesTable, Worry>(table),
+                  BaseReferences<_$AppDatabase, $WorriesTable, Worry>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WorriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WorriesTable,
+      Worry,
+      $$WorriesTableFilterComposer,
+      $$WorriesTableOrderingComposer,
+      $$WorriesTableAnnotationComposer,
+      $$WorriesTableCreateCompanionBuilder,
+      $$WorriesTableUpdateCompanionBuilder,
+      (Worry, BaseReferences<_$AppDatabase, $WorriesTable, Worry>),
+      Worry,
+      PrefetchHooks Function()
+    >;
+typedef $$TokenUnlocksTableCreateCompanionBuilder =
+    TokenUnlocksCompanion Function({
+      Value<int> id,
+      required String tokenId,
+      required DateTime unlockedAt,
+      Value<bool> seen,
+    });
+typedef $$TokenUnlocksTableUpdateCompanionBuilder =
+    TokenUnlocksCompanion Function({
+      Value<int> id,
+      Value<String> tokenId,
+      Value<DateTime> unlockedAt,
+      Value<bool> seen,
+    });
+
+class $$TokenUnlocksTableFilterComposer
+    extends Composer<_$AppDatabase, $TokenUnlocksTable> {
+  $$TokenUnlocksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tokenId => $composableBuilder(
+    column: $table.tokenId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get seen => $composableBuilder(
+    column: $table.seen,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TokenUnlocksTableOrderingComposer
+    extends Composer<_$AppDatabase, $TokenUnlocksTable> {
+  $$TokenUnlocksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tokenId => $composableBuilder(
+    column: $table.tokenId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get seen => $composableBuilder(
+    column: $table.seen,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TokenUnlocksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TokenUnlocksTable> {
+  $$TokenUnlocksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get tokenId =>
+      $composableBuilder(column: $table.tokenId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get unlockedAt => $composableBuilder(
+    column: $table.unlockedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get seen =>
+      $composableBuilder(column: $table.seen, builder: (column) => column);
+}
+
+class $$TokenUnlocksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TokenUnlocksTable,
+          TokenUnlock,
+          $$TokenUnlocksTableFilterComposer,
+          $$TokenUnlocksTableOrderingComposer,
+          $$TokenUnlocksTableAnnotationComposer,
+          $$TokenUnlocksTableCreateCompanionBuilder,
+          $$TokenUnlocksTableUpdateCompanionBuilder,
+          (
+            TokenUnlock,
+            BaseReferences<_$AppDatabase, $TokenUnlocksTable, TokenUnlock>,
+          ),
+          TokenUnlock,
+          PrefetchHooks Function()
+        > {
+  $$TokenUnlocksTableTableManager(_$AppDatabase db, $TokenUnlocksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TokenUnlocksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TokenUnlocksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TokenUnlocksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> tokenId = const Value.absent(),
+                Value<DateTime> unlockedAt = const Value.absent(),
+                Value<bool> seen = const Value.absent(),
+              }) => TokenUnlocksCompanion(
+                id: id,
+                tokenId: tokenId,
+                unlockedAt: unlockedAt,
+                seen: seen,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String tokenId,
+                required DateTime unlockedAt,
+                Value<bool> seen = const Value.absent(),
+              }) => TokenUnlocksCompanion.insert(
+                id: id,
+                tokenId: tokenId,
+                unlockedAt: unlockedAt,
+                seen: seen,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TokenUnlocksTable, TokenUnlock>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $TokenUnlocksTable,
+                    TokenUnlock
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TokenUnlocksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TokenUnlocksTable,
+      TokenUnlock,
+      $$TokenUnlocksTableFilterComposer,
+      $$TokenUnlocksTableOrderingComposer,
+      $$TokenUnlocksTableAnnotationComposer,
+      $$TokenUnlocksTableCreateCompanionBuilder,
+      $$TokenUnlocksTableUpdateCompanionBuilder,
+      (
+        TokenUnlock,
+        BaseReferences<_$AppDatabase, $TokenUnlocksTable, TokenUnlock>,
+      ),
+      TokenUnlock,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5192,4 +7169,8 @@ class $AppDatabaseManager {
       $$DialogueExposuresTableTableManager(_db, _db.dialogueExposures);
   $$AnalyticsEventsTableTableManager get analyticsEvents =>
       $$AnalyticsEventsTableTableManager(_db, _db.analyticsEvents);
+  $$WorriesTableTableManager get worries =>
+      $$WorriesTableTableManager(_db, _db.worries);
+  $$TokenUnlocksTableTableManager get tokenUnlocks =>
+      $$TokenUnlocksTableTableManager(_db, _db.tokenUnlocks);
 }

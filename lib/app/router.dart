@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/character_onboard_screen.dart';
 import '../features/onboarding/ordination_screen.dart';
-import '../features/play/moktak_screen.dart';
 import '../features/play/play_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/records/records_screen.dart';
@@ -37,7 +36,6 @@ class Routes {
 
   // 놀이
   static const burn = '/play/burn';
-  static const moktak = '/play/moktak';
 
   // 수행
   static const sessionSetup = '/session/setup';
@@ -85,7 +83,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 놀이 — HUD 없이 전체 화면
       GoRoute(path: Routes.burn, builder: (_, _) => const BurnScreen()),
-      GoRoute(path: Routes.moktak, builder: (_, _) => const MoktakScreen()),
 
       GoRoute(
           path: Routes.sessionSetup,

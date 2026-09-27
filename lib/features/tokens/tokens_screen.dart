@@ -6,10 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/theme.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
+import '../shell/tab_top_bar.dart';
 import 'token_catalog.dart';
 
-/// 「증표」 탭 — 비움의 증표.
-/// 돈으로는 못 산다. 수행 이력이 열쇠다.
+/// 「증표」 — 비움의 증표.
+/// 절 탭에서 뺀 108배·태운 번뇌·절 문 연속이 여기 모인다.
 class TokensScreen extends ConsumerStatefulWidget {
   const TokensScreen({super.key});
 
@@ -33,9 +34,8 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
         data: (state) {
-          final unlockedCount = kTokenCatalog
-              .where((t) => t.isUnlocked(state.stats))
-              .length;
+          final unlockedCount =
+              kTokenCatalog.where((t) => t.isUnlocked(state.stats)).length;
 
           final visible = kTokenCatalog.where((t) {
             if (_filter == 1) return t.isUnlocked(state.stats);
@@ -43,79 +43,59 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
             return true;
           }).toList();
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(
-                Tokens.gutter, 24, Tokens.gutter, kHudClearance),
+          return Column(
             children: [
-              Text('비움의 증표', style: text.displayMedium),
-              const SizedBox(height: 6),
-              Text(
-                '돈으로만은 못 산다. 수행 이력이 열쇠다.',
-                style:
-                    text.bodyMedium?.copyWith(color: fg.withValues(alpha: 0.6)),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  _FilterChip(
-                    label: '전체',
-                    selected: _filter == 0,
-                    onTap: () => setState(() => _filter = 0),
-                  ),
-                  const SizedBox(width: 8),
-                  _FilterChip(
-                    label: '해제됨 $unlockedCount',
-                    selected: _filter == 1,
-                    onTap: () => setState(() => _filter = 1),
-                  ),
-                  const SizedBox(width: 8),
-                  _FilterChip(
-                    label: '시즌',
-                    selected: _filter == 2,
-                    onTap: () => setState(() => _filter = 2),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 18),
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 0.78,
-                children: [
-                  for (final t in visible)
-                    _TokenCard(token: t, stats: state.stats),
-                ],
-              ),
-              const SizedBox(height: 18),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF221F1A)
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: fg.withValues(alpha: 0.08)),
-                ),
-                child: RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                        fontSize: 12,
-                        height: 1.5,
-                        color: fg.withValues(alpha: 0.6)),
-                    children: [
-                      const TextSpan(text: '해제된 증표는 프로필에 박힌다. 산 사람보다 '),
-                      TextSpan(
-                        text: '해낸 사람',
-                        style: TextStyle(
-                            color: fg, fontWeight: FontWeight.w700),
-                      ),
-                      const TextSpan(text: '이 보이게.'),
-                    ],
-                  ),
+              const TabTopBar(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                      Tokens.gutter, 16, Tokens.gutter, kHudClearance),
+                  children: [
+                    Text('비움의 증표', style: text.displayMedium),
+                    const SizedBox(height: 6),
+                    Text(
+                      '돈으로만은 못 산다. 수행 이력이 열쇠다.',
+                      style: text.bodyMedium
+                          ?.copyWith(color: fg.withValues(alpha: 0.6)),
+                    ),
+                    const SizedBox(height: 20),
+                    _Stats(state: state),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        _Filter(
+                          label: '전체',
+                          selected: _filter == 0,
+                          onTap: () => setState(() => _filter = 0),
+                        ),
+                        const SizedBox(width: 8),
+                        _Filter(
+                          label: '해제됨 $unlockedCount',
+                          selected: _filter == 1,
+                          onTap: () => setState(() => _filter = 1),
+                        ),
+                        const SizedBox(width: 8),
+                        _Filter(
+                          label: '시즌',
+                          selected: _filter == 2,
+                          onTap: () => setState(() => _filter = 2),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 0.88,
+                      children: [
+                        for (final t in visible)
+                          _TokenCard(token: t, stats: state.stats),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -126,8 +106,73 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
   }
 }
 
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
+/// 절 탭에서 옮겨온 누적값. 한 줄에 셋.
+class _Stats extends StatelessWidget {
+  const _Stats({required this.state});
+  final TempleHomeState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fg = Theme.of(context).colorScheme.onSurface;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF221F1A) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: fg.withValues(alpha: 0.07)),
+      ),
+      child: Row(
+        children: [
+          _Stat(label: '엎기', value: '${state.bowCount}'),
+          _Divider(color: fg.withValues(alpha: 0.08)),
+          _Stat(label: '태운 번뇌', value: '${state.burnedCount}'),
+          _Divider(color: fg.withValues(alpha: 0.08)),
+          _Stat(label: '절 문 연속', value: '${state.gate.streakDays}일'),
+        ],
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider({required this.color});
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) =>
+      Container(width: 1, height: 28, color: color);
+}
+
+class _Stat extends StatelessWidget {
+  const _Stat({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = Theme.of(context).colorScheme.onSurface;
+    return Expanded(
+      child: Column(
+        children: [
+          Text(value,
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontSize: 22)),
+          const SizedBox(height: 2),
+          Text(label,
+              style:
+                  TextStyle(fontSize: 11, color: fg.withValues(alpha: 0.5))),
+        ],
+      ),
+    );
+  }
+}
+
+class _Filter extends StatelessWidget {
+  const _Filter({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -150,7 +195,7 @@ class _FilterChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? Tokens.ink : Colors.transparent,
           border: Border.all(
-              color: selected ? Tokens.ink : fg.withValues(alpha: 0.2)),
+              color: selected ? Tokens.ink : fg.withValues(alpha: 0.18)),
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(
@@ -166,6 +211,7 @@ class _FilterChip extends StatelessWidget {
   }
 }
 
+/// 카드는 그림 · 이름 · 상태 한 줄까지만. 잠긴 것만 진척바를 더 붙인다.
 class _TokenCard extends StatelessWidget {
   const _TokenCard({required this.token, required this.stats});
 
@@ -187,9 +233,8 @@ class _TokenCard extends StatelessWidget {
             : (isDark ? const Color(0xFF221F1A) : Colors.white),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: unlocked && !season
-              ? Tokens.saffron
-              : fg.withValues(alpha: 0.07),
+          color:
+              unlocked && !season ? Tokens.saffron : fg.withValues(alpha: 0.07),
           width: unlocked && !season ? 2 : 1,
         ),
       ),
@@ -211,7 +256,7 @@ class _TokenCard extends StatelessWidget {
                 children: [
                   Center(
                     child: CustomPaint(
-                      size: const Size(64, 64),
+                      size: const Size(62, 62),
                       painter: _BeadsPainter(
                         dim: !unlocked,
                         color: season ? const Color(0xFFE6C56A) : null,
@@ -240,6 +285,8 @@ class _TokenCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             token.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -248,7 +295,7 @@ class _TokenCard extends StatelessWidget {
           ),
           const SizedBox(height: 3),
           Text(
-            unlocked ? '해제됨 · ${token.requirementLabel}' : token.requirementLabel,
+            unlocked ? '해제됨' : token.progressLabel(stats),
             style: TextStyle(
               fontSize: 11,
               fontWeight: unlocked ? FontWeight.w700 : null,
@@ -256,25 +303,18 @@ class _TokenCard extends StatelessWidget {
                   ? const Color(0xFF2E7D4F)
                   : (season
                       ? const Color(0xFFA39B90)
-                      : fg.withValues(alpha: 0.55)),
+                      : fg.withValues(alpha: 0.5)),
             ),
           ),
           if (!unlocked && token.goal > 0) ...[
-            const SizedBox(height: 8),
-            Text(
-              token.progressLabel(stats),
-              style:
-                  TextStyle(fontSize: 11, color: fg.withValues(alpha: 0.5)),
-            ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(999),
               child: LinearProgressIndicator(
                 value: token.ratio(stats),
-                minHeight: 6,
+                minHeight: 5,
                 backgroundColor: fg.withValues(alpha: 0.08),
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(Tokens.temple),
+                valueColor: const AlwaysStoppedAnimation<Color>(Tokens.temple),
               ),
             ),
           ],

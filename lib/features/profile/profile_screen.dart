@@ -1,65 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../app/providers.dart';
+import '../../app/router.dart';
 import '../../app/theme.dart';
-import '../temple/temple_stage.dart';
+import '../avatar/avatar_equip.dart';
+import '../avatar/monk_figure.dart';
+import '../home/home_controller.dart';
+import '../ordination/dharma_rank.dart';
 
+/// 프로필. 탭에서 뺀 것들이 여기로 모인다 — 기록·설정·테스트.
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profile = ref.watch(profileProvider).value;
-    final repo = ref.watch(profileRepositoryProvider);
+    final home = ref.watch(homeStateProvider).value;
     final text = Theme.of(context).textTheme;
-
-    if (profile == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    final last = dharmaLastSyllable(profile.creditedDays);
-    final dharma = (profile.dharmaFirst != null && last != null)
-        ? '${profile.dharmaFirst}$last'
-        : null;
+    final fg = Theme.of(context).colorScheme.onSurface;
 
     return Scaffold(
       appBar: AppBar(title: const Text('프로필')),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(Tokens.gutter),
+          padding: const EdgeInsets.fromLTRB(
+              Tokens.gutter, 8, Tokens.gutter, Tokens.gutter),
           children: [
-            Text(dharma ?? '법명 없음', style: text.displayMedium),
-            const SizedBox(height: 4),
-            Text('인정일 ${profile.creditedDays}',
-                style: text.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.55))),
-            const Divider(height: 40),
-            Text('법명 앞 글자', style: text.titleLarge),
-            const SizedBox(height: 4),
-            Text('바꿔도 뒷 글자는 그대로다.',
-                style: text.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.55))),
-            const SizedBox(height: 12),
-            for (final entry in kDharmaFirstSyllables.entries)
-              RadioGroupScope(
-                selected: profile.dharmaFirst,
-                onSelect: (v) => repo.setDharmaFirst(v),
-                value: entry.key,
-                label: '${entry.key}${last ?? ''} — ${entry.value}',
+            Center(
+              child: Column(
+                children: [
+                  MonkFigure(equip: home?.equip ?? kDefaultEquip, size: 130),
+                  const SizedBox(height: 10),
+                  Text(home?.dharmaName ?? '법명 없음',
+                      style: text.displayMedium?.copyWith(fontSize: 26)),
+                  const SizedBox(height: 2),
+                  Text(
+                    home == null
+                        ? ''
+                        : '${home.station} · 엎기 ${home.bowCount}회',
+                    style: text.bodyMedium
+                        ?.copyWith(color: fg.withValues(alpha: 0.55)),
+                  ),
+                  if (home != null) ...[
+                    const SizedBox(height: 10),
+                    _NextRank(bowCount: home.bowCount),
+                  ],
+                ],
               ),
-            const SizedBox(height: 12),
-            if (profile.dharmaFirst != null)
-              TextButton(
-                onPressed: () => repo.setDharmaFirst(null),
-                child: const Text('법명 없애기'),
-              ),
+            ),
+            const SizedBox(height: 28),
+            _Row(
+              title: '내 마음 알아보기',
+              subtitle: '16문항 · 2분',
+              onTap: () => context.push(Routes.test),
+            ),
+            _Row(
+              title: '기록',
+              subtitle: '엎어둔 날들',
+              onTap: () => context.push(Routes.records),
+            ),
+            _Row(
+              title: '설정',
+              subtitle: '알림 · 기록 저장 · 데이터 삭제',
+              onTap: () => context.push(Routes.settings),
+            ),
           ],
         ),
       ),
@@ -67,45 +71,80 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-/// 라디오 대신 쓰는 단순 선택 행. 탭 영역 44 이상을 보장한다.
-class RadioGroupScope extends StatelessWidget {
-  const RadioGroupScope({
-    super.key,
-    required this.selected,
-    required this.onSelect,
-    required this.value,
-    required this.label,
-  });
-
-  final String? selected;
-  final ValueChanged<String> onSelect;
-  final String value;
-  final String label;
+class _NextRank extends StatelessWidget {
+  const _NextRank({required this.bowCount});
+  final int bowCount;
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = selected == value;
-    return InkWell(
-      onTap: () => onSelect(value),
-      child: Container(
-        constraints: const BoxConstraints(minHeight: Tokens.minTap),
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Icon(
-              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-              size: 20,
-              color: isSelected
-                  ? Tokens.saffron
-                  : Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.4),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Text(label)),
-          ],
+    final next = nextRankAfter(bowCount);
+    if (next == null) return const SizedBox.shrink();
+    final left = next.requiredBows - bowCount;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Tokens.temple.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        '${next.station}까지 $left회',
+        style: const TextStyle(
+            fontSize: 12, fontWeight: FontWeight.w600, color: Tokens.temple),
+      ),
+    );
+  }
+}
+
+class _Row extends StatelessWidget {
+  const _Row({
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fg = Theme.of(context).colorScheme.onSurface;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF221F1A) : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: fg.withValues(alpha: 0.07)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 2),
+                    Text(subtitle,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: fg.withValues(alpha: 0.5))),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right,
+                  color: fg.withValues(alpha: 0.35)),
+            ],
+          ),
         ),
       ),
     );

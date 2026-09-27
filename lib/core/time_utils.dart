@@ -1,5 +1,25 @@
 import 'package:intl/intl.dart';
 
+/// 한글 받침에 따라 조사를 고른다. "지안으로" / "무념으로" / "보월로".
+String withParticle(String word, String afterConsonant, String afterVowel) {
+  if (word.isEmpty) return word + afterVowel;
+  final code = word.codeUnitAt(word.length - 1);
+  // 한글 음절 영역이 아니면 받침 없는 쪽으로 둔다.
+  if (code < 0xAC00 || code > 0xD7A3) return word + afterVowel;
+  final hasFinal = (code - 0xAC00) % 28 != 0;
+  return word + (hasFinal ? afterConsonant : afterVowel);
+}
+
+/// "~으로 / ~로". 단, ㄹ 받침은 "로"를 쓴다.
+String withRo(String word) {
+  if (word.isEmpty) return word;
+  final code = word.codeUnitAt(word.length - 1);
+  if (code < 0xAC00 || code > 0xD7A3) return '$word로';
+  final finalIndex = (code - 0xAC00) % 28;
+  // 8 = ㄹ
+  return '$word${finalIndex == 0 || finalIndex == 8 ? '로' : '으로'}';
+}
+
 final _dateKeyFormat = DateFormat('yyyy-MM-dd');
 
 /// 인정일 집계 키. 세션은 시작 시각의 로컬 날짜에 귀속된다 (FR-4.1).

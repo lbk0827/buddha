@@ -101,9 +101,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('단주'),
+              title: const Text('증표'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(Routes.goods),
+              onTap: () => context.go(Routes.tokens),
             ),
 
             const _SectionLabel('데이터'),

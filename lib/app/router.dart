@@ -1,12 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/goods/goods_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/character_onboard_screen.dart';
+import '../features/onboarding/ordination_screen.dart';
+import '../features/play/moktak_screen.dart';
+import '../features/play/play_screen.dart';
+import '../features/profile/profile_screen.dart';
 import '../features/records/records_screen.dart';
 import '../features/roots/root_screen.dart';
 import '../features/safety/safety_screen.dart';
+import '../features/seonsa/seonsa_screen.dart';
 import '../features/session/screens/session_done_screen.dart';
 import '../features/session/screens/session_interrupt_screen.dart';
 import '../features/session/screens/session_ready_screen.dart';
@@ -14,21 +19,34 @@ import '../features/session/screens/session_repeat_screen.dart';
 import '../features/session/screens/session_running_screen.dart';
 import '../features/session/screens/session_setup_screen.dart';
 import '../features/settings/settings_screen.dart';
+import '../features/shell/app_shell.dart';
 import '../features/temple/temple_screen.dart';
 import '../features/test/screens/checkin_screen.dart';
 import '../features/test/screens/test_intro_screen.dart';
 import '../features/test/screens/test_question_screen.dart';
 import '../features/test/screens/test_result_screen.dart';
-import '../features/profile/profile_screen.dart';
+import '../features/tokens/tokens_screen.dart';
+import '../features/worry/burn_screen.dart';
 
 class Routes {
+  // 하단 HUD 네 탭
   static const home = '/';
+  static const play = '/play';
+  static const seonsa = '/seonsa';
+  static const tokens = '/tokens';
+
+  // 놀이
+  static const burn = '/play/burn';
+  static const moktak = '/play/moktak';
+
+  // 수행
   static const sessionSetup = '/session/setup';
   static const sessionReady = '/session/ready';
   static const sessionRunning = '/session/running';
   static const sessionInterrupt = '/session/interrupt';
   static const sessionDone = '/session/done';
   static const sessionRepeat = '/session/repeat';
+
   static const safety = '/safety';
   static const temple = '/temple';
   static const records = '/records';
@@ -36,19 +54,39 @@ class Routes {
   static const testResult = '/test/result';
   static const checkin = '/checkin';
   static const profile = '/profile';
-  static const goods = '/goods';
   static const settings = '/settings';
+  static const ordination = '/onboard/ordination';
   static const characterOnboard = '/onboard/character';
 
   static String root(String id) => '/roots/$id';
   static String question(int n) => '/test/q/$n';
 }
 
+final _shellKey = GlobalKey<NavigatorState>();
+final _rootKey = GlobalKey<NavigatorState>();
+
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    navigatorKey: _rootKey,
     initialLocation: Routes.home,
     routes: [
-      GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
+      // 하단 HUD가 붙는 네 탭.
+      ShellRoute(
+        navigatorKey: _shellKey,
+        builder: (context, state, child) =>
+            AppShell(location: state.uri.path, child: child),
+        routes: [
+          GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
+          GoRoute(path: Routes.play, builder: (_, _) => const PlayScreen()),
+          GoRoute(path: Routes.seonsa, builder: (_, _) => const SeonsaScreen()),
+          GoRoute(path: Routes.tokens, builder: (_, _) => const TokensScreen()),
+        ],
+      ),
+
+      // 놀이 — HUD 없이 전체 화면
+      GoRoute(path: Routes.burn, builder: (_, _) => const BurnScreen()),
+      GoRoute(path: Routes.moktak, builder: (_, _) => const MoktakScreen()),
+
       GoRoute(
           path: Routes.sessionSetup,
           builder: (_, state) => SessionSetupScreen(
@@ -72,6 +110,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: Routes.sessionRepeat,
           builder: (_, _) => const SessionRepeatScreen()),
+
       GoRoute(path: Routes.safety, builder: (_, _) => const SafetyScreen()),
       GoRoute(path: Routes.temple, builder: (_, _) => const TempleScreen()),
       GoRoute(path: Routes.records, builder: (_, _) => const RecordsScreen()),
@@ -85,8 +124,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           builder: (_, _) => const TestResultScreen()),
       GoRoute(path: Routes.checkin, builder: (_, _) => const CheckinScreen()),
       GoRoute(path: Routes.profile, builder: (_, _) => const ProfileScreen()),
-      GoRoute(path: Routes.goods, builder: (_, _) => const GoodsScreen()),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsScreen()),
+      GoRoute(
+          path: Routes.ordination,
+          builder: (_, _) => const OrdinationScreen()),
       GoRoute(
           path: Routes.characterOnboard,
           builder: (_, _) => const CharacterOnboardScreen()),

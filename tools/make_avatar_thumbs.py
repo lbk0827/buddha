@@ -19,10 +19,18 @@ OUT = SRC / "thumbs"
 THUMB = 192
 PAD = 0.06  # 잘라낸 영역 둘레 여백 비율
 
+# 베이스 실루엣을 재보면 귀가 y 320~470 까지 내려오고 목은 y 480 에서 좁아진다.
+# 이 두 숫자가 아래 두 창을 가른다.
+NECK_Y = 478
+
 # 머리 아이템은 「머리에 씌운 모습」으로 보여준다.
 # 모자만 따로 띄우면 민머리와 종류가 달라 보이고, 어느 쪽이 위인지도 안 읽힌다.
 # 네 개를 같은 창으로 잘라야 크기·위치가 서로 맞는다.
-HEAD_WINDOW = (250, 40, 775, 470)
+# 가로는 삿갓 챙(x 212~812)까지, 세로는 모자 꼭대기부터 턱 아래까지 담는다.
+HEAD_WINDOW = (195, 0, 830, 515)
+
+# 가사는 목 아래만 보여준다. 얼굴이 같이 나오면 옷이 아니라 캐릭터로 읽힌다.
+ROBE_CROP = (270, NECK_Y, 755, 940)
 
 ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
 
@@ -70,12 +78,10 @@ def main() -> None:
 
     saffron = Image.open(SRC / "base_saffron.png").convert("RGBA")
 
-    # 가사는 겹치는 옷이 아니라 몸 그림 자체다. 일부만 자르면 목 잘린 몸이 된다.
     for name in ROBES:
         image = Image.open(SRC / f"{name}.png").convert("RGBA")
-        box = pad_box(alpha_bbox(image), *image.size)
-        square_fit(image.crop(box)).save(OUT / f"{name}.png", optimize=True)
-        print(f"{name} (전신)")
+        square_fit(image.crop(ROBE_CROP)).save(OUT / f"{name}.png", optimize=True)
+        print(f"{name} (목 아래)")
 
     for name in HEADS:
         worn = saffron.copy()

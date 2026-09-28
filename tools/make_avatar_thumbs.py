@@ -10,11 +10,14 @@ assets/avatar/thumbs/*.png (192×192)로 저장한다.
 
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets" / "avatar"
 OUT = SRC / "thumbs"
+
+# 납품 원본. 옷장용 「물건만」 그림은 앱에 나가지 않고 여기서만 쓴다.
+RAW = ROOT / "Imgs"
 
 THUMB = 192
 PAD = 0.06  # 잘라낸 영역 둘레 여백 비율
@@ -30,7 +33,12 @@ NECK_Y = 478
 HEAD_WINDOW = (195, 0, 830, 515)
 
 # 가사는 목 아래만 보여준다. 얼굴이 같이 나오면 옷이 아니라 캐릭터로 읽힌다.
-ROBE_CROP = (270, NECK_Y, 755, 940)
+# 목(478)에서 바로 자르면 살색 목 밑동이 한 줄 남아 어두운 가사에서 선처럼
+# 도드라진다. 어깨가 천에 덮이는 500 부터 자른다.
+ROBE_CROP = (270, 500, 755, 940)
+
+# 민머리는 머리까지만. 어깨가 들어가면 혼자 작은 캐릭터처럼 보인다.
+SHAVED_WINDOW = (255, 85, 770, 495)
 
 ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
 
@@ -61,6 +69,49 @@ def square_fit(subject: Image.Image, size: int = THUMB) -> Image.Image:
     return canvas
 
 
+def fill_holes(mask: Image.Image) -> Image.Image:
+    """마스크 안쪽에 뚫린 구멍만 메운다.
+
+    모자 색이 피부색과 비슷한 지점에서는 차이가 임계값에 못 미쳐 구멍이
+    난다. 팽창·수축으로 메우면 윤곽이 뭉개지므로, 테두리에서 닿지 않는
+    배경만 골라 채운다.
+    """
+    background = mask.point(lambda v: 0 if v else 255)
+    ImageDraw.floodfill(background, (0, 0), 0)
+    return ImageChops.lighter(mask, background)
+
+
+def extract_item(layer: Image.Image, bare_head: Image.Image,
+                 threshold: int = 18) -> Image.Image:
+    """머리 레이어에서 「베이스 얼굴과 달라진 부분」만 떼어낸다.
+
+    머리 아이템은 「베이스 얼굴 + 물건」으로 만들어져 있어서, 맨머리와
+    비교하면 남는 게 곧 물건이다. 옷장 목록에 얼굴이 줄줄이 나오면
+    답답해서 물건만 보여준다.
+    """
+    rgb = ImageChops.difference(layer.convert("RGB"), bare_head.convert("RGB"))
+    r, g, b = rgb.split()
+    diff = ImageChops.lighter(ImageChops.lighter(r, g), b)
+
+    # 물건이 머리 밖으로 튀어나온 부분은 색이 아니라 알파가 달라진다.
+    alpha_diff = ImageChops.difference(
+        layer.getchannel("A"), bare_head.getchannel("A"))
+
+    mask = ImageChops.lighter(diff, alpha_diff)
+    mask = mask.point(lambda v: 255 if v >= threshold else 0)
+
+    # 머리 레이어와 비교용 맨머리는 잘린 높이가 몇 줄 다를 수 있다. 그 차이가
+    # 가로줄로 남으므로 목 근처는 아예 뺀다. 모자가 거기까지 올 일은 없다.
+    mask.paste(0, (0, NECK_Y - 30, mask.width, mask.height))
+
+    mask = mask.filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.MinFilter(5))
+    mask = fill_holes(mask)
+
+    out = layer.copy()
+    out.putalpha(ImageChops.multiply(layer.getchannel("A"), mask))
+    return out
+
+
 def pad_box(box, width, height):
     x0, y0, x1, y1 = box
     dx = round((x1 - x0) * PAD)
@@ -83,12 +134,36 @@ def main() -> None:
         square_fit(image.crop(ROBE_CROP)).save(OUT / f"{name}.png", optimize=True)
         print(f"{name} (목 아래)")
 
+    # 머리 레이어에서 물건만 떼어낼 때 비교 대상이 되는 맨머리.
+    bare_head = saffron.copy()
+    bare_alpha = saffron.getchannel("A").copy()
+    bare_alpha.paste(0, (0, NECK_Y, 1024, 1024))
+    bare_head.putalpha(bare_alpha)
+
     for name in HEADS:
-        worn = saffron.copy()
-        if name != "head_shaved":
-            worn.alpha_composite(Image.open(SRC / f"{name}.png").convert("RGBA"))
-        square_fit(worn.crop(HEAD_WINDOW)).save(OUT / f"{name}.png", optimize=True)
-        print(f"{name} (머리에 씌운 모습)")
+        # 민머리는 씌울 게 없다. 머리 자체가 아이템이라 머리를 보여준다.
+        if name == "head_shaved":
+            square_fit(saffron.crop(SHAVED_WINDOW)).save(
+                OUT / f"{name}.png", optimize=True)
+            print(f"{name} (맨머리)")
+            continue
+
+        # 물건만 따로 받은 게 있으면 그걸 우선한다.
+        standalone = RAW / f"{name}_item.png"
+        if standalone.exists():
+            image = Image.open(standalone).convert("RGBA")
+            source = "따로 받은 그림"
+        else:
+            image = extract_item(
+                Image.open(SRC / f"{name}.png").convert("RGBA"), bare_head)
+            source = "머리에서 떼어냄"
+
+        box = alpha_bbox(image)
+        if box is None:
+            raise SystemExit(f"{name}: 남은 게 없다")
+        square_fit(image.crop(pad_box(box, *image.size))).save(
+            OUT / f"{name}.png", optimize=True)
+        print(f"{name} ({source})")
 
     for name in ITEMS:
         image = Image.open(SRC / f"{name}.png").convert("RGBA")

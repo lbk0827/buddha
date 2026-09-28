@@ -81,12 +81,30 @@ def fill_holes(mask: Image.Image) -> Image.Image:
     return ImageChops.lighter(mask, background)
 
 
+def keep_top_blob(mask: Image.Image) -> Image.Image:
+    """맨 위 픽셀과 이어진 덩어리만 남긴다.
+
+    머리 레이어는 「모자 쓴 얼굴」을 따로 그려 받은 것이라 눈·백호·귀
+    윤곽이 베이스와 몇 픽셀씩 어긋난다. 그 차이도 조각으로 남는데, 모자는
+    늘 맨 위에서 시작하는 한 덩어리이니 거기 붙은 것만 고른다.
+    """
+    box = mask.getbbox()
+    if box is None:
+        return mask
+    top = box[1]
+    seed = next(x for x in range(mask.width) if mask.getpixel((x, top)))
+    marked = mask.copy()
+    ImageDraw.floodfill(marked, (seed, top), 128)
+    return marked.point(lambda v: 255 if v == 128 else 0)
+
+
 def extract_item(layer: Image.Image, bare_head: Image.Image,
-                 threshold: int = 18) -> Image.Image:
+                 threshold: int = 45) -> Image.Image:
     """머리 레이어에서 「베이스 얼굴과 달라진 부분」만 떼어낸다.
 
-    머리 아이템은 「베이스 얼굴 + 물건」으로 만들어져 있어서, 맨머리와
-    비교하면 남는 게 곧 물건이다. 옷장 목록에 얼굴이 줄줄이 나오면
+    머리 아이템은 「모자 쓴 얼굴」이라 맨머리와 비교하면 남는 게 곧
+    물건이다. 얼굴도 따로 그린 것이라 살색이 조금씩 다르다. 기준을 낮추면
+    챙 아래 이마가 띠처럼 딸려 나온다. 옷장 목록에 얼굴이 줄줄이 나오면
     답답해서 물건만 보여준다.
     """
     rgb = ImageChops.difference(layer.convert("RGB"), bare_head.convert("RGB"))
@@ -104,7 +122,10 @@ def extract_item(layer: Image.Image, bare_head: Image.Image,
     # 가로줄로 남으므로 목 근처는 아예 뺀다. 모자가 거기까지 올 일은 없다.
     mask.paste(0, (0, NECK_Y - 30, mask.width, mask.height))
 
+    # 어긋난 얼굴 윤곽은 가는 선으로 남는다. 먼저 깎아 모자와 떼어 놓는다.
+    mask = mask.filter(ImageFilter.MinFilter(7)).filter(ImageFilter.MaxFilter(7))
     mask = mask.filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.MinFilter(5))
+    mask = keep_top_blob(mask)
     mask = fill_holes(mask)
 
     out = layer.copy()

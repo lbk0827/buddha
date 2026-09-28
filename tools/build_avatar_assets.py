@@ -2,13 +2,16 @@
 
 Imgs/ (납품 원본) → assets/avatar/ (앱에 나가는 것)
 
-머리 아이템은 「전신 + 모자」로 받아서 여기서 목 위만 잘라낸다.
-GPT에게 목 아래를 지우라고 시키면 잘 못하는데, 베이스와 같은 좌표계라
-우리가 자르는 건 정확하다. 자세한 건 docs/부처님_머리_재작업요청서.md.
+머리 아이템은 「모자 쓴 얼굴」을 통째로 받는다. 받는 형태는 두 가지다.
 
-**위치나 크기를 여기서 보정하지 않는다.** 아이템이 어긋나 보이면 그건
-생성 단계에서 잡아야 한다. 여기서 손으로 맞추기 시작하면 아이템마다
-숫자를 붙들고 있어야 한다.
+- head_*_face.png — 얼굴만 그린 그림. 캔버스도 배율도 베이스와 다르므로
+  베이스 얼굴에 포개지게 옮겨 놓는다 (FACE_FIT). 모자만 따로 그려 얹으면
+  모자가 머리를 덮지 못하고 뚜껑처럼 올라앉는다. 그래서 얼굴째 받는다.
+- head_*_full.png — 베이스를 편집한 전신. 좌표가 같으니 목 위만 자른다.
+
+**아이템을 보기 좋게 옮기는 보정은 하지 않는다.** FACE_FIT 은 「얼굴을
+베이스 얼굴에 겹치는」 정합일 뿐이고, 그 결과가 베이스 머리를 다 덮는지
+여기서 검사한다. 모자가 크거나 낮아 보이면 그건 생성 단계에서 잡는다.
 
     python tools/build_avatar_assets.py
     python tools/make_avatar_thumbs.py    # 썸네일은 이 결과에서 다시 뽑는다
@@ -31,6 +34,20 @@ NECK_Y = 478
 
 # 잘린 끝을 몇 픽셀 흐리게 해서 경계선이 서지 않게 한다.
 NECK_FEATHER = 6
+
+# head_*_face.png 를 베이스 좌표로 옮기는 값: (배율, 왼쪽, 위).
+# 두 눈의 가운데를 베이스 눈 가운데(510, 356)에 맞추고, 배율은 귀 끝에서
+# 귀 끝까지의 폭으로 정했다. 눈 사이로 재면 GPT 얼굴의 귀가 상대적으로
+# 작아져서 뒤의 베이스 귀·민머리가 비친다. 세로는 베이스 머리가 가장 덜
+# 비치는 자리로 몇 픽셀 올렸다.
+FACE_FIT = {
+    "head_bamboo": (0.62, 123, -96),
+    "head_straw": (0.63, 116, -78),
+    "head_nabal": (0.62, 123, -112),
+}
+
+# 옮긴 얼굴 뒤로 베이스 민머리가 이만큼 넘게 비치면 정합이 틀린 것이다.
+MAX_PEEK = 400
 
 BASES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
 HEADS = ["head_nabal", "head_bamboo", "head_straw"]
@@ -68,6 +85,25 @@ def cut_head(full: Image.Image) -> Image.Image:
     return head
 
 
+def fit_face(face: Image.Image, fit, base: Image.Image) -> Image.Image:
+    """얼굴 그림을 베이스 캔버스로 옮기고 목 아래를 자른다."""
+    scale, left, top = fit
+    size = round(face.width * scale)
+    moved = face.resize((size, size), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
+    canvas.paste(moved, (left, top))
+    head = cut_head(canvas)
+
+    # 뒤에 깔린 베이스 머리가 새 얼굴 밖으로 비치는지 센다.
+    solid = lambda a: a.point(lambda v: 255 if v > 128 else 0)
+    under = solid(base.getchannel("A"))
+    under.paste(0, (0, NECK_Y - 8, CANVAS, CANVAS))
+    peek = ImageChops.subtract(under, solid(head.getchannel("A"))).histogram()[255]
+    if peek > MAX_PEEK:
+        raise SystemExit(f"베이스 머리가 {peek}px 비친다 — FACE_FIT 을 다시 재야 한다")
+    return head, peek
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
@@ -75,9 +111,17 @@ def main() -> None:
         load(name).save(OUT / f"{name}.png", optimize=True)
         print(name)
 
+    base = load("base_saffron")
+
     for name in HEADS:
+        face = SRC / f"{name}_face.png"
         full = SRC / f"{name}_full.png"
-        if full.exists():
+        if face.exists():
+            image = Image.open(face).convert("RGBA")
+            head, peek = fit_face(image, FACE_FIT[name], base)
+            head.save(OUT / f"{name}.png", optimize=True)
+            print(f"{name}  (모자 쓴 얼굴을 베이스에 포갬, 비침 {peek}px)")
+        elif full.exists():
             # 새 방식: 전신을 받아 목 위만 잘라낸다.
             cut_head(load(f"{name}_full")).save(
                 OUT / f"{name}.png", optimize=True)

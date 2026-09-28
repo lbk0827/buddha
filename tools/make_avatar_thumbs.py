@@ -19,22 +19,18 @@ OUT = SRC / "thumbs"
 THUMB = 192
 PAD = 0.06  # 잘라낸 영역 둘레 여백 비율
 
-# 가사는 몸 전체가 아니라 천이 보이는 구간만 보여준다.
-ROBE_CROP = (300, 440, 725, 870)
-
-# 민머리는 겹칠 레이어가 없다(베이스 그대로). 썸네일만 베이스 머리에서 딴다.
-HEAD_CROP = (320, 110, 705, 430)
+# 머리 아이템은 「머리에 씌운 모습」으로 보여준다.
+# 모자만 따로 띄우면 민머리와 종류가 달라 보이고, 어느 쪽이 위인지도 안 읽힌다.
+# 네 개를 같은 창으로 잘라야 크기·위치가 서로 맞는다.
+HEAD_WINDOW = (250, 40, 775, 470)
 
 ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
-ITEMS = [
-    "head_nabal",
-    "head_bamboo",
-    "head_straw",
-    "acc_beads",
-    "acc_glasses",
-    "seat_lotus",
-    "halo_ring",
-]
+
+# 머리에 씌워서 보여줄 것들. head_shaved 는 아무것도 안 씌운 상태다.
+HEADS = ["head_shaved", "head_nabal", "head_bamboo", "head_straw"]
+
+# 물건 자체를 보여주는 것들.
+ITEMS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
 
 
 def alpha_bbox(image: Image.Image, threshold: int = 4):
@@ -73,13 +69,20 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
     saffron = Image.open(SRC / "base_saffron.png").convert("RGBA")
-    square_fit(saffron.crop(HEAD_CROP)).save(OUT / "head_shaved.png", optimize=True)
-    print("head_shaved (베이스 머리)")
 
+    # 가사는 겹치는 옷이 아니라 몸 그림 자체다. 일부만 자르면 목 잘린 몸이 된다.
     for name in ROBES:
         image = Image.open(SRC / f"{name}.png").convert("RGBA")
-        square_fit(image.crop(ROBE_CROP)).save(OUT / f"{name}.png", optimize=True)
-        print(f"{name} (가사 구간)")
+        box = pad_box(alpha_bbox(image), *image.size)
+        square_fit(image.crop(box)).save(OUT / f"{name}.png", optimize=True)
+        print(f"{name} (전신)")
+
+    for name in HEADS:
+        worn = saffron.copy()
+        if name != "head_shaved":
+            worn.alpha_composite(Image.open(SRC / f"{name}.png").convert("RGBA"))
+        square_fit(worn.crop(HEAD_WINDOW)).save(OUT / f"{name}.png", optimize=True)
+        print(f"{name} (머리에 씌운 모습)")
 
     for name in ITEMS:
         image = Image.open(SRC / f"{name}.png").convert("RGBA")

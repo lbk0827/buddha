@@ -1,6 +1,11 @@
+import 'package:drift/drift.dart' show Value;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../data/db/database.dart';
+import '../home/home_controller.dart';
 
 import '../../app/providers.dart';
 import '../../app/router.dart';
@@ -105,6 +110,25 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.go(Routes.tokens),
             ),
+
+            // 디버그 빌드에서만 보인다. 옷장을 눌러보려면 공덕이 필요하다.
+            if (kDebugMode) ...[
+              const _SectionLabel('디버그'),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('공덕 $kDebugStartingMerit 더 받기'),
+                subtitle: Text('지금 공덕 ${profile.merit}'),
+                trailing: const Icon(Icons.add),
+                onTap: () async {
+                  final db = ref.read(databaseProvider);
+                  await (db.update(db.profiles)..where((t) => t.id.equals(1)))
+                      .write(ProfilesCompanion(
+                    merit: Value(profile.merit + kDebugStartingMerit),
+                  ));
+                  ref.invalidate(homeStateProvider);
+                },
+              ),
+            ],
 
             const _SectionLabel('데이터'),
             ListTile(

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 part 'database.g.dart';
 
@@ -182,6 +183,16 @@ class AnalyticsEvents extends Table {
   DateTimeColumn get at => dateTime()();
 }
 
+/// 디버그 빌드에서만 주는 시작 공덕.
+/// 옷장을 바로 눌러볼 수 있어야 테스트가 된다. 릴리스에서는 0이다.
+const int kDebugStartingMerit = 99999;
+
+/// 새 프로필 한 줄. 만드는 곳이 여러 군데라 여기로 모았다.
+ProfilesCompanion newProfileRow() => ProfilesCompanion.insert(
+      firstLaunchAt: Value(DateTime.now()),
+      merit: Value(kDebugMode ? kDebugStartingMerit : 0),
+    );
+
 @DriftDatabase(tables: [
   Sessions,
   DayRecords,
@@ -224,7 +235,7 @@ class AppDatabase extends _$AppDatabase {
           await customStatement('PRAGMA foreign_keys = ON');
           if (details.wasCreated) {
             await into(profiles).insert(
-              ProfilesCompanion.insert(firstLaunchAt: Value(DateTime.now())),
+              newProfileRow(),
             );
           }
         },
@@ -237,7 +248,7 @@ class AppDatabase extends _$AppDatabase {
         await delete(table).go();
       }
       await into(profiles).insert(
-        ProfilesCompanion.insert(firstLaunchAt: Value(DateTime.now())),
+        newProfileRow(),
       );
     });
   }

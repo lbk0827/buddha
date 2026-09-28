@@ -40,7 +40,7 @@ class ProfileRepository {
         .getSingleOrNull();
     if (existing != null) return existing;
     await _db.into(_db.profiles).insert(
-          ProfilesCompanion.insert(firstLaunchAt: Value(DateTime.now())),
+          newProfileRow(),
         );
     return (_db.select(_db.profiles)..where((t) => t.id.equals(1))).getSingle();
   }

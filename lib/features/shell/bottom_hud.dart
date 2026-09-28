@@ -23,6 +23,12 @@ const List<HudTab> kHudTabs = [
     route: '/',
   ),
   HudTab(
+    label: '꾸미기',
+    icon: Icons.checkroom_outlined,
+    activeIcon: Icons.checkroom,
+    route: '/wardrobe',
+  ),
+  HudTab(
     label: '놀이',
     icon: Icons.local_fire_department_outlined,
     activeIcon: Icons.local_fire_department,

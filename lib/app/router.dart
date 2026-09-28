@@ -77,6 +77,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             AppShell(location: state.uri.path, child: child),
         routes: [
           GoRoute(path: Routes.home, builder: (_, _) => const HomeScreen()),
+          GoRoute(
+              path: Routes.wardrobe, builder: (_, _) => const WardrobeScreen()),
           GoRoute(path: Routes.play, builder: (_, _) => const PlayScreen()),
           GoRoute(path: Routes.seonsa, builder: (_, _) => const SeonsaScreen()),
           GoRoute(path: Routes.tokens, builder: (_, _) => const TokensScreen()),
@@ -123,8 +125,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           builder: (_, _) => const TestResultScreen()),
       GoRoute(path: Routes.checkin, builder: (_, _) => const CheckinScreen()),
       GoRoute(path: Routes.profile, builder: (_, _) => const ProfileScreen()),
-      GoRoute(
-          path: Routes.wardrobe, builder: (_, _) => const WardrobeScreen()),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsScreen()),
       GoRoute(
           path: Routes.ordination,

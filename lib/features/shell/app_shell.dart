@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'bottom_hud.dart';
 
-/// 네 탭의 공통 껍데기.
+/// 하단 HUD 탭들의 공통 껍데기.
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.child, required this.location});
 

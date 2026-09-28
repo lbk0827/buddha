@@ -9,7 +9,7 @@ import 'avatar_equip.dart';
 import 'buddha_figure.dart';
 import 'item_thumb.dart';
 
-/// 꾸미기. 위 절반은 내 부처님, 아래는 옷장 시트.
+/// 꾸미기 탭. 위 절반은 내 부처님, 아래는 옷장 시트.
 /// 고른 즉시 입혀 보고, 저장해야 남는다.
 class WardrobeScreen extends ConsumerStatefulWidget {
   const WardrobeScreen({super.key});
@@ -77,8 +77,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
     );
     if (ok != true || !mounted) return;
 
-    final bought =
-        await ref.read(profileRepositoryProvider).buyItem(item);
+    final bought = await ref.read(profileRepositoryProvider).buyItem(item);
     if (!mounted) return;
     if (!bought) return;
 
@@ -107,74 +106,55 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
   Widget build(BuildContext context) {
     final home = ref.watch(homeStateProvider);
 
-    return Scaffold(
-      body: home.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
-        data: (state) => SafeArea(
-          bottom: false,
-          child: Column(
-            children: [
-              _Stage(equip: _equipOf(state), merit: state.merit),
-              Expanded(
-                child: _Sheet(
-                  equip: _equipOf(state),
-                  slot: _slot,
-                  ownedOnly: _ownedOnly,
-                  dirty: _dirty,
-                  saving: _saving,
-                  onSlot: (s) => setState(() => _slot = s),
-                  onOwnedOnly: (v) => setState(() => _ownedOnly = v),
-                  onRevert: () => setState(() => _draft = null),
-                  onSave: _save,
-                  onTapItem: (i) => _tapItem(i, state),
-                ),
+    return home.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('$e')),
+      data: (state) => SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            const TabTopBar(),
+            _Stage(equip: _equipOf(state)),
+            Expanded(
+              child: _Sheet(
+                equip: _equipOf(state),
+                slot: _slot,
+                ownedOnly: _ownedOnly,
+                dirty: _dirty,
+                saving: _saving,
+                onSlot: (s) => setState(() => _slot = s),
+                onOwnedOnly: (v) => setState(() => _ownedOnly = v),
+                onRevert: () => setState(() => _draft = null),
+                onSave: _save,
+                onTapItem: (i) => _tapItem(i, state),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// 위 절반 — 부처님과 되돌리기.
+/// 위 절반 — 입혀 보는 자리.
 class _Stage extends StatelessWidget {
-  const _Stage({required this.equip, required this.merit});
+  const _Stage({required this.equip});
 
   final AvatarEquip equip;
-  final int merit;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      height: 300,
+      height: 272,
       width: double.infinity,
       color: isDark
           ? Tokens.temple.withValues(alpha: 0.18)
           : const Color(0xFFEDE5D6),
-      child: Stack(
-        children: [
-          Positioned(
-            left: 8,
-            top: 8,
-            child: BackButton(color: Theme.of(context).colorScheme.onSurface),
-          ),
-          Positioned(
-            right: Tokens.gutter,
-            top: 12,
-            child: MeritPill(merit: merit),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: BuddhaFigure(equip: equip, size: 190),
-            ),
-          ),
-        ],
-      ),
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(top: 8),
+      child: BuddhaFigure(equip: equip, size: 190),
     );
   }
 }
@@ -235,8 +215,7 @@ class _Sheet extends StatelessWidget {
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: Tokens.gutter),
+              padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
               children: [
                 _SlotChip(
                   label: '전체',
@@ -257,15 +236,18 @@ class _Sheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
             child: Row(
               children: [
-                Text('가진 것만',
-                    style: TextStyle(
-                        fontSize: 13, color: fg.withValues(alpha: 0.6))),
+                Text(
+                  '가진 것만',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: fg.withValues(alpha: 0.6),
+                  ),
+                ),
                 const SizedBox(width: 6),
                 Switch(value: ownedOnly, onChanged: onOwnedOnly),
                 const Spacer(),
                 if (dirty)
-                  TextButton(
-                      onPressed: onRevert, child: const Text('되돌리기')),
+                  TextButton(onPressed: onRevert, child: const Text('되돌리기')),
               ],
             ),
           ),
@@ -279,7 +261,11 @@ class _Sheet extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                Tokens.gutter, 8, Tokens.gutter, 20),
+              Tokens.gutter,
+              8,
+              Tokens.gutter,
+              20,
+            ),
             child: SizedBox(
               height: 52,
               width: double.infinity,
@@ -320,16 +306,17 @@ class _Grid extends ConsumerWidget {
 
     if (visible.isEmpty) {
       return Center(
-        child: Text('여기엔 가진 게 없다.',
-            style: Theme.of(context).textTheme.bodyMedium),
+        child: Text(
+          '여기엔 가진 게 없다.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
       );
     }
 
     return GridView.count(
       crossAxisCount: 3,
       // 아래 버튼에 가려 이름이 잘리지 않도록 여유를 준다.
-      padding: const EdgeInsets.fromLTRB(
-          Tokens.gutter, 0, Tokens.gutter, 16),
+      padding: const EdgeInsets.fromLTRB(Tokens.gutter, 0, Tokens.gutter, 16),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
       childAspectRatio: 0.78,
@@ -383,20 +370,28 @@ class _ItemTile extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  Center(child: ItemThumb(item: item, dim: !owned)),
+                  Center(
+                    child: ItemThumb(item: item, dim: !owned),
+                  ),
                   if (!owned)
                     Positioned(
                       right: 6,
                       top: 6,
-                      child: Icon(Icons.lock_outline,
-                          size: 15, color: fg.withValues(alpha: 0.45)),
+                      child: Icon(
+                        Icons.lock_outline,
+                        size: 15,
+                        color: fg.withValues(alpha: 0.45),
+                      ),
                     ),
                   if (worn)
                     const Positioned(
                       right: 6,
                       top: 6,
-                      child: Icon(Icons.check_circle,
-                          size: 17, color: Tokens.saffron),
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 17,
+                        color: Tokens.saffron,
+                      ),
                     ),
                 ],
               ),
@@ -451,7 +446,8 @@ class _SlotChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected ? Tokens.ink : Colors.transparent,
             border: Border.all(
-                color: selected ? Tokens.ink : fg.withValues(alpha: 0.18)),
+              color: selected ? Tokens.ink : fg.withValues(alpha: 0.18),
+            ),
             borderRadius: BorderRadius.circular(999),
           ),
           child: Text(

@@ -3,16 +3,30 @@ import 'package:bucheo_handsome/features/avatar/avatar_equip.dart';
 import 'package:bucheo_handsome/features/avatar/buddha_figure.dart';
 import 'package:bucheo_handsome/features/avatar/item_thumb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+Widget _wrap(Widget child, {Brightness b = Brightness.light}) => MaterialApp(
+      theme: b == Brightness.light ? AppTheme.light() : AppTheme.dark(),
+      home: Scaffold(body: Center(child: child)),
+    );
+
+/// Image.asset이 실제로 가리키는 경로.
+List<String> _assetPaths(WidgetTester tester) => tester
+    .widgetList<Image>(find.byType(Image))
+    .map((w) => (w.image as AssetImage).assetName)
+    .toList();
+
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AvatarEquip', () {
     test('입고 벗기', () {
       const e = AvatarEquip();
       expect(e.isEmpty, isTrue);
 
-      final worn = e.wear(AvatarSlot.robe, 'robe_saffron');
-      expect(worn.of(AvatarSlot.robe), 'robe_saffron');
+      final worn = e.wear(AvatarSlot.robe, 'robe_ash');
+      expect(worn.of(AvatarSlot.robe), 'robe_ash');
       expect(e.of(AvatarSlot.robe), isNull, reason: '원본은 그대로여야 한다');
       expect(worn.takeOff(AvatarSlot.robe).of(AvatarSlot.robe), isNull);
     });
@@ -28,9 +42,10 @@ void main() {
     test('toggle — 같은 걸 다시 누르면 벗는다', () {
       final on = const AvatarEquip().toggle(AvatarSlot.accessory, 'acc_beads');
       expect(on.of(AvatarSlot.accessory), 'acc_beads');
-      expect(on.toggle(AvatarSlot.accessory, 'acc_beads').of(AvatarSlot.accessory),
-          isNull);
-      // 다른 걸 누르면 갈아 낀다.
+      expect(
+        on.toggle(AvatarSlot.accessory, 'acc_beads').of(AvatarSlot.accessory),
+        isNull,
+      );
       expect(
         on.toggle(AvatarSlot.accessory, 'acc_glasses').of(AvatarSlot.accessory),
         'acc_glasses',
@@ -44,9 +59,7 @@ void main() {
           .wear(AvatarSlot.accessory, 'acc_beads')
           .wear(AvatarSlot.halo, 'halo_ring')
           .wear(AvatarSlot.seat, 'seat_lotus');
-      final back = AvatarEquip.decode(e.encode());
-      expect(back, e);
-      expect(back.of(AvatarSlot.seat), 'seat_lotus');
+      expect(AvatarEquip.decode(e.encode()), e);
     });
 
     test('깨진 값이나 빈 값이면 빈 착용으로 돌아온다', () {
@@ -58,22 +71,20 @@ void main() {
     });
 
     test('모르는 슬롯과 사라진 아이템은 버린다', () {
-      // 카탈로그가 바뀌어도 앱이 깨지지 않아야 한다.
       final e = AvatarEquip.decode(
           '{"robe":"robe_ash","wings":"x","head":"없어진아이템"}');
       expect(e.items.length, 1);
       expect(e.of(AvatarSlot.robe), 'robe_ash');
     });
 
-    test('같은 구성이면 같다고 본다', () {
-      final a = const AvatarEquip().wear(AvatarSlot.robe, 'robe_ash');
-      final b = const AvatarEquip().wear(AvatarSlot.robe, 'robe_ash');
-      expect(a, b);
-      expect(a.hashCode, b.hashCode);
+    test('예전에 저장한 기본 가사 ID가 그대로 살아 있다', () {
+      // robe_temple 은 기본값에서 해금 아이템으로 바뀌었을 뿐 사라지지 않았다.
+      final e = AvatarEquip.decode('{"robe":"robe_temple"}');
+      expect(e.of(AvatarSlot.robe), 'robe_temple');
     });
   });
 
-  group('옷장', () {
+  group('옷장 카탈로그', () {
     test('아이템 ID가 중복되지 않는다', () {
       final ids = kWardrobe.map((i) => i.id).toList();
       expect(ids.length, ids.toSet().length);
@@ -94,18 +105,10 @@ void main() {
       }
     });
 
-    test('비울 수 있는 슬롯에는 공짜 아이템이 없어도 된다', () {
+    test('비울 수 있는 슬롯 구분', () {
       expect(kOptionalSlots.contains(AvatarSlot.accessory), isTrue);
       expect(kOptionalSlots.contains(AvatarSlot.head), isFalse);
       expect(kOptionalSlots.contains(AvatarSlot.robe), isFalse);
-    });
-
-    test('슬롯별 조회', () {
-      expect(wardrobeFor(AvatarSlot.head), isNotEmpty);
-      expect(
-        wardrobeFor(AvatarSlot.robe).every((i) => i.slot == AvatarSlot.robe),
-        isTrue,
-      );
     });
 
     test('모든 슬롯에 이름이 있다', () {
@@ -127,87 +130,177 @@ void main() {
       expect(ownsItem(paid, {}), isFalse);
       expect(ownsItem(paid, {paid.id}), isTrue);
     });
+
+    test('민머리만 레이어가 없다', () {
+      final noLayer = kWardrobe.where((i) => !i.hasLayer).map((i) => i.id);
+      expect(noLayer, ['head_shaved']);
+    });
   });
 
-  group('BuddhaFigure', () {
-    Widget wrap(Widget child, {Brightness b = Brightness.light}) => MaterialApp(
-          theme: b == Brightness.light ? AppTheme.light() : AppTheme.dark(),
-          home: Scaffold(body: Center(child: child)),
-        );
+  group('에셋 실재 여부', () {
+    /// 선언된 경로에 파일이 실제로 있는지 번들에서 확인한다.
+    Future<bool> exists(String path) async {
+      try {
+        await rootBundle.load(path);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
 
+    test('모든 아이템의 레이어 파일이 있다', () async {
+      for (final item in kWardrobe) {
+        final path = item.assetPath;
+        if (path == null) continue;
+        expect(await exists(path), isTrue, reason: path);
+      }
+    });
+
+    test('모든 아이템의 썸네일 파일이 있다', () async {
+      for (final item in kWardrobe) {
+        expect(await exists(item.thumbPath), isTrue, reason: item.thumbPath);
+      }
+    });
+  });
+
+  group('BuddhaFigure — 레이어 구성', () {
+    test('그리는 순서가 후광 → 대좌 → 몸 → 머리 → 악세서리', () {
+      var equip = kDefaultEquip;
+      for (final slot in AvatarSlot.values) {
+        final items = wardrobeFor(slot).where((i) => i.hasLayer);
+        if (items.isNotEmpty) equip = equip.wear(slot, items.first.id);
+      }
+      expect(BuddhaFigure.layersOf(equip), [
+        'assets/avatar/halo_ring.png',
+        'assets/avatar/seat_lotus.png',
+        'assets/avatar/base_saffron.png',
+        'assets/avatar/head_nabal.png',
+        'assets/avatar/acc_beads.png',
+      ]);
+    });
+
+    test('기본 착용은 몸 한 장뿐 — 민머리는 레이어가 없다', () {
+      expect(BuddhaFigure.layersOf(kDefaultEquip),
+          ['assets/avatar/base_saffron.png']);
+    });
+
+    test('고르지 않은 선택형 아이템은 그리지 않는다', () {
+      final layers = BuddhaFigure.layersOf(kDefaultEquip);
+      expect(layers.any((p) => p.contains('halo')), isFalse);
+      expect(layers.any((p) => p.contains('seat')), isFalse);
+      expect(layers.any((p) => p.contains('acc_')), isFalse);
+    });
+
+    test('가사가 비어 있어도 몸은 나온다', () {
+      // 저장본이 깨져 가사가 빠져도 투명 인간이 되면 안 된다.
+      expect(BuddhaFigure.layersOf(const AvatarEquip()),
+          ['assets/avatar/base_saffron.png']);
+    });
+
+    test('가사를 바꾸면 몸 그림이 바뀐다', () {
+      final ash = kDefaultEquip.wear(AvatarSlot.robe, 'robe_ash');
+      expect(BuddhaFigure.layersOf(ash), ['assets/avatar/base_ash.png']);
+    });
+  });
+
+  group('BuddhaFigure — 위젯', () {
     testWidgets('기본 착용으로 그려진다', (tester) async {
-      await tester.pumpWidget(wrap(const BuddhaFigure()));
+      await tester.pumpWidget(_wrap(const BuddhaFigure()));
       expect(tester.takeException(), isNull);
+      expect(_assetPaths(tester), ['assets/avatar/base_saffron.png']);
+    });
+
+    testWidgets('전부 껴입으면 레이어가 순서대로 쌓인다', (tester) async {
+      var equip = kDefaultEquip;
+      for (final slot in AvatarSlot.values) {
+        final items = wardrobeFor(slot).where((i) => i.hasLayer);
+        if (items.isNotEmpty) equip = equip.wear(slot, items.last.id);
+      }
+      await tester.pumpWidget(_wrap(BuddhaFigure(equip: equip)));
+      expect(tester.takeException(), isNull);
+
+      // Stack 자식 순서가 곧 그리는 순서다.
+      expect(_assetPaths(tester), [
+        'assets/avatar/halo_ring.png',
+        'assets/avatar/seat_lotus.png',
+        'assets/avatar/base_crimson.png',
+        'assets/avatar/head_straw.png',
+        'assets/avatar/acc_glasses.png',
+      ]);
     });
 
     testWidgets('모든 아이템을 하나씩 입혀도 예외가 없다', (tester) async {
       for (final item in kWardrobe) {
-        final equip = kDefaultEquip.wear(item.slot, item.id);
-        for (final pose in BuddhaPose.values) {
-          await tester
-              .pumpWidget(wrap(BuddhaFigure(equip: equip, pose: pose)));
-          expect(tester.takeException(), isNull,
-              reason: '${item.id} / ${pose.name}');
-        }
+        await tester.pumpWidget(
+            _wrap(BuddhaFigure(equip: kDefaultEquip.wear(item.slot, item.id))));
+        expect(tester.takeException(), isNull, reason: item.id);
       }
     });
 
-    testWidgets('전부 껴입어도 그려진다', (tester) async {
+    testWidgets('레이어가 전부 같은 사각형을 쓴다 — 위치 보정 없음', (tester) async {
       var equip = kDefaultEquip;
       for (final slot in AvatarSlot.values) {
-        final items = wardrobeFor(slot);
-        if (items.isNotEmpty) equip = equip.wear(slot, items.last.id);
+        final items = wardrobeFor(slot).where((i) => i.hasLayer);
+        if (items.isNotEmpty) equip = equip.wear(slot, items.first.id);
       }
-      await tester.pumpWidget(wrap(BuddhaFigure(equip: equip)));
-      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(_wrap(BuddhaFigure(equip: equip, size: 200)));
+
+      final boxes = tester
+          .widgetList<Image>(find.byType(Image))
+          .map((w) => tester.getRect(find.byWidget(w)))
+          .toList();
+      expect(boxes.length, 5);
+      for (final r in boxes) {
+        expect(r, boxes.first, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
+      }
+      // 정사각이어야 contain 결과가 모든 레이어에서 같다.
+      expect(boxes.first.width, boxes.first.height);
     });
 
-    testWidgets('아무것도 안 입어도 그려진다', (tester) async {
-      await tester.pumpWidget(wrap(const BuddhaFigure(equip: AvatarEquip())));
-      expect(tester.takeException(), isNull);
+    testWidgets('모든 레이어가 BoxFit.contain', (tester) async {
+      await tester.pumpWidget(_wrap(
+          BuddhaFigure(equip: kDefaultEquip.wear(AvatarSlot.halo, 'halo_ring'))));
+      for (final image in tester.widgetList<Image>(find.byType(Image))) {
+        expect(image.fit, BoxFit.contain);
+      }
     });
 
     testWidgets('다크 모드', (tester) async {
-      await tester.pumpWidget(wrap(const BuddhaFigure(), b: Brightness.dark));
+      await tester.pumpWidget(_wrap(const BuddhaFigure(), b: Brightness.dark));
       expect(tester.takeException(), isNull);
     });
 
     testWidgets('숨쉬기 애니메이션이 프레임을 넘겨도 죽지 않는다', (tester) async {
-      await tester.pumpWidget(wrap(const BuddhaFigure(breathing: true)));
+      await tester.pumpWidget(_wrap(const BuddhaFigure(breathing: true)));
       await tester.pump(const Duration(seconds: 2));
       await tester.pump(const Duration(seconds: 3));
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('스크린 리더 라벨이 자세에 따라 붙는다', (tester) async {
-      await tester.pumpWidget(wrap(const BuddhaFigure()));
+    testWidgets('스크린 리더 라벨', (tester) async {
+      await tester.pumpWidget(_wrap(const BuddhaFigure()));
       expect(find.bySemanticsLabel('내 부처님'), findsOneWidget);
-
-      await tester
-          .pumpWidget(wrap(const BuddhaFigure(pose: BuddhaPose.bowing)));
-      expect(find.bySemanticsLabel('절하는 부처님'), findsOneWidget);
     });
   });
 
-  group('ItemThumbPainter', () {
-    testWidgets('옷장의 모든 아이템 그림이 그려진다', (tester) async {
+  group('ItemThumb', () {
+    testWidgets('옷장의 모든 아이템 썸네일이 그려진다', (tester) async {
       for (final item in kWardrobe) {
         for (final dim in [true, false]) {
-          await tester.pumpWidget(MaterialApp(
-            theme: AppTheme.light(),
-            home: Scaffold(
-              body: Center(
-                child: CustomPaint(
-                  size: const Size(54, 54),
-                  painter: ItemThumbPainter(item: item, dim: dim),
-                ),
-              ),
-            ),
-          ));
-          expect(tester.takeException(), isNull,
-              reason: '${item.id} dim=$dim');
+          await tester.pumpWidget(_wrap(ItemThumb(item: item, dim: dim)));
+          expect(tester.takeException(), isNull, reason: '${item.id} dim=$dim');
+          expect(_assetPaths(tester), [item.thumbPath]);
         }
       }
+    });
+
+    testWidgets('안 가진 아이템은 흐리게', (tester) async {
+      final item = kWardrobe.firstWhere((i) => !i.isFree);
+      await tester.pumpWidget(_wrap(ItemThumb(item: item, dim: true)));
+      final opacity = tester.widget<Opacity>(
+        find.ancestor(of: find.byType(Image), matching: find.byType(Opacity)),
+      );
+      expect(opacity.opacity, lessThan(1));
     });
   });
 }

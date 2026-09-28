@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 /// 내 부처님의 레이어. 나열 순서가 그대로 그리는 순서다.
-/// 레퍼런스 앱도 실시간 3D가 아니라 이런 레이어 합성이다.
+/// 후광 → 대좌 → 몸(가사) → 머리 → 악세서리
 enum AvatarSlot { halo, seat, robe, head, accessory }
 
 const Map<AvatarSlot, String> kSlotNames = {
@@ -70,23 +70,36 @@ class WardrobeItem {
   /// 공덕으로 연다. 0이면 처음부터 가지고 있다.
   final int meritCost;
 
-  /// 아이템 아트가 생기면 여기만 채우면 그리기를 대신한다.
-  final String? assetPath;
+  /// 파일명이 id와 다를 때만 쓴다 (가사는 몸 전체라 base_* 로 저장돼 있다).
+  final String? file;
+
+  /// 겹칠 그림이 없는 아이템. 민머리는 베이스 그대로라 레이어가 없다.
+  final bool hasLayer;
 
   const WardrobeItem({
     required this.id,
     required this.name,
     required this.slot,
     this.meritCost = 0,
-    this.assetPath,
+    this.file,
+    this.hasLayer = true,
   });
+
+  String get _base => file ?? id;
+
+  /// 캐릭터에 겹치는 1024×1024 레이어. 레이어가 없으면 null.
+  String? get assetPath => hasLayer ? 'assets/avatar/$_base.png' : null;
+
+  /// 옷장 칸에 쓰는, 아이템만 잘라낸 그림.
+  String get thumbPath => 'assets/avatar/thumbs/$_base.png';
 
   bool get isFree => meritCost == 0;
 }
 
 const List<WardrobeItem> kWardrobe = [
-  // 머리
-  WardrobeItem(id: 'head_shaved', name: '민머리', slot: AvatarSlot.head),
+  // 머리 — 민머리는 베이스 그대로라 겹칠 그림이 없다.
+  WardrobeItem(
+      id: 'head_shaved', name: '민머리', slot: AvatarSlot.head, hasLayer: false),
   WardrobeItem(
       id: 'head_nabal', name: '나발', slot: AvatarSlot.head, meritCost: 300),
   WardrobeItem(
@@ -94,14 +107,30 @@ const List<WardrobeItem> kWardrobe = [
   WardrobeItem(
       id: 'head_straw', name: '밀짚모자', slot: AvatarSlot.head, meritCost: 700),
 
-  // 가사
-  WardrobeItem(id: 'robe_temple', name: '먹물 가사', slot: AvatarSlot.robe),
+  // 가사 — 겹치는 레이어가 아니라 몸 그림 자체를 바꾼다.
   WardrobeItem(
-      id: 'robe_saffron', name: '황토 가사', slot: AvatarSlot.robe, meritCost: 200),
+      id: 'robe_saffron',
+      name: '황토 가사',
+      slot: AvatarSlot.robe,
+      file: 'base_saffron'),
   WardrobeItem(
-      id: 'robe_ash', name: '잿빛 가사', slot: AvatarSlot.robe, meritCost: 400),
+      id: 'robe_temple',
+      name: '먹물 가사',
+      slot: AvatarSlot.robe,
+      meritCost: 200,
+      file: 'base_temple'),
   WardrobeItem(
-      id: 'robe_crimson', name: '홍가사', slot: AvatarSlot.robe, meritCost: 900),
+      id: 'robe_ash',
+      name: '잿빛 가사',
+      slot: AvatarSlot.robe,
+      meritCost: 400,
+      file: 'base_ash'),
+  WardrobeItem(
+      id: 'robe_crimson',
+      name: '홍가사',
+      slot: AvatarSlot.robe,
+      meritCost: 900,
+      file: 'base_crimson'),
 
   // 악세서리
   WardrobeItem(
@@ -123,7 +152,7 @@ const List<WardrobeItem> kWardrobe = [
 
 /// 출가하면 이것부터 입는다. 전부 공덕 0짜리다.
 const AvatarEquip kDefaultEquip = AvatarEquip({
-  AvatarSlot.robe: 'robe_temple',
+  AvatarSlot.robe: 'robe_saffron',
   AvatarSlot.head: 'head_shaved',
 });
 

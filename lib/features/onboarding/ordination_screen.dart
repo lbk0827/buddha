@@ -135,7 +135,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                   ),
                   Column(
                     children: [
-                      const BuddhaFigure(size: 96),
+                      const BuddhaFigure(size: 128),
                       const SizedBox(height: 8),
                       Text('법명 · $_name',
                           style: const TextStyle(

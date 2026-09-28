@@ -383,12 +383,7 @@ class _ItemTile extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  Center(
-                    child: CustomPaint(
-                      size: const Size(54, 54),
-                      painter: ItemThumbPainter(item: item, dim: !owned),
-                    ),
-                  ),
+                  Center(child: ItemThumb(item: item, dim: !owned)),
                   if (!owned)
                     Positioned(
                       right: 6,

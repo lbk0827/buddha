@@ -15,8 +15,15 @@ Imgs/ (납품 원본) → assets/avatar/ (앱에 나가는 것)
 
     python tools/build_avatar_assets.py
     python tools/make_avatar_thumbs.py    # 썸네일은 이 결과에서 다시 뽑는다
+
+새 얼굴이 들어오면 먼저 FACE_FIT 값을 잰다.
+
+    python tools/build_avatar_assets.py --measure head_bamboo
+
+전체 절차는 docs/부처님_리소스_파이프라인.md.
 """
 
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops
@@ -36,14 +43,14 @@ NECK_Y = 478
 NECK_FEATHER = 6
 
 # head_*_face.png 를 베이스 좌표로 옮기는 값: (배율, 왼쪽, 위).
-# 두 눈의 가운데를 베이스 눈 가운데(510, 356)에 맞추고, 배율은 귀 끝에서
-# 귀 끝까지의 폭으로 정했다. 눈 사이로 재면 GPT 얼굴의 귀가 상대적으로
-# 작아져서 뒤의 베이스 귀·민머리가 비친다. 세로는 베이스 머리가 가장 덜
-# 비치는 자리로 몇 픽셀 올렸다.
+# --measure 로 잰다. 두 눈의 가운데를 베이스 눈 가운데에 맞추고, 배율은
+# 귀 끝에서 귀 끝까지의 폭에서 출발해 베이스 머리가 가장 덜 비치는 값을
+# 고른다. 눈 사이로 재면 GPT 얼굴의 귀가 상대적으로 작아져서 뒤의 베이스
+# 귀·민머리가 비친다.
 FACE_FIT = {
-    "head_bamboo": (0.62, 123, -96),
-    "head_straw": (0.63, 116, -78),
-    "head_nabal": (0.62, 123, -112),
+    "head_bamboo": (0.614, 126, -90),
+    "head_straw": (0.626, 119, -76),
+    "head_nabal": (0.625, 121, -116),
 }
 
 # 옮긴 얼굴 뒤로 베이스 민머리가 이만큼 넘게 비치면 정합이 틀린 것이다.
@@ -104,6 +111,107 @@ def fit_face(face: Image.Image, fit, base: Image.Image) -> Image.Image:
     return head, peek
 
 
+EDGE = 8
+
+
+def _is_dark(p) -> bool:
+    return p[3] > 200 and max(p[:3]) < 45
+
+
+def _is_skin(p) -> bool:
+    r, g, b, a = p
+    return a > 200 and r > 190 and g > 140 and r > b + 25
+
+
+def find_eyes(image: Image.Image):
+    """감은 두 눈의 가운데 좌표와 그 높이의 귀 끝~귀 끝 폭을 잰다.
+
+    눈은 위아래가 살색인 새까만 가로선이다. 나발처럼 어두운 머리칼은
+    위아래가 살색이 아니라서 빠진다. 입도 같은 조건에 걸리므로 가운데
+    3분의 1은 버리고 양쪽만 쓴다.
+    """
+    px = image.load()
+    width, height = image.size
+    marks = []
+    for y in range(1, height - 1):
+        for x in range(width):
+            if not _is_dark(px[x, y]):
+                continue
+            up = y
+            while up > 0 and _is_dark(px[x, up]):
+                up -= 1
+            down = y
+            while down < height - 1 and _is_dark(px[x, down]):
+                down += 1
+            # 선 가장자리는 흐려서 중간색이다. 몇 픽셀 건너서 살색을 본다.
+            above, below = max(0, up - EDGE), min(height - 1, down + EDGE)
+            if down - up < 60 and _is_skin(px[x, above]) and _is_skin(px[x, below]):
+                marks.append((x, y))
+    if not marks:
+        raise SystemExit("눈을 못 찾았다 — 감은 눈이 새까만 선인지 확인")
+
+    xs = [x for x, _ in marks]
+    left_edge, right_edge = min(xs), max(xs)
+    third = (right_edge - left_edge) / 3
+    left = [(x, y) for x, y in marks if x < left_edge + third]
+    right = [(x, y) for x, y in marks if x > right_edge - third]
+    if not left or not right:
+        raise SystemExit("두 눈이 갈라지지 않는다")
+
+    mean = lambda pts: (sum(p[0] for p in pts) / len(pts),
+                        sum(p[1] for p in pts) / len(pts))
+    (lx, ly), (rx, ry) = mean(left), mean(right)
+    eye_x, eye_y = (lx + rx) / 2, (ly + ry) / 2
+
+    row = [x for x in range(width) if px[x, round(eye_y)][3] > 128]
+    return (eye_x, eye_y), row[-1] - row[0]
+
+
+def peek_of(face: Image.Image, fit, under: Image.Image) -> int:
+    scale, left, top = fit
+    size = round(face.width * scale)
+    alpha = face.getchannel("A").resize((size, size), Image.Resampling.BILINEAR)
+    placed = Image.new("L", (CANVAS, CANVAS), 0)
+    placed.paste(alpha, (left, top))
+    placed = placed.point(lambda v: 255 if v > 128 else 0)
+    return ImageChops.subtract(under, placed).histogram()[255]
+
+
+def measure(name: str) -> None:
+    """head_*_face.png 의 FACE_FIT 값을 잰다."""
+    face = Image.open(SRC / f"{name}_face.png").convert("RGBA")
+    base = load("base_saffron")
+
+    (bx, by), base_span = find_eyes(base)
+    (fx, fy), face_span = find_eyes(face)
+    start = base_span / face_span
+    print(f"베이스 눈 ({bx:.0f}, {by:.0f}) 귀폭 {base_span}")
+    print(f"{name} 눈 ({fx:.0f}, {fy:.0f}) 귀폭 {face_span} → 배율 {start:.3f}")
+
+    under = base.getchannel("A").point(lambda v: 255 if v > 128 else 0)
+    under.paste(0, (0, NECK_Y - 8, CANVAS, CANVAS))
+
+    tried = []
+    for step in range(-4, 5):
+        scale = round(start + step * 0.005, 3)
+        left = round(bx - fx * scale)
+        for nudge in range(-16, 17, 2):
+            top = round(by - fy * scale) + nudge
+            fit = (scale, left, top)
+            tried.append((peek_of(face, fit, under), fit))
+    tried.sort()
+
+    print("비침이 적은 순:")
+    for peek, fit in tried[:3]:
+        print(f"  {fit}  비침 {peek}px")
+    best_peek, best = tried[0]
+    if best_peek > MAX_PEEK:
+        print("비침이 기준을 넘는다 — 얼굴이 베이스와 너무 다르다. 다시 받는다")
+    print()
+    print("FACE_FIT 에 넣을 값:")
+    print(f'    "{name}": {best},')
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
@@ -133,4 +241,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    sys.stdout.reconfigure(encoding="utf-8")
+    if len(sys.argv) == 3 and sys.argv[1] == "--measure":
+        measure(sys.argv[2])
+    else:
+        main()

@@ -8,6 +8,7 @@ assets/avatar/thumbs/*.png (192×192)로 저장한다.
     python tools/make_avatar_thumbs.py
 """
 
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
@@ -197,4 +198,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
     main()

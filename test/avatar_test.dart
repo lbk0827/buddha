@@ -171,17 +171,17 @@ void main() {
         if (items.isNotEmpty) equip = equip.wear(slot, items.first.id);
       }
       expect(BuddhaFigure.layersOf(equip), [
-        'assets/avatar/halo_ring.png',
-        'assets/avatar/seat_lotus.png',
-        'assets/avatar/base_saffron.png',
-        'assets/avatar/head_nabal.png',
-        'assets/avatar/acc_beads.png',
+        'assets/avatar/halo_ring.webp',
+        'assets/avatar/seat_lotus.webp',
+        'assets/avatar/base_saffron.webp',
+        'assets/avatar/head_nabal.webp',
+        'assets/avatar/acc_beads.webp',
       ]);
     });
 
     test('기본 착용은 몸 한 장뿐 — 민머리는 레이어가 없다', () {
       expect(BuddhaFigure.layersOf(kDefaultEquip),
-          ['assets/avatar/base_saffron.png']);
+          ['assets/avatar/base_saffron.webp']);
     });
 
     test('고르지 않은 선택형 아이템은 그리지 않는다', () {
@@ -194,12 +194,12 @@ void main() {
     test('가사가 비어 있어도 몸은 나온다', () {
       // 저장본이 깨져 가사가 빠져도 투명 인간이 되면 안 된다.
       expect(BuddhaFigure.layersOf(const AvatarEquip()),
-          ['assets/avatar/base_saffron.png']);
+          ['assets/avatar/base_saffron.webp']);
     });
 
     test('가사를 바꾸면 몸 그림이 바뀐다', () {
       final ash = kDefaultEquip.wear(AvatarSlot.robe, 'robe_ash');
-      expect(BuddhaFigure.layersOf(ash), ['assets/avatar/base_ash.png']);
+      expect(BuddhaFigure.layersOf(ash), ['assets/avatar/base_ash.webp']);
     });
   });
 
@@ -207,7 +207,7 @@ void main() {
     testWidgets('기본 착용으로 그려진다', (tester) async {
       await tester.pumpWidget(_wrap(const BuddhaFigure()));
       expect(tester.takeException(), isNull);
-      expect(_assetPaths(tester), ['assets/avatar/base_saffron.png']);
+      expect(_assetPaths(tester), ['assets/avatar/base_saffron.webp']);
     });
 
     testWidgets('전부 껴입으면 레이어가 순서대로 쌓인다', (tester) async {
@@ -221,11 +221,11 @@ void main() {
 
       // Stack 자식 순서가 곧 그리는 순서다.
       expect(_assetPaths(tester), [
-        'assets/avatar/halo_ring.png',
-        'assets/avatar/seat_lotus.png',
-        'assets/avatar/base_crimson.png',
-        'assets/avatar/head_straw.png',
-        'assets/avatar/acc_glasses.png',
+        'assets/avatar/halo_ring.webp',
+        'assets/avatar/seat_lotus.webp',
+        'assets/avatar/base_crimson.webp',
+        'assets/avatar/head_straw.webp',
+        'assets/avatar/acc_glasses.webp',
       ]);
     });
 

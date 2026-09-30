@@ -88,10 +88,10 @@ class WardrobeItem {
   String get _base => file ?? id;
 
   /// 캐릭터에 겹치는 1024×1024 레이어. 레이어가 없으면 null.
-  String? get assetPath => hasLayer ? 'assets/avatar/$_base.png' : null;
+  String? get assetPath => hasLayer ? 'assets/avatar/$_base.webp' : null;
 
   /// 옷장 칸에 쓰는, 아이템만 잘라낸 그림.
-  String get thumbPath => 'assets/avatar/thumbs/$_base.png';
+  String get thumbPath => 'assets/avatar/thumbs/$_base.webp';
 
   bool get isFree => meritCost == 0;
 }

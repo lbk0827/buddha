@@ -1,6 +1,9 @@
 """납품받은 스프라이트를 앱 에셋으로 굽는다.
 
-Imgs/ (납품 원본) → assets/avatar/ (앱에 나가는 것)
+Imgs/*.png (납품 원본) → assets/avatar/*.webp (앱에 나가는 것)
+
+원본은 무손실 PNG 로 두고, 앱에는 WebP(품질 90)로 굽는다. 1024 캔버스
+레이어 한 장이 PNG 로 300~400KB, WebP 로 50KB 안팎이다.
 
 머리 아이템은 「모자 쓴 얼굴」을 통째로 받는다. 받는 형태는 두 가지다.
 
@@ -52,6 +55,9 @@ FACE_FIT = {
     "head_straw": (0.626, 119, -76),
     "head_nabal": (0.625, 121, -116),
 }
+
+# 앱에 굽는 WebP 품질. 알파는 무손실로 남는다.
+WEBP_QUALITY = 90
 
 # 옮긴 얼굴 뒤로 베이스 민머리가 이만큼 넘게 비치면 정합이 틀린 것이다.
 MAX_PEEK = 400
@@ -212,11 +218,21 @@ def measure(name: str) -> None:
     print(f'    "{name}": {best},')
 
 
+def save_layer(image: Image.Image, directory: Path, name: str) -> None:
+    """WebP 로 굽고, 같은 이름의 예전 PNG 는 지운다.
+
+    pubspec 은 폴더째 등록돼 있어서 PNG 가 남으면 APK 에 같이 들어간다.
+    """
+    image.save(directory / f"{name}.webp", "WEBP",
+               quality=WEBP_QUALITY, method=6)
+    (directory / f"{name}.png").unlink(missing_ok=True)
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
     for name in BASES + OVERLAYS:
-        load(name).save(OUT / f"{name}.png", optimize=True)
+        save_layer(load(name), OUT, name)
         print(name)
 
     base = load("base_saffron")
@@ -227,16 +243,15 @@ def main() -> None:
         if face.exists():
             image = Image.open(face).convert("RGBA")
             head, peek = fit_face(image, FACE_FIT[name], base)
-            head.save(OUT / f"{name}.png", optimize=True)
+            save_layer(head, OUT, name)
             print(f"{name}  (모자 쓴 얼굴을 베이스에 포갬, 비침 {peek}px)")
         elif full.exists():
             # 새 방식: 전신을 받아 목 위만 잘라낸다.
-            cut_head(load(f"{name}_full")).save(
-                OUT / f"{name}.png", optimize=True)
+            save_layer(cut_head(load(f"{name}_full")), OUT, name)
             print(f"{name}  (전신에서 목 위만)")
         else:
             # 아직 재작업 전. 예전 「모자만」 그림을 그대로 쓴다.
-            load(name).save(OUT / f"{name}.png", optimize=True)
+            save_layer(load(name), OUT, name)
             print(f"{name}  (구버전 — {name}_full.png 를 기다리는 중)")
 
 

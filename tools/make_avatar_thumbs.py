@@ -1,7 +1,7 @@
 """옷장 칸에 쓸 썸네일을 만든다.
 
-assets/avatar/*.png (1024×1024 원본)에서 아이템 영역만 잘라
-assets/avatar/thumbs/*.png (192×192)로 저장한다.
+assets/avatar/*.webp (1024×1024 레이어)에서 아이템 영역만 잘라
+assets/avatar/thumbs/*.webp (192×192)로 저장한다.
 
 원본은 읽기만 한다. 아이템이 바뀌면 이 스크립트를 다시 돌리면 된다.
 
@@ -12,6 +12,8 @@ import sys
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
+
+from build_avatar_assets import save_layer
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets" / "avatar"
@@ -149,11 +151,11 @@ def pad_box(box, width, height):
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
-    saffron = Image.open(SRC / "base_saffron.png").convert("RGBA")
+    saffron = Image.open(SRC / "base_saffron.webp").convert("RGBA")
 
     for name in ROBES:
-        image = Image.open(SRC / f"{name}.png").convert("RGBA")
-        square_fit(image.crop(ROBE_CROP)).save(OUT / f"{name}.png", optimize=True)
+        image = Image.open(SRC / f"{name}.webp").convert("RGBA")
+        save_layer(square_fit(image.crop(ROBE_CROP)), OUT, name)
         print(f"{name} (목 아래)")
 
     # 머리 레이어에서 물건만 떼어낼 때 비교 대상이 되는 맨머리.
@@ -165,8 +167,7 @@ def main() -> None:
     for name in HEADS:
         # 민머리는 씌울 게 없다. 머리 자체가 아이템이라 머리를 보여준다.
         if name == "head_shaved":
-            square_fit(saffron.crop(SHAVED_WINDOW)).save(
-                OUT / f"{name}.png", optimize=True)
+            save_layer(square_fit(saffron.crop(SHAVED_WINDOW)), OUT, name)
             print(f"{name} (맨머리)")
             continue
 
@@ -177,23 +178,22 @@ def main() -> None:
             source = "따로 받은 그림"
         else:
             image = extract_item(
-                Image.open(SRC / f"{name}.png").convert("RGBA"), bare_head)
+                Image.open(SRC / f"{name}.webp").convert("RGBA"), bare_head)
             source = "머리에서 떼어냄"
 
         box = alpha_bbox(image)
         if box is None:
             raise SystemExit(f"{name}: 남은 게 없다")
-        square_fit(image.crop(pad_box(box, *image.size))).save(
-            OUT / f"{name}.png", optimize=True)
+        save_layer(square_fit(image.crop(pad_box(box, *image.size))), OUT, name)
         print(f"{name} ({source})")
 
     for name in ITEMS:
-        image = Image.open(SRC / f"{name}.png").convert("RGBA")
+        image = Image.open(SRC / f"{name}.webp").convert("RGBA")
         box = alpha_bbox(image)
         if box is None:
             raise SystemExit(f"{name}: 불투명 영역이 없다")
         box = pad_box(box, *image.size)
-        square_fit(image.crop(box)).save(OUT / f"{name}.png", optimize=True)
+        save_layer(square_fit(image.crop(box)), OUT, name)
         print(f"{name} {box}")
 
 

@@ -26,20 +26,25 @@ class BuddhaFigure extends StatelessWidget {
   /// 가만히 있을 때 아주 느리게 오르내린다.
   final bool breathing;
 
-  /// 실제로 그릴 레이어 경로들. 그리는 순서대로.
+  /// 실제로 그릴 레이어들. 그리는 순서대로.
   ///
   /// - 선택되지 않은 슬롯은 건너뛴다.
-  /// - 민머리처럼 겹칠 그림이 없는 아이템도 건너뛴다.
+  /// - 민머리·부처처럼 겹칠 그림이 없는 아이템도 건너뛴다.
   /// - 가사가 비어 있으면 기본 몸을 쓴다. 몸이 없으면 아무것도 안 보인다.
-  static List<String> layersOf(AvatarEquip equip) {
-    final paths = <String>[];
+  /// - 재질을 입었으면 살이 있는 레이어 바로 위에 그 살만 물들여 한 번 더
+  ///   겹친다. 모자·가사는 아래 원래 레이어가 그대로 보인다.
+  static List<AvatarLayer> layersOf(AvatarEquip equip) {
+    final tint = wardrobeItem(equip.wornIn(AvatarSlot.buddha))?.tint;
+    final layers = <AvatarLayer>[];
     for (final slot in AvatarSlot.values) {
-      final id = equip.of(slot) ??
-          (slot == AvatarSlot.robe ? kDefaultEquip.of(AvatarSlot.robe) : null);
-      final path = wardrobeItem(id)?.assetPath;
-      if (path != null) paths.add(path);
+      final item = wardrobeItem(equip.wornIn(slot));
+      final path = item?.assetPath;
+      if (item == null || path == null) continue;
+      layers.add(AvatarLayer(path));
+      final skin = item.skinPath;
+      if (tint != null && skin != null) layers.add(AvatarLayer(skin, tint));
     }
-    return paths;
+    return layers;
   }
 
   @override
@@ -50,13 +55,16 @@ class BuddhaFigure extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          for (final path in layersOf(equip))
-            Image.asset(
-              path,
-              key: ValueKey(path),
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.medium,
-              gaplessPlayback: true,
+          for (final layer in layersOf(equip))
+            tintedBy(
+              layer.tint,
+              Image.asset(
+                layer.path,
+                key: ValueKey(layer.path),
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.medium,
+                gaplessPlayback: true,
+              ),
             ),
         ],
       ),
@@ -69,6 +77,30 @@ class BuddhaFigure extends StatelessWidget {
     );
   }
 }
+
+/// 겹칠 그림 한 장. [tint]가 있으면 그 재질로 물들여 그린다.
+@immutable
+class AvatarLayer {
+  const AvatarLayer(this.path, [this.tint]);
+
+  final String path;
+  final SkinTint? tint;
+
+  @override
+  bool operator ==(Object other) =>
+      other is AvatarLayer && other.path == path && other.tint == tint;
+
+  @override
+  int get hashCode => Object.hash(path, tint);
+
+  @override
+  String toString() => tint == null ? path : '$path (재질)';
+}
+
+/// 재질이 있으면 물들이고, 없으면 그대로.
+Widget tintedBy(SkinTint? tint, Widget child) => tint == null
+    ? child
+    : ColorFiltered(colorFilter: ColorFilter.matrix(tint.matrix), child: child);
 
 class _Breathe extends StatefulWidget {
   const _Breathe({required this.child});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'avatar_equip.dart';
+import 'buddha_figure.dart';
 
 /// 옷장 칸에 들어가는 아이템 그림.
 /// 원본 스프라이트에서 아이템 영역만 잘라낸 것을 쓴다
@@ -25,12 +26,16 @@ class ItemThumb extends StatelessWidget {
         image: true,
         child: Opacity(
           opacity: dim ? 0.5 : 1,
-          child: Image.asset(
-            item.thumbPath,
-            width: size,
-            height: size,
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.medium,
+          // 부처 재질은 민머리 썸네일을 그 재질로 물들여 보여준다.
+          child: tintedBy(
+            item.tint,
+            Image.asset(
+              item.thumbPath,
+              width: size,
+              height: size,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.medium,
+            ),
           ),
         ),
       );

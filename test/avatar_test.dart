@@ -40,23 +40,26 @@ void main() {
     });
 
     test('toggle — 같은 걸 다시 누르면 벗는다', () {
-      final on = const AvatarEquip().toggle(AvatarSlot.accessory, 'acc_beads');
-      expect(on.of(AvatarSlot.accessory), 'acc_beads');
-      expect(
-        on.toggle(AvatarSlot.accessory, 'acc_beads').of(AvatarSlot.accessory),
-        isNull,
-      );
-      expect(
-        on.toggle(AvatarSlot.accessory, 'acc_glasses').of(AvatarSlot.accessory),
-        'acc_glasses',
-      );
+      final on = const AvatarEquip().toggle(AvatarSlot.neck, 'acc_beads');
+      expect(on.of(AvatarSlot.neck), 'acc_beads');
+      expect(on.toggle(AvatarSlot.neck, 'acc_beads').of(AvatarSlot.neck), isNull);
+    });
+
+    test('안경과 단주를 같이 쓴다', () {
+      final e = const AvatarEquip()
+          .toggle(AvatarSlot.face, 'acc_glasses')
+          .toggle(AvatarSlot.neck, 'acc_beads');
+      expect(e.of(AvatarSlot.face), 'acc_glasses');
+      expect(e.of(AvatarSlot.neck), 'acc_beads');
     });
 
     test('직렬화 왕복', () {
       final e = const AvatarEquip()
+          .wear(AvatarSlot.buddha, 'buddha_gold')
           .wear(AvatarSlot.robe, 'robe_ash')
           .wear(AvatarSlot.head, 'head_nabal')
-          .wear(AvatarSlot.accessory, 'acc_beads')
+          .wear(AvatarSlot.face, 'acc_glasses')
+          .wear(AvatarSlot.neck, 'acc_beads')
           .wear(AvatarSlot.halo, 'halo_ring')
           .wear(AvatarSlot.seat, 'seat_lotus');
       expect(AvatarEquip.decode(e.encode()), e);
@@ -75,6 +78,21 @@ void main() {
           '{"robe":"robe_ash","wings":"x","head":"없어진아이템"}');
       expect(e.items.length, 1);
       expect(e.of(AvatarSlot.robe), 'robe_ash');
+    });
+
+    test('악세서리 슬롯에 저장한 예전 값이 얼굴·목으로 옮겨진다', () {
+      final glasses = AvatarEquip.decode('{"accessory":"acc_glasses"}');
+      expect(glasses.of(AvatarSlot.face), 'acc_glasses');
+      final beads = AvatarEquip.decode('{"accessory":"acc_beads"}');
+      expect(beads.of(AvatarSlot.neck), 'acc_beads');
+    });
+
+    test('예전 저장본에 부처가 없으면 살빛 부처를 입은 것으로 본다', () {
+      final e = AvatarEquip.decode('{"robe":"robe_ash","head":"head_nabal"}');
+      expect(e.of(AvatarSlot.buddha), isNull);
+      expect(e.wornIn(AvatarSlot.buddha), 'buddha_flesh');
+      expect(e.wornIn(AvatarSlot.robe), 'robe_ash');
+      expect(e.wornIn(AvatarSlot.halo), isNull, reason: '선택형은 비어 있으면 빈 채로');
     });
 
     test('예전에 저장한 기본 가사 ID가 그대로 살아 있다', () {
@@ -98,17 +116,32 @@ void main() {
       }
     });
 
-    test('머리와 가사는 공짜 기본값이 하나씩 있다', () {
-      for (final slot in [AvatarSlot.head, AvatarSlot.robe]) {
+    test('부처·머리·가사는 공짜 기본값이 하나씩 있다', () {
+      for (final slot in [AvatarSlot.buddha, AvatarSlot.head, AvatarSlot.robe]) {
         expect(wardrobeFor(slot).where((i) => i.isFree), isNotEmpty,
             reason: slot.name);
       }
     });
 
     test('비울 수 있는 슬롯 구분', () {
-      expect(kOptionalSlots.contains(AvatarSlot.accessory), isTrue);
+      expect(kOptionalSlots.contains(AvatarSlot.face), isTrue);
+      expect(kOptionalSlots.contains(AvatarSlot.neck), isTrue);
+      expect(kOptionalSlots.contains(AvatarSlot.buddha), isFalse);
       expect(kOptionalSlots.contains(AvatarSlot.head), isFalse);
       expect(kOptionalSlots.contains(AvatarSlot.robe), isFalse);
+    });
+
+    test('비울 수 없는 슬롯은 기본 착용에 다 들어 있다', () {
+      for (final s in AvatarSlot.values) {
+        if (kOptionalSlots.contains(s)) continue;
+        expect(kDefaultEquip.of(s), isNotNull, reason: s.name);
+      }
+    });
+
+    test('모든 슬롯에 아이템이 있다', () {
+      for (final s in AvatarSlot.values) {
+        expect(wardrobeFor(s), isNotEmpty, reason: s.name);
+      }
     });
 
     test('모든 슬롯에 이름이 있다', () {
@@ -131,9 +164,42 @@ void main() {
       expect(ownsItem(paid, {paid.id}), isTrue);
     });
 
-    test('민머리만 레이어가 없다', () {
-      final noLayer = kWardrobe.where((i) => !i.hasLayer).map((i) => i.id);
-      expect(noLayer, ['head_shaved']);
+    test('레이어가 없는 건 민머리와 부처뿐', () {
+      for (final item in kWardrobe.where((i) => !i.hasLayer)) {
+        expect(
+            item.id == 'head_shaved' || item.slot == AvatarSlot.buddha, isTrue,
+            reason: item.id);
+      }
+    });
+
+    test('살이 그려진 레이어는 살 레이어를 알고 있다', () {
+      // 빠뜨리면 그 옷을 입은 돌부처는 얼굴만 살빛으로 남는다.
+      for (final item in kWardrobe) {
+        final hasSkin = item.hasLayer &&
+            (item.slot == AvatarSlot.robe || item.slot == AvatarSlot.head);
+        expect(item.skinPath != null, hasSkin, reason: item.id);
+      }
+    });
+
+    test('살빛 부처만 재질이 없다', () {
+      for (final item in wardrobeFor(AvatarSlot.buddha)) {
+        expect(item.tint == null, item.id == 'buddha_flesh', reason: item.id);
+      }
+    });
+
+    test('재질 행렬 — 살 밝기 범위가 어두운 색에서 밝은 색으로 간다', () {
+      const t = SkinTint(dark: [10, 20, 30], light: [200, 210, 220]);
+      final m = t.matrix;
+      expect(m.length, 20);
+      expect(m.sublist(15), [0, 0, 0, 1, 0], reason: '알파는 건드리지 않는다');
+
+      double apply(int row, double gray) =>
+          m[row * 5] * gray + m[row * 5 + 1] * gray + m[row * 5 + 2] * gray +
+          m[row * 5 + 4];
+      // 회색은 휘도가 곧 그 값이다.
+      expect(apply(0, 90), closeTo(10, 1e-9));
+      expect(apply(0, 235), closeTo(200, 1e-9));
+      expect(apply(2, 235), closeTo(220, 1e-9));
     });
   });
 
@@ -156,6 +222,14 @@ void main() {
       }
     });
 
+    test('모든 살 레이어 파일이 있다', () async {
+      for (final item in kWardrobe) {
+        final path = item.skinPath;
+        if (path == null) continue;
+        expect(await exists(path), isTrue, reason: path);
+      }
+    });
+
     test('모든 아이템의 썸네일 파일이 있다', () async {
       for (final item in kWardrobe) {
         expect(await exists(item.thumbPath), isTrue, reason: item.thumbPath);
@@ -164,28 +238,31 @@ void main() {
   });
 
   group('BuddhaFigure — 레이어 구성', () {
-    test('그리는 순서가 후광 → 대좌 → 몸 → 머리 → 악세서리', () {
+    List<String> paths(AvatarEquip e) =>
+        BuddhaFigure.layersOf(e).map((l) => l.path).toList();
+
+    test('그리는 순서가 후광 → 대좌 → 몸 → 머리 → 얼굴 → 목', () {
       var equip = kDefaultEquip;
       for (final slot in AvatarSlot.values) {
         final items = wardrobeFor(slot).where((i) => i.hasLayer);
         if (items.isNotEmpty) equip = equip.wear(slot, items.first.id);
       }
-      expect(BuddhaFigure.layersOf(equip), [
+      expect(paths(equip), [
         'assets/avatar/halo_ring.webp',
         'assets/avatar/seat_lotus.webp',
         'assets/avatar/base_saffron.webp',
         'assets/avatar/head_nabal.webp',
+        'assets/avatar/acc_glasses.webp',
         'assets/avatar/acc_beads.webp',
       ]);
     });
 
-    test('기본 착용은 몸 한 장뿐 — 민머리는 레이어가 없다', () {
-      expect(BuddhaFigure.layersOf(kDefaultEquip),
-          ['assets/avatar/base_saffron.webp']);
+    test('기본 착용은 몸 한 장뿐 — 민머리·살빛 부처는 레이어가 없다', () {
+      expect(paths(kDefaultEquip), ['assets/avatar/base_saffron.webp']);
     });
 
     test('고르지 않은 선택형 아이템은 그리지 않는다', () {
-      final layers = BuddhaFigure.layersOf(kDefaultEquip);
+      final layers = paths(kDefaultEquip);
       expect(layers.any((p) => p.contains('halo')), isFalse);
       expect(layers.any((p) => p.contains('seat')), isFalse);
       expect(layers.any((p) => p.contains('acc_')), isFalse);
@@ -193,13 +270,52 @@ void main() {
 
     test('가사가 비어 있어도 몸은 나온다', () {
       // 저장본이 깨져 가사가 빠져도 투명 인간이 되면 안 된다.
-      expect(BuddhaFigure.layersOf(const AvatarEquip()),
-          ['assets/avatar/base_saffron.webp']);
+      expect(paths(const AvatarEquip()), ['assets/avatar/base_saffron.webp']);
     });
 
     test('가사를 바꾸면 몸 그림이 바뀐다', () {
       final ash = kDefaultEquip.wear(AvatarSlot.robe, 'robe_ash');
-      expect(BuddhaFigure.layersOf(ash), ['assets/avatar/base_ash.webp']);
+      expect(paths(ash), ['assets/avatar/base_ash.webp']);
+    });
+
+    test('재질을 입으면 살이 있는 레이어 바로 위에 물든 살이 겹친다', () {
+      final gold = wardrobeItem('buddha_gold')!.tint;
+      final equip = kDefaultEquip
+          .wear(AvatarSlot.buddha, 'buddha_gold')
+          .wear(AvatarSlot.head, 'head_nabal')
+          .wear(AvatarSlot.neck, 'acc_beads');
+      expect(BuddhaFigure.layersOf(equip), [
+        const AvatarLayer('assets/avatar/base_saffron.webp'),
+        AvatarLayer('assets/avatar/skin_body.webp', gold),
+        const AvatarLayer('assets/avatar/head_nabal.webp'),
+        AvatarLayer('assets/avatar/skin_head_nabal.webp', gold),
+        const AvatarLayer('assets/avatar/acc_beads.webp'),
+      ]);
+    });
+
+    test('물건 레이어는 재질이 있어도 물들지 않는다', () {
+      var equip = kDefaultEquip.wear(AvatarSlot.buddha, 'buddha_stone');
+      for (final slot in AvatarSlot.values) {
+        final items = wardrobeFor(slot).where((i) => i.hasLayer);
+        if (items.isNotEmpty) equip = equip.wear(slot, items.last.id);
+      }
+      for (final layer in BuddhaFigure.layersOf(equip)) {
+        expect(layer.tint != null, layer.path.contains('/skin_'),
+            reason: layer.path);
+      }
+    });
+
+    test('민머리 돌부처는 몸의 살만 물든다', () {
+      final equip = kDefaultEquip.wear(AvatarSlot.buddha, 'buddha_stone');
+      expect(paths(equip), [
+        'assets/avatar/base_saffron.webp',
+        'assets/avatar/skin_body.webp',
+      ]);
+    });
+
+    test('예전 저장본(부처 없음)도 살빛으로 그려진다', () {
+      final old = AvatarEquip.decode('{"robe":"robe_ash","head":"head_nabal"}');
+      expect(BuddhaFigure.layersOf(old).every((l) => l.tint == null), isTrue);
     });
   });
 
@@ -226,6 +342,24 @@ void main() {
         'assets/avatar/base_crimson.webp',
         'assets/avatar/head_straw.webp',
         'assets/avatar/acc_glasses.webp',
+        'assets/avatar/acc_beads.webp',
+      ]);
+    });
+
+    testWidgets('재질은 살 레이어에만 색 필터로 입힌다', (tester) async {
+      final equip = kDefaultEquip
+          .wear(AvatarSlot.buddha, 'buddha_jade')
+          .wear(AvatarSlot.head, 'head_straw');
+      await tester.pumpWidget(_wrap(BuddhaFigure(equip: equip)));
+      expect(tester.takeException(), isNull);
+
+      final filtered = tester
+          .widgetList<Image>(find.descendant(
+              of: find.byType(ColorFiltered), matching: find.byType(Image)))
+          .map((w) => (w.image as AssetImage).assetName);
+      expect(filtered, [
+        'assets/avatar/skin_body.webp',
+        'assets/avatar/skin_head_straw.webp',
       ]);
     });
 
@@ -238,7 +372,8 @@ void main() {
     });
 
     testWidgets('레이어가 전부 같은 사각형을 쓴다 — 위치 보정 없음', (tester) async {
-      var equip = kDefaultEquip;
+      // 물든 살 레이어도 같은 사각형이어야 한다.
+      var equip = kDefaultEquip.wear(AvatarSlot.buddha, 'buddha_gold');
       for (final slot in AvatarSlot.values) {
         final items = wardrobeFor(slot).where((i) => i.hasLayer);
         if (items.isNotEmpty) equip = equip.wear(slot, items.first.id);
@@ -249,7 +384,7 @@ void main() {
           .widgetList<Image>(find.byType(Image))
           .map((w) => tester.getRect(find.byWidget(w)))
           .toList();
-      expect(boxes.length, 5);
+      expect(boxes.length, 8);
       for (final r in boxes) {
         expect(r, boxes.first, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
       }

@@ -39,7 +39,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
     final purchased = repo.ownedItemsOf(profile);
 
     if (!ownsItem(item, purchased)) {
-      await _confirmBuy(item, profile.merit);
+      await _confirmBuy(item, profile.merit, state);
       return;
     }
 
@@ -51,7 +51,8 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
     });
   }
 
-  Future<void> _confirmBuy(WardrobeItem item, int merit) async {
+  Future<void> _confirmBuy(
+      WardrobeItem item, int merit, TempleHomeState state) async {
     final enough = merit >= item.meritCost;
     final ok = await showDialog<bool>(
       context: context,
@@ -83,7 +84,9 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
 
     ref.invalidate(homeStateProvider);
     setState(() {
-      _draft = (_draft ?? kDefaultEquip).wear(item.slot, item.id);
+      // 기본 착용이 아니라 지금 입어 보던 것 위에 입힌다. 산 걸 입어 보다가
+      // 입던 모자·가사가 사라지면 안 된다.
+      _draft = _equipOf(state).wear(item.slot, item.id);
     });
   }
 
@@ -325,7 +328,7 @@ class _Grid extends ConsumerWidget {
           _ItemTile(
             item: item,
             owned: ownsItem(item, purchased),
-            worn: equip.of(item.slot) == item.id,
+            worn: equip.wornIn(item.slot) == item.id,
             onTap: () => onTap(item),
           ),
       ],

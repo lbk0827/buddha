@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _wrap(Widget child, {Brightness b = Brightness.light}) => MaterialApp(
-      theme: b == Brightness.light ? AppTheme.light() : AppTheme.dark(),
-      home: Scaffold(body: Center(child: child)),
-    );
+  theme: b == Brightness.light ? AppTheme.light() : AppTheme.dark(),
+  home: Scaffold(body: Center(child: child)),
+);
 
 /// Image.asset이 실제로 가리키는 경로.
 List<String> _assetPaths(WidgetTester tester) => tester
@@ -42,7 +42,10 @@ void main() {
     test('toggle — 같은 걸 다시 누르면 벗는다', () {
       final on = const AvatarEquip().toggle(AvatarSlot.neck, 'acc_beads');
       expect(on.of(AvatarSlot.neck), 'acc_beads');
-      expect(on.toggle(AvatarSlot.neck, 'acc_beads').of(AvatarSlot.neck), isNull);
+      expect(
+        on.toggle(AvatarSlot.neck, 'acc_beads').of(AvatarSlot.neck),
+        isNull,
+      );
     });
 
     test('안경과 단주를 같이 쓴다', () {
@@ -75,7 +78,8 @@ void main() {
 
     test('모르는 슬롯과 사라진 아이템은 버린다', () {
       final e = AvatarEquip.decode(
-          '{"robe":"robe_ash","wings":"x","head":"없어진아이템"}');
+        '{"robe":"robe_ash","wings":"x","head":"없어진아이템"}',
+      );
       expect(e.items.length, 1);
       expect(e.of(AvatarSlot.robe), 'robe_ash');
     });
@@ -93,6 +97,35 @@ void main() {
       expect(e.wornIn(AvatarSlot.buddha), 'buddha_flesh');
       expect(e.wornIn(AvatarSlot.robe), 'robe_ash');
       expect(e.wornIn(AvatarSlot.halo), isNull, reason: '선택형은 비어 있으면 빈 채로');
+    });
+
+    test('신발 슬롯이 없던 예전 저장본은 맨발로 복원된다', () {
+      final e = AvatarEquip.decode(
+        '{"buddha":"buddha_jade","robe":"robe_ash","head":"head_nabal",'
+        '"face":"acc_glasses","neck":"acc_beads"}',
+      );
+      expect(e.of(AvatarSlot.feet), isNull);
+      expect(e.wornIn(AvatarSlot.feet), isNull, reason: '선택형이라 기본값을 채우지 않는다');
+      expect(e.items.length, 5, reason: '기존 착용은 하나도 빠지지 않는다');
+    });
+
+    test('새 아이템은 저장된 키가 달라도 아이템 id로 제 슬롯을 찾는다', () {
+      final e = AvatarEquip.decode(
+        '{"accessory":"acc_neckphones","x":"feet_sneakers",'
+        '"face":"acc_pinkshades","robe":"robe_lavender"}',
+      );
+      expect(e.of(AvatarSlot.neck), 'acc_neckphones');
+      expect(e.of(AvatarSlot.feet), 'feet_sneakers');
+      expect(e.of(AvatarSlot.face), 'acc_pinkshades');
+      expect(e.of(AvatarSlot.robe), 'robe_lavender');
+    });
+
+    test('신발까지 입은 한 벌도 직렬화 왕복', () {
+      final e = kDefaultEquip
+          .wear(AvatarSlot.feet, 'feet_sneakers')
+          .wear(AvatarSlot.neck, 'acc_goldbeads')
+          .wear(AvatarSlot.face, 'acc_sunglasses');
+      expect(AvatarEquip.decode(e.encode()), e);
     });
 
     test('예전에 저장한 기본 가사 ID가 그대로 살아 있다', () {
@@ -117,13 +150,25 @@ void main() {
     });
 
     test('부처·머리·가사는 공짜 기본값이 하나씩 있다', () {
-      for (final slot in [AvatarSlot.buddha, AvatarSlot.head, AvatarSlot.robe]) {
-        expect(wardrobeFor(slot).where((i) => i.isFree), isNotEmpty,
-            reason: slot.name);
+      for (final slot in [
+        AvatarSlot.buddha,
+        AvatarSlot.head,
+        AvatarSlot.robe,
+      ]) {
+        expect(
+          wardrobeFor(slot).where((i) => i.isFree),
+          isNotEmpty,
+          reason: slot.name,
+        );
       }
     });
 
     test('비울 수 있는 슬롯 구분', () {
+      expect(
+        kOptionalSlots.contains(AvatarSlot.feet),
+        isTrue,
+        reason: '맨발이 기본이다',
+      );
       expect(kOptionalSlots.contains(AvatarSlot.face), isTrue);
       expect(kOptionalSlots.contains(AvatarSlot.neck), isTrue);
       expect(kOptionalSlots.contains(AvatarSlot.buddha), isFalse);
@@ -150,6 +195,28 @@ void main() {
       }
     });
 
+    test('신규 소품·가사 6종이 제 슬롯과 공덕으로 들어 있다', () {
+      const expected = {
+        'acc_sunglasses': (AvatarSlot.face, 700),
+        'acc_pinkshades': (AvatarSlot.face, 900),
+        'acc_neckphones': (AvatarSlot.neck, 900),
+        'acc_goldbeads': (AvatarSlot.neck, 1300),
+        'feet_sneakers': (AvatarSlot.feet, 600),
+        'robe_lavender': (AvatarSlot.robe, 600),
+      };
+      for (final MapEntry(key: id, value: (slot, cost)) in expected.entries) {
+        final item = wardrobeItem(id);
+        expect(item, isNotNull, reason: id);
+        expect(item!.slot, slot, reason: id);
+        expect(item.meritCost, cost, reason: id);
+        expect(item.hasLayer, isTrue, reason: id);
+      }
+      expect(
+        wardrobeItem('robe_lavender')!.skinPath,
+        'assets/avatar/skin_body.webp',
+      );
+    });
+
     test('없는 ID는 null', () {
       expect(wardrobeItem('없음'), isNull);
       expect(wardrobeItem(null), isNull);
@@ -167,15 +234,18 @@ void main() {
     test('레이어가 없는 건 민머리와 부처뿐', () {
       for (final item in kWardrobe.where((i) => !i.hasLayer)) {
         expect(
-            item.id == 'head_shaved' || item.slot == AvatarSlot.buddha, isTrue,
-            reason: item.id);
+          item.id == 'head_shaved' || item.slot == AvatarSlot.buddha,
+          isTrue,
+          reason: item.id,
+        );
       }
     });
 
     test('살이 그려진 레이어는 살 레이어를 알고 있다', () {
       // 빠뜨리면 그 옷을 입은 돌부처는 얼굴만 살빛으로 남는다.
       for (final item in kWardrobe) {
-        final hasSkin = item.hasLayer &&
+        final hasSkin =
+            item.hasLayer &&
             (item.slot == AvatarSlot.robe || item.slot == AvatarSlot.head);
         expect(item.skinPath != null, hasSkin, reason: item.id);
       }
@@ -194,7 +264,9 @@ void main() {
       expect(m.sublist(15), [0, 0, 0, 1, 0], reason: '알파는 건드리지 않는다');
 
       double apply(int row, double gray) =>
-          m[row * 5] * gray + m[row * 5 + 1] * gray + m[row * 5 + 2] * gray +
+          m[row * 5] * gray +
+          m[row * 5 + 1] * gray +
+          m[row * 5 + 2] * gray +
           m[row * 5 + 4];
       // 회색은 휘도가 곧 그 값이다.
       expect(apply(0, 90), closeTo(10, 1e-9));
@@ -241,7 +313,7 @@ void main() {
     List<String> paths(AvatarEquip e) =>
         BuddhaFigure.layersOf(e).map((l) => l.path).toList();
 
-    test('그리는 순서가 후광 → 대좌 → 몸 → 머리 → 얼굴 → 목', () {
+    test('그리는 순서가 후광 → 대좌 → 몸 → 발 → 머리 → 얼굴 → 목', () {
       var equip = kDefaultEquip;
       for (final slot in AvatarSlot.values) {
         final items = wardrobeFor(slot).where((i) => i.hasLayer);
@@ -251,6 +323,7 @@ void main() {
         'assets/avatar/halo_ring.webp',
         'assets/avatar/seat_lotus.webp',
         'assets/avatar/base_saffron.webp',
+        'assets/avatar/feet_sneakers.webp',
         'assets/avatar/head_nabal.webp',
         'assets/avatar/acc_glasses.webp',
         'assets/avatar/acc_beads.webp',
@@ -300,9 +373,34 @@ void main() {
         if (items.isNotEmpty) equip = equip.wear(slot, items.last.id);
       }
       for (final layer in BuddhaFigure.layersOf(equip)) {
-        expect(layer.tint != null, layer.path.contains('/skin_'),
-            reason: layer.path);
+        expect(
+          layer.tint != null,
+          layer.path.contains('/skin_'),
+          reason: layer.path,
+        );
       }
+    });
+
+    test('신발은 물든 살 위에 온다 — 재질 입은 맨발이 비치지 않게', () {
+      final stone = wardrobeItem('buddha_stone')!.tint;
+      final equip = kDefaultEquip
+          .wear(AvatarSlot.buddha, 'buddha_stone')
+          .wear(AvatarSlot.feet, 'feet_sneakers');
+      expect(BuddhaFigure.layersOf(equip), [
+        const AvatarLayer('assets/avatar/base_saffron.webp'),
+        AvatarLayer('assets/avatar/skin_body.webp', stone),
+        const AvatarLayer('assets/avatar/feet_sneakers.webp'),
+      ]);
+    });
+
+    test('라벤더 가사도 몸의 살 레이어를 같이 쓴다', () {
+      final equip = kDefaultEquip
+          .wear(AvatarSlot.buddha, 'buddha_pink')
+          .wear(AvatarSlot.robe, 'robe_lavender');
+      expect(paths(equip), [
+        'assets/avatar/base_lavender.webp',
+        'assets/avatar/skin_body.webp',
+      ]);
     });
 
     test('민머리 돌부처는 몸의 살만 물든다', () {
@@ -339,10 +437,11 @@ void main() {
       expect(_assetPaths(tester), [
         'assets/avatar/halo_ring.webp',
         'assets/avatar/seat_lotus.webp',
-        'assets/avatar/base_crimson.webp',
+        'assets/avatar/base_lavender.webp',
+        'assets/avatar/feet_sneakers.webp',
         'assets/avatar/head_straw.webp',
-        'assets/avatar/acc_glasses.webp',
-        'assets/avatar/acc_beads.webp',
+        'assets/avatar/acc_pinkshades.webp',
+        'assets/avatar/acc_goldbeads.webp',
       ]);
     });
 
@@ -354,8 +453,12 @@ void main() {
       expect(tester.takeException(), isNull);
 
       final filtered = tester
-          .widgetList<Image>(find.descendant(
-              of: find.byType(ColorFiltered), matching: find.byType(Image)))
+          .widgetList<Image>(
+            find.descendant(
+              of: find.byType(ColorFiltered),
+              matching: find.byType(Image),
+            ),
+          )
           .map((w) => (w.image as AssetImage).assetName);
       expect(filtered, [
         'assets/avatar/skin_body.webp',
@@ -366,7 +469,8 @@ void main() {
     testWidgets('모든 아이템을 하나씩 입혀도 예외가 없다', (tester) async {
       for (final item in kWardrobe) {
         await tester.pumpWidget(
-            _wrap(BuddhaFigure(equip: kDefaultEquip.wear(item.slot, item.id))));
+          _wrap(BuddhaFigure(equip: kDefaultEquip.wear(item.slot, item.id))),
+        );
         expect(tester.takeException(), isNull, reason: item.id);
       }
     });
@@ -384,7 +488,8 @@ void main() {
           .widgetList<Image>(find.byType(Image))
           .map((w) => tester.getRect(find.byWidget(w)))
           .toList();
-      expect(boxes.length, 8);
+      // 후광·대좌·몸·물든 몸·발·머리·물든 머리·얼굴·목
+      expect(boxes.length, 9);
       for (final r in boxes) {
         expect(r, boxes.first, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
       }
@@ -393,8 +498,11 @@ void main() {
     });
 
     testWidgets('모든 레이어가 BoxFit.contain', (tester) async {
-      await tester.pumpWidget(_wrap(
-          BuddhaFigure(equip: kDefaultEquip.wear(AvatarSlot.halo, 'halo_ring'))));
+      await tester.pumpWidget(
+        _wrap(
+          BuddhaFigure(equip: kDefaultEquip.wear(AvatarSlot.halo, 'halo_ring')),
+        ),
+      );
       for (final image in tester.widgetList<Image>(find.byType(Image))) {
         expect(image.fit, BoxFit.contain);
       }

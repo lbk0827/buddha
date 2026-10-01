@@ -52,7 +52,10 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
   }
 
   Future<void> _confirmBuy(
-      WardrobeItem item, int merit, TempleHomeState state) async {
+    WardrobeItem item,
+    int merit,
+    TempleHomeState state,
+  ) async {
     final enough = merit >= item.meritCost;
     final ok = await showDialog<bool>(
       context: context,

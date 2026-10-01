@@ -22,21 +22,21 @@ class ItemThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: item.name,
-        image: true,
-        child: Opacity(
-          opacity: dim ? 0.5 : 1,
-          // 부처 재질은 민머리 썸네일을 그 재질로 물들여 보여준다.
-          child: tintedBy(
-            item.tint,
-            Image.asset(
-              item.thumbPath,
-              width: size,
-              height: size,
-              fit: BoxFit.contain,
-              filterQuality: FilterQuality.medium,
-            ),
-          ),
+    label: item.name,
+    image: true,
+    child: Opacity(
+      opacity: dim ? 0.5 : 1,
+      // 부처 재질은 민머리 썸네일을 그 재질로 물들여 보여준다.
+      child: tintedBy(
+        item.tint,
+        Image.asset(
+          item.thumbPath,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.medium,
         ),
-      );
+      ),
+    ),
+  );
 }

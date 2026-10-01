@@ -4,12 +4,12 @@ import 'avatar_equip.dart';
 
 /// 내 부처님.
 ///
-/// 스프라이트 11장은 전부 1024×1024 같은 좌표계로 그려져 있어서,
+/// 스프라이트는 전부 1024×1024 같은 좌표계로 그려져 있어서,
 /// 같은 사각형에 [BoxFit.contain]으로 겹치기만 하면 정렬이 맞는다.
 /// **레이어별 위치 보정을 넣지 말 것** — 넣는 순간 어긋난다.
 ///
 /// 쌓는 순서는 [AvatarSlot]의 선언 순서를 그대로 따른다:
-/// 후광 → 대좌 → 몸(가사) → 머리 → 악세서리
+/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목
 class BuddhaFigure extends StatelessWidget {
   const BuddhaFigure({
     super.key,
@@ -125,11 +125,11 @@ class _BreatheState extends State<_Breathe>
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _c,
-        builder: (context, child) => Transform.translate(
-          offset: Offset(0, -3 * Curves.easeInOut.transform(_c.value)),
-          child: child,
-        ),
-        child: widget.child,
-      );
+    animation: _c,
+    builder: (context, child) => Transform.translate(
+      offset: Offset(0, -3 * Curves.easeInOut.transform(_c.value)),
+      child: child,
+    ),
+    child: widget.child,
+  );
 }

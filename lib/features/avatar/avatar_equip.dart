@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 /// 내 부처님의 레이어. 나열 순서가 그대로 그리는 순서다.
-/// 후광 → 대좌 → 몸(가사) → 머리 → 얼굴 → 목
+/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목
+///
+/// 발은 몸 바로 다음이다. 몸 위에 재질 입힌 살이 한 번 더 겹치므로, 그보다
+/// 뒤에 그려야 신발이 맨발(과 물든 발)을 덮는다.
 ///
 /// 「부처」는 겹칠 그림이 없다. 몸과 머리의 살에 재질을 입힐 뿐이라
 /// 그리는 순서와 상관없이 맨 앞에 둔다.
-enum AvatarSlot { buddha, halo, seat, robe, head, face, neck }
+enum AvatarSlot { buddha, halo, seat, robe, feet, head, face, neck }
 
 /// 옷장 탭에 나오는 순서.
 const Map<AvatarSlot, String> kSlotNames = {
@@ -14,6 +17,7 @@ const Map<AvatarSlot, String> kSlotNames = {
   AvatarSlot.robe: '가사',
   AvatarSlot.face: '얼굴',
   AvatarSlot.neck: '목',
+  AvatarSlot.feet: '발',
   AvatarSlot.seat: '대좌',
   AvatarSlot.halo: '후광',
 };
@@ -35,8 +39,7 @@ class AvatarEquip {
   AvatarEquip wear(AvatarSlot slot, String itemId) =>
       AvatarEquip({...items, slot: itemId});
 
-  AvatarEquip takeOff(AvatarSlot slot) =>
-      AvatarEquip({...items}..remove(slot));
+  AvatarEquip takeOff(AvatarSlot slot) => AvatarEquip({...items}..remove(slot));
 
   /// 이미 입고 있으면 벗고, 아니면 입는다. 비울 수 있는 슬롯에만 쓴다.
   AvatarEquip toggle(AvatarSlot slot, String itemId) =>
@@ -150,122 +153,195 @@ class WardrobeItem {
 const List<WardrobeItem> kWardrobe = [
   // 부처 — 몸과 얼굴의 살에 재질을 입힌다. 모자·가사·소품은 제 색 그대로다.
   WardrobeItem(
-      id: 'buddha_flesh',
-      name: '살빛 부처',
-      slot: AvatarSlot.buddha,
-      file: 'head_shaved',
-      hasLayer: false),
+    id: 'buddha_flesh',
+    name: '살빛 부처',
+    slot: AvatarSlot.buddha,
+    file: 'head_shaved',
+    hasLayer: false,
+  ),
   WardrobeItem(
-      id: 'buddha_stone',
-      name: '돌부처',
-      slot: AvatarSlot.buddha,
-      meritCost: 500,
-      file: 'head_shaved',
-      hasLayer: false,
-      tint: SkinTint(dark: [64, 62, 58], light: [236, 232, 222])),
+    id: 'buddha_stone',
+    name: '돌부처',
+    slot: AvatarSlot.buddha,
+    meritCost: 500,
+    file: 'head_shaved',
+    hasLayer: false,
+    tint: SkinTint(dark: [64, 62, 58], light: [236, 232, 222]),
+  ),
   // 청동은 넣지 않았다. 금속은 번쩍이는 하이라이트로 읽히는데, 밝기를
   // 색으로 옮기는 것만으로는 그게 안 나와서 갈색 피부처럼 보인다.
   WardrobeItem(
-      id: 'buddha_porcelain',
-      name: '백자부처',
-      slot: AvatarSlot.buddha,
-      meritCost: 800,
-      file: 'head_shaved',
-      hasLayer: false,
-      tint: SkinTint(dark: [92, 104, 126], light: [272, 274, 282])),
+    id: 'buddha_porcelain',
+    name: '백자부처',
+    slot: AvatarSlot.buddha,
+    meritCost: 800,
+    file: 'head_shaved',
+    hasLayer: false,
+    tint: SkinTint(dark: [92, 104, 126], light: [272, 274, 282]),
+  ),
   WardrobeItem(
-      id: 'buddha_jade',
-      name: '옥부처',
-      slot: AvatarSlot.buddha,
-      meritCost: 1100,
-      file: 'head_shaved',
-      hasLayer: false,
-      tint: SkinTint(dark: [18, 84, 60], light: [206, 255, 222])),
+    id: 'buddha_jade',
+    name: '옥부처',
+    slot: AvatarSlot.buddha,
+    meritCost: 1100,
+    file: 'head_shaved',
+    hasLayer: false,
+    tint: SkinTint(dark: [18, 84, 60], light: [206, 255, 222]),
+  ),
   // 핑꾸 — 형광 핫핑크. 전시장에 서 있던 벨벳 핑크 불상에서 왔다.
   WardrobeItem(
-      id: 'buddha_pink',
-      name: '핑꾸부처',
-      slot: AvatarSlot.buddha,
-      meritCost: 1300,
-      file: 'head_shaved',
-      hasLayer: false,
-      tint: SkinTint(dark: [128, 0, 58], light: [330, 66, 186])),
+    id: 'buddha_pink',
+    name: '핑꾸부처',
+    slot: AvatarSlot.buddha,
+    meritCost: 1300,
+    file: 'head_shaved',
+    hasLayer: false,
+    tint: SkinTint(dark: [128, 0, 58], light: [330, 66, 186]),
+  ),
   WardrobeItem(
-      id: 'buddha_gold',
-      name: '황금부처',
-      slot: AvatarSlot.buddha,
-      meritCost: 1500,
-      file: 'head_shaved',
-      hasLayer: false,
-      tint: SkinTint(dark: [112, 52, 0], light: [330, 226, 64])),
+    id: 'buddha_gold',
+    name: '황금부처',
+    slot: AvatarSlot.buddha,
+    meritCost: 1500,
+    file: 'head_shaved',
+    hasLayer: false,
+    tint: SkinTint(dark: [112, 52, 0], light: [330, 226, 64]),
+  ),
 
   // 머리 — 민머리는 베이스 그대로라 겹칠 그림이 없다.
   WardrobeItem(
-      id: 'head_shaved', name: '민머리', slot: AvatarSlot.head, hasLayer: false),
+    id: 'head_shaved',
+    name: '민머리',
+    slot: AvatarSlot.head,
+    hasLayer: false,
+  ),
   WardrobeItem(
-      id: 'head_nabal',
-      name: '나발',
-      slot: AvatarSlot.head,
-      meritCost: 300,
-      skin: 'skin_head_nabal'),
+    id: 'head_nabal',
+    name: '나발',
+    slot: AvatarSlot.head,
+    meritCost: 300,
+    skin: 'skin_head_nabal',
+  ),
   WardrobeItem(
-      id: 'head_bamboo',
-      name: '삿갓',
-      slot: AvatarSlot.head,
-      meritCost: 500,
-      skin: 'skin_head_bamboo'),
+    id: 'head_bamboo',
+    name: '삿갓',
+    slot: AvatarSlot.head,
+    meritCost: 500,
+    skin: 'skin_head_bamboo',
+  ),
   WardrobeItem(
-      id: 'head_straw',
-      name: '밀짚모자',
-      slot: AvatarSlot.head,
-      meritCost: 700,
-      skin: 'skin_head_straw'),
+    id: 'head_straw',
+    name: '밀짚모자',
+    slot: AvatarSlot.head,
+    meritCost: 700,
+    skin: 'skin_head_straw',
+  ),
 
   // 가사 — 겹치는 레이어가 아니라 몸 그림 자체를 바꾼다.
   // 살은 가사가 달라도 같은 픽셀이라 살 레이어 한 장을 같이 쓴다.
   WardrobeItem(
-      id: 'robe_saffron',
-      name: '황토 가사',
-      slot: AvatarSlot.robe,
-      file: 'base_saffron',
-      skin: 'skin_body'),
+    id: 'robe_saffron',
+    name: '황토 가사',
+    slot: AvatarSlot.robe,
+    file: 'base_saffron',
+    skin: 'skin_body',
+  ),
   WardrobeItem(
-      id: 'robe_temple',
-      name: '먹물 가사',
-      slot: AvatarSlot.robe,
-      meritCost: 200,
-      file: 'base_temple',
-      skin: 'skin_body'),
+    id: 'robe_temple',
+    name: '먹물 가사',
+    slot: AvatarSlot.robe,
+    meritCost: 200,
+    file: 'base_temple',
+    skin: 'skin_body',
+  ),
   WardrobeItem(
-      id: 'robe_ash',
-      name: '잿빛 가사',
-      slot: AvatarSlot.robe,
-      meritCost: 400,
-      file: 'base_ash',
-      skin: 'skin_body'),
+    id: 'robe_ash',
+    name: '잿빛 가사',
+    slot: AvatarSlot.robe,
+    meritCost: 400,
+    file: 'base_ash',
+    skin: 'skin_body',
+  ),
   WardrobeItem(
-      id: 'robe_crimson',
-      name: '홍가사',
-      slot: AvatarSlot.robe,
-      meritCost: 900,
-      file: 'base_crimson',
-      skin: 'skin_body'),
+    id: 'robe_crimson',
+    name: '홍가사',
+    slot: AvatarSlot.robe,
+    meritCost: 900,
+    file: 'base_crimson',
+    skin: 'skin_body',
+  ),
+  WardrobeItem(
+    id: 'robe_lavender',
+    name: '라벤더 가사',
+    slot: AvatarSlot.robe,
+    meritCost: 600,
+    file: 'base_lavender',
+    skin: 'skin_body',
+  ),
 
   // 얼굴
   WardrobeItem(
-      id: 'acc_glasses', name: '안경', slot: AvatarSlot.face, meritCost: 600),
+    id: 'acc_glasses',
+    name: '안경',
+    slot: AvatarSlot.face,
+    meritCost: 600,
+  ),
+  WardrobeItem(
+    id: 'acc_sunglasses',
+    name: '동그란 선글라스',
+    slot: AvatarSlot.face,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'acc_pinkshades',
+    name: '핑크 선글라스',
+    slot: AvatarSlot.face,
+    meritCost: 900,
+  ),
 
   // 목
   WardrobeItem(
-      id: 'acc_beads', name: '단주', slot: AvatarSlot.neck, meritCost: 150),
+    id: 'acc_beads',
+    name: '단주',
+    slot: AvatarSlot.neck,
+    meritCost: 150,
+  ),
+  WardrobeItem(
+    id: 'acc_neckphones',
+    name: '목에 건 헤드폰',
+    slot: AvatarSlot.neck,
+    meritCost: 900,
+  ),
+  WardrobeItem(
+    id: 'acc_goldbeads',
+    name: '금빛 단주',
+    slot: AvatarSlot.neck,
+    meritCost: 1300,
+  ),
+
+  // 발
+  WardrobeItem(
+    id: 'feet_sneakers',
+    name: '흰 운동화',
+    slot: AvatarSlot.feet,
+    meritCost: 600,
+  ),
 
   // 대좌
   WardrobeItem(
-      id: 'seat_lotus', name: '연꽃 대좌', slot: AvatarSlot.seat, meritCost: 1200),
+    id: 'seat_lotus',
+    name: '연꽃 대좌',
+    slot: AvatarSlot.seat,
+    meritCost: 1200,
+  ),
 
   // 후광
   WardrobeItem(
-      id: 'halo_ring', name: '후광', slot: AvatarSlot.halo, meritCost: 1000),
+    id: 'halo_ring',
+    name: '후광',
+    slot: AvatarSlot.halo,
+    meritCost: 1000,
+  ),
 ];
 
 /// 출가하면 이것부터 입는다. 전부 공덕 0짜리다.
@@ -277,6 +353,7 @@ const AvatarEquip kDefaultEquip = AvatarEquip({
 
 /// 비워둘 수 있는 슬롯. 부처·머리·가사는 항상 뭔가 입고 있어야 한다.
 const Set<AvatarSlot> kOptionalSlots = {
+  AvatarSlot.feet,
   AvatarSlot.face,
   AvatarSlot.neck,
   AvatarSlot.seat,

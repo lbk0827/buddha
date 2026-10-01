@@ -13,7 +13,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from build_avatar_assets import save_layer
+from build_avatar_assets import ALPHA_FLOOR, PLACED, save_layer
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets" / "avatar"
@@ -43,7 +43,8 @@ ROBE_CROP = (270, 500, 755, 940)
 # 민머리는 머리까지만. 어깨가 들어가면 혼자 작은 캐릭터처럼 보인다.
 SHAVED_WINDOW = (255, 85, 770, 495)
 
-ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
+ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson",
+         "base_lavender"]
 
 # 머리에 씌워서 보여줄 것들. head_shaved 는 아무것도 안 씌운 상태다.
 HEADS = ["head_shaved", "head_nabal", "head_bamboo", "head_straw"]
@@ -186,6 +187,16 @@ def main() -> None:
             raise SystemExit(f"{name}: 남은 게 없다")
         save_layer(square_fit(image.crop(pad_box(box, *image.size))), OUT, name)
         print(f"{name} ({source})")
+
+    # 물건만 그려 받은 소품은 원본을 쓴다. 앱 레이어는 손 뒤·목 뒤로 넘어가는
+    # 부분을 지워 놓아서 물건이 잘려 보인다.
+    for name in PLACED:
+        image = Image.open(RAW / f"{name}.png").convert("RGBA")
+        image.putalpha(image.getchannel("A").point(
+            lambda v: 0 if v < ALPHA_FLOOR else v))
+        box = pad_box(alpha_bbox(image), *image.size)
+        save_layer(square_fit(image.crop(box)), OUT, name)
+        print(f"{name} (물건 원본)")
 
     for name in ITEMS:
         image = Image.open(SRC / f"{name}.webp").convert("RGBA")

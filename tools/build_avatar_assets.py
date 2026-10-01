@@ -12,6 +12,10 @@ Imgs/*.png (납품 원본) → assets/avatar/*.webp (앱에 나가는 것)
   모자가 머리를 덮지 못하고 뚜껑처럼 올라앉는다. 그래서 얼굴째 받는다.
 - head_*_full.png — 베이스를 편집한 전신. 좌표가 같으니 목 위만 자른다.
 
+얼굴·목·발 소품은 「물건만」 크게 그려 받는다. 베이스에 대 보며 정한
+크기·자리(PLACED)로 1024 캔버스에 옮겨 놓고, 몸 뒤로 가야 하는 부분
+(합장한 손 뒤, 목 뒤, 가사 밑단 안)은 지운다.
+
 **아이템을 보기 좋게 옮기는 보정은 하지 않는다.** FACE_FIT 은 「얼굴을
 베이스 얼굴에 겹치는」 정합일 뿐이고, 그 결과가 베이스 머리를 다 덮는지
 여기서 검사한다. 모자가 크거나 낮아 보이면 그건 생성 단계에서 잡는다.
@@ -29,7 +33,7 @@ Imgs/*.png (납품 원본) → assets/avatar/*.webp (앱에 나가는 것)
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "Imgs"
@@ -62,9 +66,47 @@ WEBP_QUALITY = 90
 # 옮긴 얼굴 뒤로 베이스 민머리가 이만큼 넘게 비치면 정합이 틀린 것이다.
 MAX_PEEK = 400
 
-BASES = ["base_saffron", "base_temple", "base_ash", "base_crimson"]
+BASES = ["base_saffron", "base_temple", "base_ash", "base_crimson",
+         "base_lavender"]
 HEADS = ["head_nabal", "head_bamboo", "head_straw"]
 OVERLAYS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
+
+# 물건만 그려 받은 소품을 베이스에 놓는 값.
+#   (배율, 원본 기준점, 베이스 기준점, 몸 뒤로 숨길 곳)
+# 원본 기준점이 베이스 기준점에 오도록 배율대로 줄여 놓는다. 베이스 기준점은
+# 베이스를 재서 얻었다 — 감은 두 눈 가운데 (510, 356), 목 y 478,
+# 합장한 손끝 y 520, 두 발 중심 x 457·565 · 발바닥 y 918.
+#   선글라스  두 렌즈 중심 간격을 두 눈 간격(156)에 맞춘다. 동그란 것은 아래
+#             테가 입꼬리에 닿아 6% 줄였다
+#   헤드폰    두 컵이 쇄골 앞 양옆, 밴드는 목 뒤(BAND 를 지운다), 컵은 손 뒤
+#   금빛 단주 손끝이 목 바로 아래라 U 를 손 위에 둘 자리가 없다. 손 뒤로
+#             지나 손 아래에서 U 가 보이게 한다
+#   운동화    두 짝 간격을 두 발 간격보다 조금 넓게(128) 잡아 발가락까지
+#             덮고, 가사 밑단 안쪽은 지운다
+PLACED = {
+    "acc_sunglasses": (156 / 452 * 0.94, (512, 515), (510, 356), ()),
+    "acc_pinkshades": (156 / 462, (512, 512), (510, 356), ()),
+    "acc_neckphones": (0.34, (512, 477), (512, 470), ("band", "hands")),
+    "acc_goldbeads": (170 / 685, (512, 99), (512, 466), ("hands",)),
+    "feet_sneakers": (128 / 336, (511, 776), (511, 936), ("robe",)),
+}
+
+# 헤드폰 원본에서 목 뒤로 넘어가는 밴드. 양쪽 경첩 사이, 쿠션 위쪽의 띠다.
+BAND = [(325, 500), (420, 512), (512, 520), (604, 512), (700, 500),
+        (692, 546), (632, 562), (606, 586), (512, 600), (418, 586),
+        (392, 562), (332, 546)]
+
+# 베이스에서 합장한 두 손의 윤곽. 맨살인 왼쪽 가슴과 붙어 있어서 살만으로는
+# 가를 수 없다.
+HAND_OUTLINE = [(503, 514), (522, 514), (542, 530), (558, 578), (568, 646),
+                (456, 646), (462, 588), (482, 530)]
+
+# 원본 둘레에 투명도 1~15 짜리 흐린 점이 수천 개 흩어져 있다. 지운다.
+ALPHA_FLOOR = 16
+
+# 운동화 두 짝 사이 위쪽은 발목이 가늘어져 발이 비친다. 가사 밑단 아래
+# 그림자처럼 어두운 중간색으로 메운다. 가사 색을 따면 다른 가사에서 어긋난다.
+SHOE_GAP_SHADOW = (72, 62, 56)
 
 
 def load(name: str) -> Image.Image:
@@ -218,6 +260,82 @@ def measure(name: str) -> None:
     print(f'    "{name}": {best},')
 
 
+def body_masks():
+    """소품을 몸 뒤로 숨길 때 쓰는 가사·손 마스크를 원본 PNG 에서 만든다.
+
+    가사 = 가사 원본끼리 다른 픽셀. 발가락 윤곽이나 밑단 아래 발등 그림자도
+    가사마다 조금씩 달라 같이 잡히므로, 가는 선은 열림 연산으로 걸러 내고
+    안쪽으로 몇 픽셀 더 깎는다. 소품이 가사 경계 밑으로 살짝 파고들어야
+    아래 살이 비치지 않는다.
+    """
+    bases = [load(name) for name in BASES]
+    first = bases[0]
+    diff = Image.new("L", first.size, 0)
+    for other in bases[1:]:
+        r, g, b = ImageChops.difference(
+            first.convert("RGB"), other.convert("RGB")).split()
+        diff = ImageChops.lighter(diff, ImageChops.lighter(ImageChops.lighter(r, g), b))
+    body = first.getchannel("A").point(lambda v: 255 if v > 128 else 0)
+    robe = ImageChops.multiply(diff.point(lambda v: 255 if v > 40 else 0), body)
+    skin = ImageChops.subtract(body, robe.filter(ImageFilter.MaxFilter(3)))
+    robe = (robe.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(9))
+            .filter(ImageFilter.MinFilter(7)).filter(ImageFilter.GaussianBlur(0.8)))
+
+    outline = Image.new("L", first.size, 0)
+    ImageDraw.Draw(outline).polygon(HAND_OUTLINE, fill=255)
+    hands = ImageChops.multiply(skin.filter(ImageFilter.MaxFilter(3)), outline)
+    hands = hands.filter(ImageFilter.GaussianBlur(0.8))
+    return {"robe": robe, "hands": hands, "skin": skin}
+
+
+def hide(layer: Image.Image, mask: Image.Image) -> Image.Image:
+    out = layer.copy()
+    out.putalpha(ImageChops.multiply(layer.getchannel("A"), ImageChops.invert(mask)))
+    return out
+
+
+def place_item(name: str, masks) -> Image.Image:
+    """물건 원본을 PLACED 값대로 베이스 캔버스에 옮기고, 몸 뒤를 지운다."""
+    scale, (sx, sy), (dx, dy), behind = PLACED[name]
+    item = load(name)
+    item.putalpha(item.getchannel("A").point(lambda v: 0 if v < ALPHA_FLOOR else v))
+
+    if "band" in behind:
+        band = Image.new("L", item.size, 0)
+        ImageDraw.Draw(band).polygon(BAND, fill=255)
+        item = hide(item, band.filter(ImageFilter.GaussianBlur(2)))
+
+    size = round(item.width * scale)
+    moved = item.resize((size, size), Image.Resampling.LANCZOS)
+    layer = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
+    layer.paste(moved, (round(dx - sx * scale), round(dy - sy * scale)), moved)
+
+    for part in behind:
+        if part in masks:
+            layer = hide(layer, masks[part])
+
+    if name.startswith("feet_"):
+        feet = masks["skin"].copy()
+        feet.paste(0, (0, 0, CANVAS, 840))
+        solid = layer.getchannel("A").point(lambda v: 255 if v > 128 else 0)
+        gap = ImageChops.subtract(feet, solid)
+        gap = gap.filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(1))
+        shadow = Image.new("RGBA", layer.size, SHOE_GAP_SHADOW + (255,))
+        shadow.putalpha(gap)
+        filled = Image.new("RGBA", layer.size, (0, 0, 0, 0))
+        filled.alpha_composite(shadow)
+        filled.alpha_composite(layer)
+        layer = filled
+
+        # 신발이 덜 덮은 발. 0 이어야 한다.
+        weak = ImageChops.multiply(
+            feet, layer.getchannel("A").point(lambda v: 255 if v < 250 else 0))
+        bare = weak.histogram()[255]
+        if bare > 10:
+            raise SystemExit(f"{name}: 발이 {bare}px 비친다 — PLACED 값을 다시 잰다")
+    return layer
+
+
 def save_layer(image: Image.Image, directory: Path, name: str) -> None:
     """WebP 로 굽고, 같은 이름의 예전 PNG 는 지운다.
 
@@ -234,6 +352,11 @@ def main() -> None:
     for name in BASES + OVERLAYS:
         save_layer(load(name), OUT, name)
         print(name)
+
+    masks = body_masks()
+    for name in PLACED:
+        save_layer(place_item(name, masks), OUT, name)
+        print(f"{name}  (물건 원본을 베이스에 놓음)")
 
     base = load("base_saffron")
 

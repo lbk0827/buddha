@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'avatar_equip.dart';
+import 'bubble_gum_motion.dart';
+
+export 'bubble_gum_motion.dart' show AvatarMotion;
 
 /// 내 부처님.
 ///
@@ -9,13 +12,17 @@ import 'avatar_equip.dart';
 /// **레이어별 위치 보정을 넣지 말 것** — 넣는 순간 어긋난다.
 ///
 /// 쌓는 순서는 [AvatarSlot]의 선언 순서를 그대로 따른다:
-/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목
+/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목 → 입
+///
+/// 움직이는 아이템(풍선껌)은 [motion]에 따라 그 레이어만 입을 중심으로
+/// 커졌다 작아진다. 기기에서 「동작 줄이기」를 켜면 멈춘 그림이다.
 class BuddhaFigure extends StatelessWidget {
   const BuddhaFigure({
     super.key,
     this.equip = kDefaultEquip,
     this.size = 220,
     this.breathing = false,
+    this.motion = AvatarMotion.still,
   });
 
   final AvatarEquip equip;
@@ -25,6 +32,9 @@ class BuddhaFigure extends StatelessWidget {
 
   /// 가만히 있을 때 아주 느리게 오르내린다.
   final bool breathing;
+
+  /// 풍선껌 같은 움직이는 아이템을 어떻게 보여줄지.
+  final AvatarMotion motion;
 
   /// 실제로 그릴 레이어들. 그리는 순서대로.
   ///
@@ -40,15 +50,27 @@ class BuddhaFigure extends StatelessWidget {
       final item = wardrobeItem(equip.wornIn(slot));
       final path = item?.assetPath;
       if (item == null || path == null) continue;
-      layers.add(AvatarLayer(path));
+      layers.add(AvatarLayer(path, null, item.poppedPath));
       final skin = item.skinPath;
       if (tint != null && skin != null) layers.add(AvatarLayer(skin, tint));
     }
     return layers;
   }
 
+  static Widget _image(String path) => Image.asset(
+    path,
+    key: ValueKey(path),
+    fit: BoxFit.contain,
+    filterQuality: FilterQuality.medium,
+    gaplessPlayback: true,
+  );
+
   @override
   Widget build(BuildContext context) {
+    final animate =
+        motion != AvatarMotion.still &&
+        !(MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+
     final figure = SizedBox(
       width: size,
       height: size,
@@ -56,16 +78,16 @@ class BuddhaFigure extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           for (final layer in layersOf(equip))
-            tintedBy(
-              layer.tint,
-              Image.asset(
-                layer.path,
-                key: ValueKey(layer.path),
-                fit: BoxFit.contain,
-                filterQuality: FilterQuality.medium,
-                gaplessPlayback: true,
-              ),
-            ),
+            if (animate && layer.popped != null)
+              BubbleGumMotion(
+                key: ValueKey('motion:${layer.path}'),
+                bubble: layer.path,
+                popped: layer.popped!,
+                layer: _image,
+                once: motion == AvatarMotion.once,
+              )
+            else
+              tintedBy(layer.tint, _image(layer.path)),
         ],
       ),
     );
@@ -79,19 +101,24 @@ class BuddhaFigure extends StatelessWidget {
 }
 
 /// 겹칠 그림 한 장. [tint]가 있으면 그 재질로 물들여 그린다.
+/// [popped]가 있으면 움직이는 아이템이다 (풍선껌의 터진 껌).
 @immutable
 class AvatarLayer {
-  const AvatarLayer(this.path, [this.tint]);
+  const AvatarLayer(this.path, [this.tint, this.popped]);
 
   final String path;
   final SkinTint? tint;
+  final String? popped;
 
   @override
   bool operator ==(Object other) =>
-      other is AvatarLayer && other.path == path && other.tint == tint;
+      other is AvatarLayer &&
+      other.path == path &&
+      other.tint == tint &&
+      other.popped == popped;
 
   @override
-  int get hashCode => Object.hash(path, tint);
+  int get hashCode => Object.hash(path, tint, popped);
 
   @override
   String toString() => tint == null ? path : '$path (재질)';

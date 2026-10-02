@@ -160,7 +160,7 @@ class _Stage extends StatelessWidget {
           : const Color(0xFFEDE5D6),
       alignment: Alignment.center,
       padding: const EdgeInsets.only(top: 8),
-      child: BuddhaFigure(equip: equip, size: 190),
+      child: BuddhaFigure(equip: equip, size: 190, motion: AvatarMotion.once),
     );
   }
 }

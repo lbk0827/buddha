@@ -79,7 +79,12 @@ class _Stage extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () => context.go(Routes.wardrobe),
-        child: BuddhaFigure(equip: state.equip, size: 240, breathing: true),
+        child: BuddhaFigure(
+          equip: state.equip,
+          size: 240,
+          breathing: true,
+          motion: AvatarMotion.loop,
+        ),
       ),
     );
   }

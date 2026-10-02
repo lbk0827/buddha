@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 /// 내 부처님의 레이어. 나열 순서가 그대로 그리는 순서다.
-/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목
+/// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목 → 입
 ///
 /// 발은 몸 바로 다음이다. 몸 위에 재질 입힌 살이 한 번 더 겹치므로, 그보다
 /// 뒤에 그려야 신발이 맨발(과 물든 발)을 덮는다.
 ///
+/// 입은 맨 마지막이다. 풍선껌 풍선은 입에서 앞으로 부풀어 안경 아래 테나
+/// 헤드폰보다 앞에 있다.
+///
 /// 「부처」는 겹칠 그림이 없다. 몸과 머리의 살에 재질을 입힐 뿐이라
 /// 그리는 순서와 상관없이 맨 앞에 둔다.
-enum AvatarSlot { buddha, halo, seat, robe, feet, head, face, neck }
+enum AvatarSlot { buddha, halo, seat, robe, feet, head, face, neck, mouth }
 
 /// 옷장 탭에 나오는 순서.
 const Map<AvatarSlot, String> kSlotNames = {
@@ -16,6 +19,7 @@ const Map<AvatarSlot, String> kSlotNames = {
   AvatarSlot.head: '머리',
   AvatarSlot.robe: '가사',
   AvatarSlot.face: '얼굴',
+  AvatarSlot.mouth: '입',
   AvatarSlot.neck: '목',
   AvatarSlot.feet: '발',
   AvatarSlot.seat: '대좌',
@@ -125,6 +129,10 @@ class WardrobeItem {
   /// 「부처」 아이템의 재질. null이면 원래 살빛.
   final SkinTint? tint;
 
+  /// 움직이는 아이템의 두 번째 그림. 풍선껌은 풍선이 터진 뒤 입에 붙은 껌.
+  /// 옷장 칸과 멈춘 화면에는 [assetPath]만 쓴다.
+  final String? popped;
+
   const WardrobeItem({
     required this.id,
     required this.name,
@@ -134,6 +142,7 @@ class WardrobeItem {
     this.hasLayer = true,
     this.skin,
     this.tint,
+    this.popped,
   });
 
   String get _base => file ?? id;
@@ -143,6 +152,10 @@ class WardrobeItem {
 
   /// 재질을 입힐 살 레이어. 살이 없는 아이템이면 null.
   String? get skinPath => skin == null ? null : 'assets/avatar/$skin.webp';
+
+  /// 풍선껌 연출의 터진 껌 레이어. 움직이지 않는 아이템이면 null.
+  String? get poppedPath =>
+      popped == null ? null : 'assets/avatar/$popped.webp';
 
   /// 옷장 칸에 쓰는, 아이템만 잘라낸 그림.
   String get thumbPath => 'assets/avatar/thumbs/$_base.webp';
@@ -236,6 +249,20 @@ const List<WardrobeItem> kWardrobe = [
     meritCost: 700,
     skin: 'skin_head_straw',
   ),
+  WardrobeItem(
+    id: 'head_beanie',
+    name: '비니',
+    slot: AvatarSlot.head,
+    meritCost: 400,
+    skin: 'skin_head_beanie',
+  ),
+  WardrobeItem(
+    id: 'head_bucket',
+    name: '버킷햇',
+    slot: AvatarSlot.head,
+    meritCost: 500,
+    skin: 'skin_head_bucket',
+  ),
 
   // 가사 — 겹치는 레이어가 아니라 몸 그림 자체를 바꾼다.
   // 살은 가사가 달라도 같은 픽셀이라 살 레이어 한 장을 같이 쓴다.
@@ -319,6 +346,15 @@ const List<WardrobeItem> kWardrobe = [
     meritCost: 1300,
   ),
 
+  // 입 — 풍선껌은 절 화면에서 부풀었다 터져 입에 붙는다 (BubbleGumMotion).
+  WardrobeItem(
+    id: 'mouth_bubblegum',
+    name: '풍선껌',
+    slot: AvatarSlot.mouth,
+    meritCost: 800,
+    popped: 'mouth_bubblegum_popped',
+  ),
+
   // 발
   WardrobeItem(
     id: 'feet_sneakers',
@@ -355,6 +391,7 @@ const AvatarEquip kDefaultEquip = AvatarEquip({
 const Set<AvatarSlot> kOptionalSlots = {
   AvatarSlot.feet,
   AvatarSlot.face,
+  AvatarSlot.mouth,
   AvatarSlot.neck,
   AvatarSlot.seat,
   AvatarSlot.halo,

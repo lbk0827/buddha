@@ -67,6 +67,24 @@ FOREHEAD_SEAM = {
         (452, 198), (512, 196), (572, 198), (627, 208),
         (670, 227), (695, 252), (709, 288),
     ],
+    # 버킷햇은 처진 챙 그늘에 들어간 이마가 베이스 이마보다 어두워 모자로
+    # 잘못 분류된다. 경계를 정하는 건 아래 SKIN_COLOR 이고, 곡선은 범위만
+    # 정한다. 열마다 처음 살색이 나오는 y 보다 26px 위로 넉넉히 잡았다.
+    # 관자놀이는 윤곽이 급히 꺾여 곡선을 붙이면 살 일부가 곡선 밖에 남는다.
+    "head_bucket": [
+        (282, 330), (300, 302), (330, 272), (360, 222), (390, 208),
+        (420, 200), (450, 197), (480, 193), (510, 190),
+        (540, 191), (570, 197), (600, 201), (630, 209),
+        (660, 215), (690, 242), (720, 300), (742, 330),
+    ],
+}
+
+# 이마 경계 곡선 안에서 살로 칠 색 (PIL HSV, 0~255).
+# 버킷햇: 살은 색상 14~20, 카키 챙은 색상 24~30 이라 색상으로 갈린다. 이마
+# 하이라이트는 채도가 60~110 으로 낮아 채도 하한을 낮게 둔다. 챙 안쪽 그늘은
+# 색상이 살과 비슷해도 명도가 100 아래라 모자로 남긴다.
+SKIN_COLOR = {
+    "head_bucket": {"hue_max": 21, "sat_min": 60, "val_min": 120},
 }
 
 
@@ -140,6 +158,20 @@ def head_skin(name: str, bare_head: Image.Image) -> Image.Image:
                 else round(255 * (25 - value) / 5))
             forehead = ImageChops.multiply(forehead, head_limit)
             forehead = ImageChops.multiply(forehead, skin_hue)
+        elif name in SKIN_COLOR:
+            rule = SKIN_COLOR[name]
+            h, s, v = layer.convert("HSV").split()
+            color = ImageChops.multiply(
+                h.point(lambda value: 255 if value <= rule["hue_max"] else 0),
+                ImageChops.multiply(
+                    s.point(lambda value: 255 if value >= rule["sat_min"] else 0),
+                    v.point(lambda value: 255 if value >= rule["val_min"] else 0)))
+            # 얼굴 윤곽의 경계 픽셀은 챙 그늘과 섞여 어두워져 명도에서 빠진다.
+            # 1px 넓혀 덮는다. 그 바깥은 원래 어두운 챙이라 물들어도 어둡다.
+            color = color.filter(ImageFilter.MedianFilter(3))
+            color = color.filter(ImageFilter.MaxFilter(3))
+            forehead = ImageChops.multiply(forehead, head_limit)
+            forehead = ImageChops.multiply(forehead, color)
 
         skin_mask = ImageChops.lighter(skin_mask, forehead)
 

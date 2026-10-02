@@ -3,6 +3,8 @@
 assets/avatar/*.webp (1024×1024 레이어)에서 아이템 영역만 잘라
 assets/avatar/thumbs/*.webp (192×192)로 저장한다.
 
+머리 아이템은 살 레이어를 빼서 떼어 내므로 make_avatar_skins.py 다음에 돌린다.
+
 원본은 읽기만 한다. 아이템이 바뀌면 이 스크립트를 다시 돌리면 된다.
 
     python tools/make_avatar_thumbs.py
@@ -13,7 +15,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from build_avatar_assets import ALPHA_FLOOR, PLACED, save_layer
+from build_avatar_assets import ALPHA_FLOOR, MOTION_ONLY, PLACED, save_layer
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets" / "avatar"
@@ -47,7 +49,8 @@ ROBES = ["base_saffron", "base_temple", "base_ash", "base_crimson",
          "base_lavender"]
 
 # 머리에 씌워서 보여줄 것들. head_shaved 는 아무것도 안 씌운 상태다.
-HEADS = ["head_shaved", "head_nabal", "head_bamboo", "head_straw"]
+HEADS = ["head_shaved", "head_nabal", "head_bamboo", "head_straw",
+         "head_beanie", "head_bucket"]
 
 # 물건 자체를 보여주는 것들.
 ITEMS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
@@ -100,6 +103,28 @@ def keep_top_blob(mask: Image.Image) -> Image.Image:
     marked = mask.copy()
     ImageDraw.floodfill(marked, (seed, top), 128)
     return marked.point(lambda v: 255 if v == 128 else 0)
+
+
+def without_skin(item: Image.Image, name: str) -> Image.Image:
+    """떼어 낸 모자에서 살 레이어(skin_head_*)에 든 살을 한 번 더 뺀다.
+
+    챙 그늘에 든 이마는 베이스 이마와 색이 달라 모자로 딸려 나온다. 살
+    레이어는 모자별 경계까지 맞춰 둔 것이라 그걸 빼는 게 가장 정확하다.
+    make_avatar_skins.py 를 먼저 돌려야 한다. 살 레이어가 없으면 그대로 둔다.
+    """
+    skin_path = SRC / f"skin_{name}.webp"
+    if not skin_path.exists():
+        return item
+    skin = Image.open(skin_path).convert("RGBA").getchannel("A")
+    alpha = ImageChops.multiply(item.getchannel("A"), ImageChops.invert(skin))
+
+    # 귀 끝처럼 가늘게 이어진 살 조각을 끊고 모자 덩어리만 남긴다.
+    solid = alpha.point(lambda v: 255 if v > 32 else 0)
+    solid = solid.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3))
+    keep = keep_top_blob(solid).filter(ImageFilter.MaxFilter(3))
+    out = item.copy()
+    out.putalpha(ImageChops.multiply(alpha, keep))
+    return out
 
 
 def extract_item(layer: Image.Image, bare_head: Image.Image,
@@ -181,6 +206,7 @@ def main() -> None:
             image = extract_item(
                 Image.open(SRC / f"{name}.webp").convert("RGBA"), bare_head)
             source = "머리에서 떼어냄"
+            image = without_skin(image, name)
 
         box = alpha_bbox(image)
         if box is None:
@@ -191,6 +217,8 @@ def main() -> None:
     # 물건만 그려 받은 소품은 원본을 쓴다. 앱 레이어는 손 뒤·목 뒤로 넘어가는
     # 부분을 지워 놓아서 물건이 잘려 보인다.
     for name in PLACED:
+        if name in MOTION_ONLY:
+            continue
         image = Image.open(RAW / f"{name}.png").convert("RGBA")
         image.putalpha(image.getchannel("A").point(
             lambda v: 0 if v < ALPHA_FLOOR else v))

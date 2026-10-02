@@ -7,7 +7,8 @@ Imgs/*.png (납품 원본) → assets/avatar/*.webp (앱에 나가는 것)
 
 머리 아이템은 「모자 쓴 얼굴」을 통째로 받는다. 받는 형태는 두 가지다.
 
-- head_*_face.png — 얼굴만 그린 그림. 캔버스도 배율도 베이스와 다르므로
+- head_*_face.png — 얼굴만 그린 그림. 다시 받은 그림은 원본을 덮어쓰지
+  않고 head_*_face_v2.png 처럼 번호를 붙이며, 가장 높은 번호를 쓴다. 캔버스도 배율도 베이스와 다르므로
   베이스 얼굴에 포개지게 옮겨 놓는다 (FACE_FIT). 모자만 따로 그려 얹으면
   모자가 머리를 덮지 못하고 뚜껑처럼 올라앉는다. 그래서 얼굴째 받는다.
 - head_*_full.png — 베이스를 편집한 전신. 좌표가 같으니 목 위만 자른다.
@@ -58,6 +59,8 @@ FACE_FIT = {
     "head_bamboo": (0.614, 126, -90),
     "head_straw": (0.626, 119, -76),
     "head_nabal": (0.625, 121, -116),
+    "head_beanie": (0.5, 200, -13),
+    "head_bucket": (0.544, 172, -47),
 }
 
 # 앱에 굽는 WebP 품질. 알파는 무손실로 남는다.
@@ -68,7 +71,7 @@ MAX_PEEK = 400
 
 BASES = ["base_saffron", "base_temple", "base_ash", "base_crimson",
          "base_lavender"]
-HEADS = ["head_nabal", "head_bamboo", "head_straw"]
+HEADS = ["head_nabal", "head_bamboo", "head_straw", "head_beanie", "head_bucket"]
 OVERLAYS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
 
 # 물건만 그려 받은 소품을 베이스에 놓는 값.
@@ -81,6 +84,10 @@ OVERLAYS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
 #   헤드폰    두 컵이 쇄골 앞 양옆, 밴드는 목 뒤(BAND 를 지운다), 컵은 손 뒤
 #   금빛 단주 손끝이 목 바로 아래라 U 를 손 위에 둘 자리가 없다. 손 뒤로
 #             지나 손 아래에서 U 가 보이게 한다
+#   풍선껌    입(510, 396)을 덮도록 지름 105, 가운데를 입보다 조금 아래(412)에
+#             둔다. 더 크면 안경과 턱을 다 가린다. 원본 풍선 지름 829
+#   터진 껌   풍선이 터진 뒤 입 둘레에 붙은 껌. 폭 120, 풍선과 같은 자리.
+#             옷장 아이템이 아니라 풍선껌 연출에서만 쓴다
 #   운동화    두 짝 간격을 두 발 간격보다 조금 넓게(128) 잡아 발가락까지
 #             덮고, 가사 밑단 안쪽은 지운다
 PLACED = {
@@ -89,7 +96,12 @@ PLACED = {
     "acc_neckphones": (0.34, (512, 477), (512, 470), ("band", "hands")),
     "acc_goldbeads": (170 / 685, (512, 99), (512, 466), ("hands",)),
     "feet_sneakers": (128 / 336, (511, 776), (511, 936), ("robe",)),
+    "mouth_bubblegum": (105 / 829, (626.5, 621), (510, 412), ()),
+    "mouth_bubblegum_popped": (120 / 940, (634, 646.5), (510, 410), ()),
 }
+
+# 옷장 아이템이 아니라 연출에만 쓰는 레이어. 썸네일을 만들지 않는다.
+MOTION_ONLY = {"mouth_bubblegum_popped"}
 
 # 헤드폰 원본에서 목 뒤로 넘어가는 밴드. 양쪽 경첩 사이, 쿠션 위쪽의 띠다.
 BAND = [(325, 500), (420, 512), (512, 520), (604, 512), (700, 500),
@@ -109,12 +121,19 @@ ALPHA_FLOOR = 16
 SHOE_GAP_SHADOW = (72, 62, 56)
 
 
-def load(name: str) -> Image.Image:
+def load(name: str, any_size: bool = False) -> Image.Image:
+    """원본을 읽는다. 레이어는 1024 정사각이어야 한다.
+
+    any_size — 물건만 그려 받은 소품. 배율로 줄여 놓으니 정사각이기만 하면 된다.
+    """
     path = SRC / f"{name}.png"
     if not path.exists():
         raise SystemExit(f"{path} 가 없다")
     image = Image.open(path)
-    if image.size != (CANVAS, CANVAS):
+    if any_size:
+        if image.width != image.height:
+            raise SystemExit(f"{name}: {image.size} — 정사각이어야 한다")
+    elif image.size != (CANVAS, CANVAS):
         raise SystemExit(f"{name}: {image.size} — {CANVAS} 정사각이어야 한다")
     if image.mode != "RGBA":
         image = image.convert("RGBA")
@@ -140,6 +159,18 @@ def cut_head(full: Image.Image) -> Image.Image:
     return head
 
 
+def face_source(name: str) -> Path:
+    """머리 아이템의 얼굴 원본. _v2, _v3 … 가 있으면 가장 높은 번호."""
+    versions = []
+    for path in SRC.glob(f"{name}_face_v*.png"):
+        suffix = path.stem.rsplit("_v", 1)[1]
+        if suffix.isdigit():
+            versions.append((int(suffix), path))
+    if versions:
+        return max(versions)[1]
+    return SRC / f"{name}_face.png"
+
+
 def fit_face(face: Image.Image, fit, base: Image.Image) -> Image.Image:
     """얼굴 그림을 베이스 캔버스로 옮기고 목 아래를 자른다."""
     scale, left, top = fit
@@ -160,6 +191,9 @@ def fit_face(face: Image.Image, fit, base: Image.Image) -> Image.Image:
 
 
 EDGE = 8
+
+# 귀 폭을 재는 높이: 눈에서 눈 간격의 이만큼 아래.
+EAR_BELOW_EYES = 0.3
 
 
 def _is_dark(p) -> bool:
@@ -211,7 +245,11 @@ def find_eyes(image: Image.Image):
     (lx, ly), (rx, ry) = mean(left), mean(right)
     eye_x, eye_y = (lx + rx) / 2, (ly + ry) / 2
 
-    row = [x for x in range(width) if px[x, round(eye_y)][3] > 128]
+    # 귀 폭은 눈보다 조금 아래(귓불 쪽)에서 잰다. 눈 높이에서 재면 버킷햇처럼
+    # 아래로 처진 챙이 같이 잡혀 폭이 부풀고 배율이 작게 나온다. 눈 간격에
+    # 비례한 거리라 그림 크기와 상관없이 같은 자리다.
+    ear_y = round(eye_y + (rx - lx) * EAR_BELOW_EYES)
+    row = [x for x in range(width) if px[x, ear_y][3] > 128]
     return (eye_x, eye_y), row[-1] - row[0]
 
 
@@ -227,8 +265,10 @@ def peek_of(face: Image.Image, fit, under: Image.Image) -> int:
 
 def measure(name: str) -> None:
     """head_*_face.png 의 FACE_FIT 값을 잰다."""
-    face = Image.open(SRC / f"{name}_face.png").convert("RGBA")
+    source = face_source(name)
+    face = Image.open(source).convert("RGBA")
     base = load("base_saffron")
+    print(f"원본 {source.name}")
 
     (bx, by), base_span = find_eyes(base)
     (fx, fy), face_span = find_eyes(face)
@@ -240,7 +280,7 @@ def measure(name: str) -> None:
     under.paste(0, (0, NECK_Y - 8, CANVAS, CANVAS))
 
     tried = []
-    for step in range(-4, 5):
+    for step in range(-6, 7):
         scale = round(start + step * 0.005, 3)
         left = round(bx - fx * scale)
         for nudge in range(-16, 17, 2):
@@ -297,7 +337,7 @@ def hide(layer: Image.Image, mask: Image.Image) -> Image.Image:
 def place_item(name: str, masks) -> Image.Image:
     """물건 원본을 PLACED 값대로 베이스 캔버스에 옮기고, 몸 뒤를 지운다."""
     scale, (sx, sy), (dx, dy), behind = PLACED[name]
-    item = load(name)
+    item = load(name, any_size=True)
     item.putalpha(item.getchannel("A").point(lambda v: 0 if v < ALPHA_FLOOR else v))
 
     if "band" in behind:
@@ -361,13 +401,13 @@ def main() -> None:
     base = load("base_saffron")
 
     for name in HEADS:
-        face = SRC / f"{name}_face.png"
+        face = face_source(name)
         full = SRC / f"{name}_full.png"
         if face.exists():
             image = Image.open(face).convert("RGBA")
             head, peek = fit_face(image, FACE_FIT[name], base)
             save_layer(head, OUT, name)
-            print(f"{name}  (모자 쓴 얼굴을 베이스에 포갬, 비침 {peek}px)")
+            print(f"{name}  ({face.name} 를 베이스에 포갬, 비침 {peek}px)")
         elif full.exists():
             # 새 방식: 전신을 받아 목 위만 잘라낸다.
             save_layer(cut_head(load(f"{name}_full")), OUT, name)

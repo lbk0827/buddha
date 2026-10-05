@@ -3,40 +3,72 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import 'play_stage.dart';
 
-/// 목탁. 두드리면 살짝 눌리고 파문이 퍼진다.
-class MoktakPainter extends CustomPainter {
-  MoktakPainter({required this.pulse, required this.isDark});
+/// 목탁 그림과 채를 무대([kPlayStage])에 놓는 값.
+///
+/// 원본: assets/play/moktak_body.webp, moktak_mallet.webp (1254 캔버스).
+/// 기준점은 원본 좌표로 적고 [body] 배율로 무대에 옮긴다.
+abstract final class MoktakLayout {
+  static const bodyAsset = 'assets/play/moktak_body.webp';
+  static const malletAsset = 'assets/play/moktak_mallet.webp';
 
+  /// 원본에서 목탁(손잡이 포함)이 실제로 차지하는 영역.
+  static const bodyBox = Rect.fromLTRB(418, 400, 839, 873);
+
+  /// 원본: 둥근 몸통. 가장 넓은 행(y 712)의 폭 332 → 반지름 166.
+  static const ballCenterSource = Offset(672, 712);
+  static const ballRadiusSource = 166.0;
+
+  /// 원본: 채가 칠 자리 — 몸통 오른쪽 위, 가운데에서 -20° 방향 겉면.
+  static final strikeSource =
+      ballCenterSource +
+      Offset.fromDirection(-20 * math.pi / 180, ballRadiusSource);
+
+  /// 목탁은 높이 190dp. 채가 오른쪽에서 내려오도록 무대 왼쪽에 둔다.
+  static final body = SpritePlacement.box(
+    bodyBox,
+    left: centeredLeft(190 * bodyBox.width / bodyBox.height),
+    top: centeredTop(190),
+    width: 190 * bodyBox.width / bodyBox.height,
+  );
+
+  /// 무대: 둥근 몸통.
+  static Offset get ballCenter => body.toStage(ballCenterSource);
+  static double get ballRadius => body.length(ballRadiusSource);
+
+  /// 무대: 목탁 바닥 가운데. 두드릴 때 여기를 기준으로 눌린다.
+  static Offset get bottom =>
+      body.toStage(Offset(ballCenterSource.dx, bodyBox.bottom));
+
+  /// 채. 원본 손잡이 끝 (869, 434), 머리 끝 (425, 864).
+  /// 칠 때 130° 방향으로 몸통 오른쪽 위를 치고, 쉴 때는 35° 들려 목탁 오른쪽에 선다.
+  static final mallet = MalletRig(
+    asset: malletAsset,
+    grip: const Offset(869, 434),
+    tip: const Offset(425, 864),
+    scale: 0.25,
+    target: body.toStage(strikeSource),
+    hitDegrees: 130,
+  );
+}
+
+/// 목탁 뒤에 그리는 것 — 바닥 그림자와 퍼지는 파문.
+class MoktakUnderPainter extends CustomPainter {
+  MoktakUnderPainter({required this.pulse});
+
+  /// 친 뒤 0 → 1.
   final double pulse;
-  final bool isDark;
-
-  Color get _body => isDark ? const Color(0xFF5A452F) : const Color(0xFF8B5E3C);
-  Color get _shade =>
-      isDark ? const Color(0xFF43331F) : const Color(0xFF6B4527);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final r = size.width * 0.30;
+    final c = MoktakLayout.ballCenter;
+    final r = MoktakLayout.ballRadius;
 
-    // 퍼지는 파문
-    if (pulse > 0 && pulse < 1) {
-      canvas.drawCircle(
-        center,
-        r + pulse * r * 0.8,
-        Paint()
-          ..color = Tokens.saffron.withValues(alpha: (1 - pulse) * 0.45)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.5,
-      );
-    }
-
-    // 바닥 그림자
     canvas.drawOval(
       Rect.fromCenter(
-        center: Offset(center.dx, center.dy + r + 12),
-        width: r * 1.9,
+        center: MoktakLayout.bottom + const Offset(0, 6),
+        width: r * 1.8,
         height: 14,
       ),
       Paint()
@@ -44,76 +76,23 @@ class MoktakPainter extends CustomPainter {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
     );
 
-    canvas.save();
-    canvas.translate(center.dx, center.dy);
-    // 두드리는 순간 눌린다
-    canvas.scale(1 + pulse * 0.03, 1 - pulse * 0.05);
-
-    // 손잡이 — 몸통 뒤로 비스듬히
-    canvas.save();
-    canvas.rotate(-math.pi / 4.4);
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(-r * 0.13, -r * 1.75, r * 0.26, r * 0.85),
-        Radius.circular(r * 0.13),
-      ),
-      Paint()..color = _shade,
-    );
-    canvas.restore();
-
-    // 몸통
-    canvas.drawCircle(Offset.zero, r, Paint()..color = _body);
-
-    // 위쪽 광
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(-r * 0.28, -r * 0.42),
-        width: r * 0.7,
-        height: r * 0.4,
-      ),
+    if (pulse <= 0 || pulse >= 1) return;
+    canvas.drawCircle(
+      c,
+      r + pulse * r * 0.8,
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.16)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, r * 0.12),
-    );
-
-    // 울림통 틈 — 아래쪽을 가로지르는 좁은 렌즈.
-    // 호를 크게 그리면 웃는 입이 되어 얼굴로 읽힌다.
-    final slit = Path()
-      ..moveTo(-r * 0.62, r * 0.46)
-      ..quadraticBezierTo(0, r * 0.30, r * 0.62, r * 0.46)
-      ..quadraticBezierTo(0, r * 0.62, -r * 0.62, r * 0.46)
-      ..close();
-    canvas.drawPath(slit, Paint()..color = const Color(0xFF2A1C10));
-
-    // 틈 아래로 말려 올라간 아가리
-    canvas.drawPath(
-      Path()
-        ..moveTo(-r * 0.62, r * 0.46)
-        ..quadraticBezierTo(-r * 0.78, r * 0.20, -r * 0.60, r * 0.02),
-      Paint()
-        ..color = _shade
+        ..color = Tokens.saffron.withValues(alpha: (1 - pulse) * 0.45)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = r * 0.09
-        ..strokeCap = StrokeCap.round,
+        ..strokeWidth = 2.5,
     );
-
-    // 나뭇결 한 줄
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(0, r * 0.05), radius: r * 0.74),
-      math.pi * 1.12,
-      math.pi * 0.42,
-      false,
-      Paint()
-        ..color = _shade.withValues(alpha: 0.55)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = r * 0.05
-        ..strokeCap = StrokeCap.round,
-    );
-
-    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(MoktakPainter old) =>
-      old.pulse != pulse || old.isDark != isDark;
+  bool shouldRepaint(MoktakUnderPainter old) => old.pulse != pulse;
+}
+
+/// 두드린 순간 목탁이 바닥을 기준으로 살짝 눌렸다 돌아온다. [pulse] 0 → 1.
+Matrix4 moktakSquash(double pulse) {
+  final k = pulse <= 0 || pulse >= 1 ? 0.0 : math.sin(math.pi * pulse);
+  return Matrix4.diagonal3Values(1 + k * 0.03, 1 - k * 0.05, 1);
 }

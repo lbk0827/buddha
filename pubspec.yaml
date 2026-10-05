@@ -48,6 +48,7 @@ dependencies:
   screenshot: ^3.0.0
   path_provider: ^2.1.6
   intl: ^0.20.3
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,8 @@ flutter:
     - assets/content/
     - assets/avatar/
     - assets/avatar/thumbs/
+    - assets/sounds/
+    - assets/play/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

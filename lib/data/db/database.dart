@@ -87,7 +87,7 @@ class Profiles extends Table {
   DateTimeColumn get ordainedAt => dateTime().nullable()();
 
   /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴를 돌면 쌓인다.
-  /// (엎어두기도 쌓지만 지금은 진입 버튼이 없다.)
+  /// 폰을 엎어 둔 1분에도 10씩 쌓인다.
   IntColumn get merit => integer().withDefault(const Constant(0))();
 
   /// 태운 번뇌 누적. 108개가 「108번뇌 완파」 조건이다.

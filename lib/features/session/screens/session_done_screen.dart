@@ -8,12 +8,16 @@ import '../../../app/theme.dart';
 import '../../../core/time_utils.dart';
 import '../../../data/content/models.dart';
 import '../../../data/repositories/profile_repository.dart';
+import '../../../data/repositories/session_repository.dart';
 import '../../dialogue/dialogue_service.dart';
 import '../../home/home_controller.dart';
 import '../../dialogue/share_card.dart';
 import '../../temple/temple_stage.dart';
 import '../../temple/temple_yard.dart';
 import '../session_controller.dart';
+
+/// 기록 저장 동의를 이미 물어봤다는 표시. 거부해도 다시 묻지 않게 설정에 남긴다.
+const recordConsentAskedKey = '${ConsentKeys.recordStorage}_asked';
 
 /// 완주·중단 공통 종료 화면 (FR-2.8).
 /// 깨달음을 요구하거나 평가하는 문구는 두지 않는다.
@@ -41,10 +45,9 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
   Future<void> _askRecordConsent() async {
     final repo = ref.read(profileRepositoryProvider);
     final profile = await repo.ensure();
-    final consents = repo.consentsOf(profile);
-    // 이미 한 번 물었으면 다시 묻지 않는다.
-    if (consents.containsKey(ConsentKeys.recordStorage) ||
-        consents.containsKey('${ConsentKeys.recordStorage}_asked')) {
+    // 이미 한 번 물었으면 다시 묻지 않는다. 물어봤다는 표시는 설정 쪽에 남는다.
+    if (repo.consentsOf(profile).containsKey(ConsentKeys.recordStorage) ||
+        repo.settingsOf(profile)[recordConsentAskedKey] == true) {
       return;
     }
     if (!mounted) return;
@@ -70,7 +73,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
 
     await repo.setConsent(ConsentKeys.recordStorage, ok == true);
     // 거부해도 다시 묻지 않도록 물어봤다는 사실만 남긴다.
-    await repo.setSetting('${ConsentKeys.recordStorage}_asked', true);
+    await repo.setSetting(recordConsentAskedKey, true);
 
     if (ok == true) return;
 
@@ -201,6 +204,17 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
                         completed: result.session.outcome == 'completed',
                         valid: result.isValid,
                       ),
+                    // 엎어둔 1분에 공덕 10. 기록을 안 남겨도 공덕은 남는다.
+                    if (result.isValid) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        '+${meritForSession(practiced)} 공덕',
+                        style: text.bodyMedium?.copyWith(
+                          color: Tokens.saffron,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 24),
 
                     // 위기 감지 세션에서는 한마디 카드·공유를 유예한다 (SA-2).

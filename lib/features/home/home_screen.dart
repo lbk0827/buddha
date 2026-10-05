@@ -91,7 +91,7 @@ class _Stage extends StatelessWidget {
   }
 }
 
-/// 하단 — 부처님의 한마디 카드 하나와 [지금 엎어두기] 버튼 하나.
+/// 하단 — 부처님의 한마디 카드 하나와 [마음 내려놓기] 버튼 하나.
 class _Bottom extends ConsumerWidget {
   const _Bottom({required this.state});
   final TempleHomeState state;
@@ -161,7 +161,7 @@ class _Bottom extends ConsumerWidget {
                 context.push(Routes.sessionSetup);
               },
               child: const Text(
-                '지금 엎어두기',
+                '마음 내려놓기',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
               ),
             ),

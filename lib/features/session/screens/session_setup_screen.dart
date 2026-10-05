@@ -144,7 +144,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                 padding: const EdgeInsets.fromLTRB(
                     Tokens.gutter, 8, Tokens.gutter, 16),
                 children: [
-                  Text('얼마나 둘까', style: text.titleLarge),
+                  Text('얼마나 오래 마음을 내려놓을까?', style: text.titleLarge),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -166,7 +166,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     ],
                   ),
                   const SizedBox(height: 28),
-                  Text('걸리는 게 있으면 한 줄', style: text.titleLarge),
+                  Text('태우고 싶은 번뇌 작성하기', style: text.titleLarge),
                   const SizedBox(height: 4),
                   Text('안 써도 된다.',
                       style: text.bodyMedium?.copyWith(
@@ -186,7 +186,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text('무엇 때문인지', style: text.titleLarge),
+                  Text('무엇이 그댈 괴롭히는가?', style: text.titleLarge),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 8,

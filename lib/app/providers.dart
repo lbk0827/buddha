@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/content/content_repository.dart';
 import '../data/db/database.dart';
 import '../data/repositories/dialogue_repository.dart';
+import '../data/repositories/play_repository.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/session_repository.dart';
 import '../data/repositories/worry_repository.dart';
@@ -33,6 +34,9 @@ final dialogueRepositoryProvider = Provider<DialogueRepository>(
 
 final worryRepositoryProvider =
     Provider<WorryRepository>((ref) => WorryRepository(ref.watch(databaseProvider)));
+
+final playRepositoryProvider =
+    Provider<PlayRepository>((ref) => PlayRepository(ref.watch(databaseProvider)));
 
 final tokenRepositoryProvider =
     Provider<TokenRepository>((ref) => TokenRepository(ref.watch(databaseProvider)));

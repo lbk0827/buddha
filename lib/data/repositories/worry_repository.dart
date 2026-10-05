@@ -12,6 +12,14 @@ class WorryRepository {
   /// 태우면 붙는 공덕.
   static const int meritPerBurn = 15;
 
+  /// 공덕이 붙는 건 하루 이만큼까지. 그 뒤로도 태우는 건 된다.
+  /// 한 글자씩 적어 태우는 게 가장 좋은 벌이가 되지 않게 한다.
+  static const int meritBurnsPerDay = 3;
+
+  /// 오늘 이미 [burnedBefore]개 태웠을 때 하나 더 태우면 붙는 공덕.
+  static int meritForBurn(int burnedBefore) =>
+      burnedBefore < meritBurnsPerDay ? meritPerBurn : 0;
+
   Future<Worry> create({
     required String body,
     String? kind,
@@ -49,6 +57,7 @@ class WorryRepository {
   /// 「인정. 태운다」. 번뇌를 닫고 공덕과 누적을 올린다.
   Future<int> burn(int worryId, {bool accepted = true}) async {
     return _db.transaction(() async {
+      final merit = meritForBurn(await burnedToday());
       await (_db.update(_db.worries)..where((t) => t.id.equals(worryId)))
           .write(WorriesCompanion(
         burnedAt: Value(DateTime.now()),
@@ -62,7 +71,7 @@ class WorryRepository {
       await (_db.update(_db.profiles)..where((t) => t.id.equals(1)))
           .write(ProfilesCompanion(
         burnedCount: Value(burned),
-        merit: Value(profile.merit + meritPerBurn),
+        merit: Value(profile.merit + merit),
       ));
       return burned;
     });

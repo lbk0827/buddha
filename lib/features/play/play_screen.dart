@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../home/home_controller.dart';
@@ -15,6 +16,7 @@ import 'moktak.dart';
 import 'moktak_sound.dart';
 import 'play_instrument.dart';
 import 'play_stage.dart';
+import 'prayer_beads.dart';
 import 'singing_bowl.dart';
 import 'singing_bowl_sound.dart';
 
@@ -67,12 +69,25 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   int _strikes = 0;
   double _rubSeconds = 0;
 
+  /// 오늘 넘긴 염주. 저장소가 돌려준 값만 쓴다.
+  BeadCount _beads = BeadCount.zero;
+
+  /// 저장을 한 줄로 세운다. 늦게 온 결과가 앞선 결과를 덮지 않게.
+  Future<void> _beadQueue = Future.value();
+
+  /// 울리는 동안 쌓인 시간. [PrayerBeads.rubSecondsPerBead]마다 한 알.
+  double _rubBeadClock = 0;
+
+  /// 방금 한 바퀴를 돌아 받은 공덕. 잠깐 보여주고 지운다.
+  int? _justGained;
+
   @override
   void initState() {
     super.initState();
     // dispose 에서는 ref 를 쓸 수 없어 미리 잡아 둔다.
     _moktakSound = ref.read(moktakSoundProvider)..warmUp();
     _bowlSound = ref.read(singingBowlSoundProvider)..warmUp();
+    _enqueueBeads(() => ref.read(playRepositoryProvider).today());
   }
 
   @override
@@ -98,6 +113,32 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _timers.add(timer);
   }
 
+  /// 염주 [beads]알을 넘긴다. 바퀴를 다 돌면 공덕이 붙는다.
+  void _addBeads(int beads) {
+    final repo = ref.read(playRepositoryProvider);
+    _enqueueBeads(() => repo.addBeads(beads));
+  }
+
+  void _enqueueBeads(Future<BeadCount> Function() step) {
+    _beadQueue = _beadQueue.then((_) async {
+      final beads = await step();
+      if (!mounted) return;
+      setState(() => _beads = beads);
+      if (beads.meritGained > 0) _celebrate(beads.meritGained);
+    }).catchError((Object e) {
+      // 못 남겨도 놀이는 된다.
+      debugPrint('염주를 못 남겼다: $e');
+    });
+  }
+
+  void _celebrate(int merit) {
+    ref.invalidate(homeStateProvider); // 위 공덕 알약을 새로 읽는다
+    setState(() => _justGained = merit);
+    _after(const Duration(milliseconds: 2400), () {
+      setState(() => _justGained = null);
+    });
+  }
+
   /// 채를 휘두른다. 소리는 닿는 순간 들리도록 미리, 파문·진동은 닿는 순간.
   void _swing(
     AnimationController swing, {
@@ -118,6 +159,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
 
   void _knock() {
     setState(() => _knocks++);
+    _addBeads(1);
     _swing(
       _moktakSwing,
       soundOnset: Duration.zero, // moktak.mp3 는 0ms 부터 소리가 난다
@@ -131,6 +173,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
 
   void _strike() {
     setState(() => _strikes++);
+    _addBeads(1);
     _swing(
       _bowlSwing,
       // 합성 타격음은 파일 시작점에서 바로 소리가 난다.
@@ -182,9 +225,18 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _lastTick = elapsed;
     _rub.tick(dt);
     _bowlSound.rub(_rub.level);
+    final sounding = _rub.level > 0.25;
     setState(() {
-      if (_rub.level > 0.25) _rubSeconds += dt;
+      if (sounding) _rubSeconds += dt;
     });
+    if (sounding) {
+      _rubBeadClock += dt;
+      final beads = _rubBeadClock ~/ PrayerBeads.rubSecondsPerBead;
+      if (beads > 0) {
+        _rubBeadClock -= beads * PrayerBeads.rubSecondsPerBead;
+        _addBeads(beads);
+      }
+    }
     if (_rub.isSilent && !_moveClock.isRunning) _rubTicker.stop();
   }
 
@@ -314,6 +366,8 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
                       color: fg.withValues(alpha: 0.55),
                     ),
                   ),
+                  const SizedBox(height: 14),
+                  BeadLine(beads: _beads, justGained: _justGained),
                   const Spacer(),
                 ],
               ),
@@ -347,6 +401,40 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 염주 한 줄 — 「염주 37 / 108 · 오늘 2바퀴」.
+class BeadLine extends StatelessWidget {
+  const BeadLine({super.key, required this.beads, this.justGained});
+
+  final BeadCount beads;
+  final int? justGained;
+
+  String get _label {
+    final gained = justGained;
+    if (gained != null) return '한 바퀴 돌았다. 공덕 +$gained';
+    final progress = '염주 ${beads.inRound} / ${PrayerBeads.perRound}';
+    if (beads.meritDoneToday) return '$progress · 오늘 공덕은 다 받았다';
+    if (beads.roundsToday > 0) return '$progress · 오늘 ${beads.roundsToday}바퀴';
+    return '$progress · 한 바퀴에 공덕 ${PrayerBeads.meritPerRound}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = Theme.of(context).colorScheme.onSurface;
+    final highlight = justGained != null;
+    return Semantics(
+      liveRegion: highlight,
+      child: Text(
+        _label,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: highlight ? Tokens.saffron : fg.withValues(alpha: 0.45),
+          fontWeight: highlight ? FontWeight.w700 : null,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        ),
       ),
     );
   }

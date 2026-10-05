@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:bucheo_handsome/app/providers.dart';
 import 'package:bucheo_handsome/app/theme.dart';
+import 'package:bucheo_handsome/data/repositories/play_repository.dart';
 import 'package:bucheo_handsome/features/home/home_controller.dart';
 import 'package:bucheo_handsome/features/play/moktak.dart';
 import 'package:bucheo_handsome/features/play/moktak_sound.dart';
 import 'package:bucheo_handsome/features/play/play_instrument.dart';
 import 'package:bucheo_handsome/features/play/play_screen.dart';
 import 'package:bucheo_handsome/features/play/play_stage.dart';
+import 'package:bucheo_handsome/features/play/prayer_beads.dart';
 import 'package:bucheo_handsome/features/play/singing_bowl.dart';
 import 'package:bucheo_handsome/features/play/singing_bowl_sound.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class _FakePlay implements PlayRepository {
+  _FakePlay([this.beads = 0]);
+  int beads;
+  int merit = 0;
+
+  @override
+  Future<BeadCount> today() async => BeadCount(today: beads);
+
+  @override
+  Future<BeadCount> addBeads(int n) async {
+    final before = beads;
+    beads += n;
+    final gained = PrayerBeads.meritBetween(before, beads);
+    merit += gained;
+    return BeadCount(today: beads, meritGained: gained);
+  }
+}
 
 class _FakeMoktak implements MoktakSound {
   int knocks = 0;
@@ -356,16 +377,19 @@ void main() {
   group('놀이 화면', () {
     late _FakeMoktak moktak;
     late _FakeBowl bowl;
+    late _FakePlay play;
 
-    Future<void> pumpPlay(WidgetTester tester) async {
+    Future<void> pumpPlay(WidgetTester tester, {int beads = 0}) async {
       SharedPreferences.setMockInitialValues({});
       moktak = _FakeMoktak();
       bowl = _FakeBowl();
+      play = _FakePlay(beads);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             moktakSoundProvider.overrideWithValue(moktak),
             singingBowlSoundProvider.overrideWithValue(bowl),
+            playRepositoryProvider.overrideWithValue(play),
             homeStateProvider.overrideWith(
               (ref) => Completer<TempleHomeState>().future,
             ),
@@ -491,6 +515,51 @@ void main() {
         await tester.pump(const Duration(milliseconds: 50));
       }
       expect(bowl.levels.last, lessThan(0.01));
+    });
+
+    testWidgets('두드릴 때마다 염주 한 알, 한 바퀴를 돌면 공덕', (tester) async {
+      await pumpPlay(tester, beads: 106);
+      expect(find.text('염주 106 / 108 · 한 바퀴에 공덕 20'), findsOneWidget);
+
+      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('염주 107 / 108 · 한 바퀴에 공덕 20'), findsOneWidget);
+
+      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(play.merit, PrayerBeads.meritPerRound);
+      expect(find.text('한 바퀴 돌았다. 공덕 +20'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('염주 0 / 108 · 오늘 1바퀴'), findsOneWidget);
+    });
+
+    testWidgets('싱잉볼을 울리는 동안에도 염주가 넘어간다', (tester) async {
+      await pumpPlay(tester);
+      await tester.tap(find.text('싱잉볼'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('싱잉볼을 울려라.'));
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(play.beads, 1, reason: '치기는 한 알');
+
+      final gesture = await tester.startGesture(_onRim(tester, 0));
+      for (var i = 1; i <= 180; i++) {
+        await gesture.moveTo(_onRim(tester, i / 60 * RubMeter.fullSpeed));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      for (var i = 0; i < 80; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(play.beads, greaterThan(2), reason: '울린 시간만큼 알이 넘어간다');
+    });
+
+    testWidgets('하루 공덕을 다 받으면 그렇다고 알려 준다', (tester) async {
+      await pumpPlay(
+        tester,
+        beads: PrayerBeads.perRound * PrayerBeads.roundsPerDay + 3,
+      );
+      expect(find.text('염주 3 / 108 · 오늘 공덕은 다 받았다'), findsOneWidget);
     });
 
     testWidgets('문지르다가 목탁으로 바꾸면 울림이 멈춘다', (tester) async {

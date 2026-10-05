@@ -86,7 +86,8 @@ class Profiles extends Table {
   TextColumn get avatarPath => text().nullable()();
   DateTimeColumn get ordainedAt => dateTime().nullable()();
 
-  /// 공덕. 번뇌를 태우거나 엎어둘 때 쌓인다.
+  /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴를 돌면 쌓인다.
+  /// (엎어두기도 쌓지만 지금은 진입 버튼이 없다.)
   IntColumn get merit => integer().withDefault(const Constant(0))();
 
   /// 태운 번뇌 누적. 108개가 「108번뇌 완파」 조건이다.
@@ -103,6 +104,17 @@ class Profiles extends Table {
 
   /// 공덕으로 연 옷장 아이템 ID 목록 JSON.
   TextColumn get ownedItemsJson => text().withDefault(const Constant('[]'))();
+
+  // --- 놀이 염주 (목탁·싱잉볼) ---
+
+  /// [playBeadsToday]가 센 날 (yyyy-MM-dd). 날이 바뀌면 0부터 다시 센다.
+  TextColumn get playDate => text().nullable()();
+
+  /// 그날 넘긴 염주 알. 108알이 한 바퀴다.
+  IntColumn get playBeadsToday => integer().withDefault(const Constant(0))();
+
+  /// 지금까지 돈 바퀴. 공덕 상한과 상관없이 다 센다.
+  IntColumn get beadRounds => integer().withDefault(const Constant(0))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -208,8 +220,9 @@ class AppDatabase extends _$AppDatabase {
       : super(executor ?? driftDatabase(name: 'bucheo_handsome'));
 
   /// 3 — 아바타 옷장(착용 상태·보유 아이템) 추가.
+  /// 4 — 놀이 염주(오늘 넘긴 알·누적 바퀴) 추가.
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -229,6 +242,11 @@ class AppDatabase extends _$AppDatabase {
           if (from < 3) {
             await m.addColumn(profiles, profiles.equipJson);
             await m.addColumn(profiles, profiles.ownedItemsJson);
+          }
+          if (from < 4) {
+            await m.addColumn(profiles, profiles.playDate);
+            await m.addColumn(profiles, profiles.playBeadsToday);
+            await m.addColumn(profiles, profiles.beadRounds);
           }
         },
         beforeOpen: (details) async {

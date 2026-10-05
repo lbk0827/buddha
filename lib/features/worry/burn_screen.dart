@@ -347,38 +347,45 @@ class _BurnCount extends ConsumerWidget {
   }
 }
 
-class _MeritHint extends StatelessWidget {
+class _MeritHint extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: const Color(0xFF2B2622),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.local_fire_department_outlined,
-                size: 18, color: Tokens.saffron),
-            const SizedBox(width: 10),
-            Expanded(
-              child: RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                      fontSize: 13, color: Color(0xFFD9D0C3), height: 1.4),
-                  children: [
-                    TextSpan(text: '태우면 '),
-                    TextSpan(
-                        text: '+${WorryRepository.meritPerBurn} 공덕',
-                        style: TextStyle(
-                            color: Tokens.ivory, fontWeight: FontWeight.w700)),
-                    TextSpan(text: ' · 108개 채우면 「108번뇌 완파」'),
-                  ],
-                ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final burnedToday = ref.watch(homeStateProvider).value?.burnedToday ?? 0;
+    final merit = WorryRepository.meritForBurn(burnedToday);
+    const base = TextStyle(fontSize: 13, color: Color(0xFFD9D0C3), height: 1.4);
+    const strong = TextStyle(color: Tokens.ivory, fontWeight: FontWeight.w700);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2B2622),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.local_fire_department_outlined,
+              size: 18, color: Tokens.saffron),
+          const SizedBox(width: 10),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: base,
+                children: merit > 0
+                    ? [
+                        const TextSpan(text: '태우면 '),
+                        TextSpan(text: '+$merit 공덕', style: strong),
+                        const TextSpan(text: ' · 108개 채우면 「108번뇌 완파」'),
+                      ]
+                    : const [
+                        TextSpan(text: '오늘 공덕은 다 받았다. '),
+                        TextSpan(text: '태우는 건 된다.', style: strong),
+                      ],
               ),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _KindChip extends StatelessWidget {

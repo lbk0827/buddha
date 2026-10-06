@@ -498,7 +498,7 @@ void main() {
         'assets/avatar/head_bucket.webp',
         'assets/avatar/acc_cybervisor.webp',
         'assets/avatar/acc_goldbeads.webp',
-        'assets/avatar/mouth_bubblegum.webp',
+        'assets/avatar/mouth_grillz.webp',
       ]);
     });
 

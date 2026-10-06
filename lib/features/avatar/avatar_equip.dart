@@ -408,6 +408,48 @@ const List<WardrobeItem> kWardrobe = [
     meritCost: 800,
     popped: 'mouth_bubblegum_popped',
   ),
+  WardrobeItem(
+    id: 'mouth_pacifier',
+    name: '쪽쪽이',
+    slot: AvatarSlot.mouth,
+    meritCost: 600,
+  ),
+  WardrobeItem(
+    id: 'mouth_bungeoppang',
+    name: '붕어빵',
+    slot: AvatarSlot.mouth,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'mouth_tteokkochi',
+    name: '떡꼬치',
+    slot: AvatarSlot.mouth,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'mouth_whistle',
+    name: '호루라기',
+    slot: AvatarSlot.mouth,
+    meritCost: 600,
+  ),
+  WardrobeItem(
+    id: 'mouth_mustache',
+    name: '콧수염',
+    slot: AvatarSlot.mouth,
+    meritCost: 500,
+  ),
+  WardrobeItem(
+    id: 'mouth_lollipop',
+    name: '소용돌이 사탕',
+    slot: AvatarSlot.mouth,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'mouth_grillz',
+    name: '금니 웃음',
+    slot: AvatarSlot.mouth,
+    meritCost: 1200,
+  ),
 
   // 발
   WardrobeItem(

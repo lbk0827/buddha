@@ -320,6 +320,12 @@ const List<WardrobeItem> kWardrobe = [
     meritCost: 700,
   ),
   WardrobeItem(
+    id: 'acc_trafficlight',
+    name: '신호등 선글라스',
+    slot: AvatarSlot.face,
+    meritCost: 700,
+  ),
+  WardrobeItem(
     id: 'acc_pinkshades',
     name: '핑크 선글라스',
     slot: AvatarSlot.face,

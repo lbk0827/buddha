@@ -15,6 +15,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from avatar_anchors import REFERENCE
 from build_avatar_assets import ALPHA_FLOOR, MOTION_ONLY, PLACED, save_layer
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ PAD = 0.06  # 잘라낸 영역 둘레 여백 비율
 
 # 베이스 실루엣을 재보면 귀가 y 320~470 까지 내려오고 목은 y 480 에서 좁아진다.
 # 이 두 숫자가 아래 두 창을 가른다.
-NECK_Y = 478
+NECK_Y = REFERENCE.neck_cut_y
 
 # 머리 아이템은 「머리에 씌운 모습」으로 보여준다.
 # 모자만 따로 띄우면 민머리와 종류가 달라 보이고, 어느 쪽이 위인지도 안 읽힌다.

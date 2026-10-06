@@ -17,6 +17,10 @@ Imgs/*.png (납품 원본) → assets/avatar/*.webp (앱에 나가는 것)
 크기·자리(PLACED)로 1024 캔버스에 옮겨 놓고, 몸 뒤로 가야 하는 부분
 (합장한 손 뒤, 목 뒤, 가사 밑단 안)은 지운다.
 
+소품 자리는 기준 캐릭터(동자 부처) 위에서 정하고, 어느 앵커(눈·입·목·
+발…)를 따라가는지 함께 적는다. 다른 캐릭터에는 두 캐릭터의 앵커를 따라
+옮겨 굽는다(avatar_anchors.py). 기준 캐릭터에서는 옮기지 않는다.
+
 **아이템을 보기 좋게 옮기는 보정은 하지 않는다.** FACE_FIT 은 「얼굴을
 베이스 얼굴에 겹치는」 정합일 뿐이고, 그 결과가 베이스 머리를 다 덮는지
 여기서 검사한다. 모자가 크거나 낮아 보이면 그건 생성 단계에서 잡는다.
@@ -36,16 +40,18 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from avatar_anchors import REFERENCE, Character, find_eyes, map_placement
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "Imgs"
 OUT = ROOT / "assets" / "avatar"
 
 CANVAS = 1024
 
-# 베이스 실루엣을 재보면 귀가 세로 320~470 까지 내려오고, 목은 478 에서
-# 가장 좁아진다(폭 142). 여기서 자르면 잘린 면이 제일 작고, 그 아래는
-# 베이스와 같은 픽셀이라 이음매가 보이지 않는다.
-NECK_Y = 478
+# 베이스 실루엣을 재보면 귀가 세로 320~470 까지 내려오고, 목은 478 근처에서
+# 가장 좁아진다. 여기서 자르면 잘린 면이 제일 작고, 그 아래는 베이스와 같은
+# 픽셀이라 이음매가 보이지 않는다. 캐릭터마다 다르다(characters/*.json).
+NECK_Y = REFERENCE.neck_cut_y
 
 # 잘린 끝을 몇 픽셀 흐리게 해서 경계선이 서지 않게 한다.
 NECK_FEATHER = 6
@@ -72,15 +78,24 @@ MAX_PEEK = 400
 BASES = ["base_saffron", "base_temple", "base_ash", "base_crimson",
          "base_lavender"]
 HEADS = ["head_nabal", "head_bamboo", "head_straw", "head_beanie", "head_bucket"]
-OVERLAYS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
+# 1024 캔버스 제자리에 놓인 채로 받은 소품(예전 방식)과, 따라가는 앵커.
+OVERLAYS = {
+    "acc_beads": "neck",
+    "acc_glasses": "eyes",
+    "seat_lotus": "body",
+    "halo_ring": "head",
+}
 
 # 물건만 그려 받은 소품을 베이스에 놓는 값.
-#   (배율, 원본 기준점, 베이스 기준점, 몸 뒤로 숨길 곳)
+#   (따라갈 앵커, 배율, 원본 기준점, 베이스 기준점, 몸 뒤로 숨길 곳)
 # 원본 기준점이 베이스 기준점에 오도록 배율대로 줄여 놓는다. 베이스 기준점은
-# 베이스를 재서 얻었다 — 감은 두 눈 가운데 (510, 356), 목 y 478,
-# 합장한 손끝 y 520, 두 발 중심 x 457·565 · 발바닥 y 918.
+# 기준 캐릭터(동자 부처) 위의 자리다. 베이스를 대 보며 정했다 — 감은 두 눈
+# 가운데 (510, 356), 목 y 478, 합장한 손끝 y 520, 두 발 중심 x 457·565 ·
+# 발바닥 y 918. 다른 캐릭터에서는 앵커를 따라 옮겨진다.
 #   선글라스  두 렌즈 중심 간격을 두 눈 간격(156)에 맞춘다. 동그란 것은 아래
 #             테가 입꼬리에 닿아 6% 줄였다
+#   신호등    두 신호등 알 중심 간격(239)을 눈 간격에 맞춘다. 원본에서 알을
+#             상단에 모아, 오른쪽 기둥 끝이 축소 뒤 발바닥 아래(y≈965)에 닿는다
 #   헤드폰    두 컵이 쇄골 앞 양옆, 밴드는 목 뒤(BAND 를 지운다), 컵은 손 뒤
 #   금빛 단주 손끝이 목 바로 아래라 U 를 손 위에 둘 자리가 없다. 손 뒤로
 #             지나 손 아래에서 U 가 보이게 한다
@@ -91,13 +106,14 @@ OVERLAYS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
 #   운동화    두 짝 간격을 두 발 간격보다 조금 넓게(128) 잡아 발가락까지
 #             덮고, 가사 밑단 안쪽은 지운다
 PLACED = {
-    "acc_sunglasses": (156 / 452 * 0.94, (512, 515), (510, 356), ()),
-    "acc_pinkshades": (156 / 462, (512, 512), (510, 356), ()),
-    "acc_neckphones": (0.34, (512, 477), (512, 470), ("band", "hands")),
-    "acc_goldbeads": (170 / 685, (512, 99), (512, 466), ("hands",)),
-    "feet_sneakers": (128 / 336, (511, 776), (511, 936), ("robe",)),
-    "mouth_bubblegum": (105 / 829, (626.5, 621), (510, 412), ()),
-    "mouth_bubblegum_popped": (120 / 940, (634, 646.5), (510, 410), ()),
+    "acc_sunglasses": ("eyes", 156 / 452 * 0.94, (512, 515), (510, 356), ()),
+    "acc_trafficlight": ("eyes", 156 / 239, (661, 289), (510, 356), ()),
+    "acc_pinkshades": ("eyes", 156 / 462, (512, 512), (510, 356), ()),
+    "acc_neckphones": ("neck", 0.34, (512, 477), (512, 470), ("band", "hands")),
+    "acc_goldbeads": ("neck", 170 / 685, (512, 99), (512, 466), ("hands",)),
+    "feet_sneakers": ("feet", 128 / 336, (511, 776), (511, 936), ("robe",)),
+    "mouth_bubblegum": ("mouth", 105 / 829, (626.5, 621), (510, 412), ()),
+    "mouth_bubblegum_popped": ("mouth", 120 / 940, (634, 646.5), (510, 410), ()),
 }
 
 # 옷장 아이템이 아니라 연출에만 쓰는 레이어. 썸네일을 만들지 않는다.
@@ -108,13 +124,12 @@ BAND = [(325, 500), (420, 512), (512, 520), (604, 512), (700, 500),
         (692, 546), (632, 562), (606, 586), (512, 600), (418, 586),
         (392, 562), (332, 546)]
 
-# 베이스에서 합장한 두 손의 윤곽. 맨살인 왼쪽 가슴과 붙어 있어서 살만으로는
-# 가를 수 없다.
-HAND_OUTLINE = [(503, 514), (522, 514), (542, 530), (558, 578), (568, 646),
-                (456, 646), (462, 588), (482, 530)]
 
 # 원본 둘레에 투명도 1~15 짜리 흐린 점이 수천 개 흩어져 있다. 지운다.
 ALPHA_FLOOR = 16
+
+# 운동화로 덮었는지 검사할 발의 윗선. 기준 캐릭터에서 가사 밑단 바로 아래다.
+FEET_TOP_Y = 840
 
 # 운동화 두 짝 사이 위쪽은 발목이 가늘어져 발이 비친다. 가사 밑단 아래
 # 그림자처럼 어두운 중간색으로 메운다. 가사 색을 따면 다른 가사에서 어긋난다.
@@ -190,69 +205,6 @@ def fit_face(face: Image.Image, fit, base: Image.Image) -> Image.Image:
     return head, peek
 
 
-EDGE = 8
-
-# 귀 폭을 재는 높이: 눈에서 눈 간격의 이만큼 아래.
-EAR_BELOW_EYES = 0.3
-
-
-def _is_dark(p) -> bool:
-    return p[3] > 200 and max(p[:3]) < 45
-
-
-def _is_skin(p) -> bool:
-    r, g, b, a = p
-    return a > 200 and r > 190 and g > 140 and r > b + 25
-
-
-def find_eyes(image: Image.Image):
-    """감은 두 눈의 가운데 좌표와 그 높이의 귀 끝~귀 끝 폭을 잰다.
-
-    눈은 위아래가 살색인 새까만 가로선이다. 나발처럼 어두운 머리칼은
-    위아래가 살색이 아니라서 빠진다. 입도 같은 조건에 걸리므로 가운데
-    3분의 1은 버리고 양쪽만 쓴다.
-    """
-    px = image.load()
-    width, height = image.size
-    marks = []
-    for y in range(1, height - 1):
-        for x in range(width):
-            if not _is_dark(px[x, y]):
-                continue
-            up = y
-            while up > 0 and _is_dark(px[x, up]):
-                up -= 1
-            down = y
-            while down < height - 1 and _is_dark(px[x, down]):
-                down += 1
-            # 선 가장자리는 흐려서 중간색이다. 몇 픽셀 건너서 살색을 본다.
-            above, below = max(0, up - EDGE), min(height - 1, down + EDGE)
-            if down - up < 60 and _is_skin(px[x, above]) and _is_skin(px[x, below]):
-                marks.append((x, y))
-    if not marks:
-        raise SystemExit("눈을 못 찾았다 — 감은 눈이 새까만 선인지 확인")
-
-    xs = [x for x, _ in marks]
-    left_edge, right_edge = min(xs), max(xs)
-    third = (right_edge - left_edge) / 3
-    left = [(x, y) for x, y in marks if x < left_edge + third]
-    right = [(x, y) for x, y in marks if x > right_edge - third]
-    if not left or not right:
-        raise SystemExit("두 눈이 갈라지지 않는다")
-
-    mean = lambda pts: (sum(p[0] for p in pts) / len(pts),
-                        sum(p[1] for p in pts) / len(pts))
-    (lx, ly), (rx, ry) = mean(left), mean(right)
-    eye_x, eye_y = (lx + rx) / 2, (ly + ry) / 2
-
-    # 귀 폭은 눈보다 조금 아래(귓불 쪽)에서 잰다. 눈 높이에서 재면 버킷햇처럼
-    # 아래로 처진 챙이 같이 잡혀 폭이 부풀고 배율이 작게 나온다. 눈 간격에
-    # 비례한 거리라 그림 크기와 상관없이 같은 자리다.
-    ear_y = round(eye_y + (rx - lx) * EAR_BELOW_EYES)
-    row = [x for x in range(width) if px[x, ear_y][3] > 128]
-    return (eye_x, eye_y), row[-1] - row[0]
-
-
 def peek_of(face: Image.Image, fit, under: Image.Image) -> int:
     scale, left, top = fit
     size = round(face.width * scale)
@@ -300,7 +252,7 @@ def measure(name: str) -> None:
     print(f'    "{name}": {best},')
 
 
-def body_masks():
+def body_masks(character: Character = REFERENCE):
     """소품을 몸 뒤로 숨길 때 쓰는 가사·손 마스크를 원본 PNG 에서 만든다.
 
     가사 = 가사 원본끼리 다른 픽셀. 발가락 윤곽이나 밑단 아래 발등 그림자도
@@ -322,7 +274,7 @@ def body_masks():
             .filter(ImageFilter.MinFilter(7)).filter(ImageFilter.GaussianBlur(0.8)))
 
     outline = Image.new("L", first.size, 0)
-    ImageDraw.Draw(outline).polygon(HAND_OUTLINE, fill=255)
+    ImageDraw.Draw(outline).polygon(list(character.hand_outline), fill=255)
     hands = ImageChops.multiply(skin.filter(ImageFilter.MaxFilter(3)), outline)
     hands = hands.filter(ImageFilter.GaussianBlur(0.8))
     return {"robe": robe, "hands": hands, "skin": skin}
@@ -334,9 +286,31 @@ def hide(layer: Image.Image, mask: Image.Image) -> Image.Image:
     return out
 
 
-def place_item(name: str, masks) -> Image.Image:
-    """물건 원본을 PLACED 값대로 베이스 캔버스에 옮기고, 몸 뒤를 지운다."""
-    scale, (sx, sy), (dx, dy), behind = PLACED[name]
+def place_overlay(name: str, target: Character = REFERENCE) -> Image.Image:
+    """제자리에 놓인 채로 받은 소품을 target 캐릭터로 옮긴다.
+
+    기준 캐릭터면 원본 그대로다. 다른 캐릭터면 앵커를 축으로 통째로
+    키우고 옮긴다.
+    """
+    layer = load(name)
+    if target.id == REFERENCE.id:
+        return layer
+    anchor = REFERENCE.anchors[OVERLAYS[name]]
+    scale, (x, y) = map_placement(OVERLAYS[name], 1.0, (anchor.x, anchor.y), target)
+    size = round(CANVAS * scale)
+    moved = layer.resize((size, size), Image.Resampling.LANCZOS)
+    out = Image.new("RGBA", (CANVAS, CANVAS), (0, 0, 0, 0))
+    out.paste(moved, (round(x - anchor.x * scale), round(y - anchor.y * scale)), moved)
+    return out
+
+
+def place_item(name: str, masks, target: Character = REFERENCE) -> Image.Image:
+    """물건 원본을 PLACED 값대로 target 캐릭터 캔버스에 옮기고, 몸 뒤를 지운다.
+
+    masks 는 target 캐릭터의 몸으로 만든 것이어야 한다(body_masks).
+    """
+    anchor, scale, (sx, sy), dest, behind = PLACED[name]
+    scale, (dx, dy) = map_placement(anchor, scale, dest, target)
     item = load(name, any_size=True)
     item.putalpha(item.getchannel("A").point(lambda v: 0 if v < ALPHA_FLOOR else v))
 
@@ -355,8 +329,9 @@ def place_item(name: str, masks) -> Image.Image:
             layer = hide(layer, masks[part])
 
     if name.startswith("feet_"):
+        _, (_, feet_top) = map_placement("feet", 1.0, (0, FEET_TOP_Y), target)
         feet = masks["skin"].copy()
-        feet.paste(0, (0, 0, CANVAS, 840))
+        feet.paste(0, (0, 0, CANVAS, round(feet_top)))
         solid = layer.getchannel("A").point(lambda v: 255 if v > 128 else 0)
         gap = ImageChops.subtract(feet, solid)
         gap = gap.filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(1))
@@ -389,8 +364,12 @@ def save_layer(image: Image.Image, directory: Path, name: str) -> None:
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
-    for name in BASES + OVERLAYS:
+    for name in BASES:
         save_layer(load(name), OUT, name)
+        print(name)
+
+    for name in OVERLAYS:
+        save_layer(place_overlay(name), OUT, name)
         print(name)
 
     masks = body_masks()

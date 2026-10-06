@@ -6,7 +6,7 @@ import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../home/home_controller.dart';
 
-/// 탭들이 공유하는 상단바. 좌: 공덕 / 우: 원형 버튼.
+/// 탭들이 공유하는 상단바. 좌: 공덕 / 우: 원형 버튼(증표 · 프로필).
 /// 레퍼런스처럼 상단에는 이것 말고 아무것도 두지 않는다.
 class TabTopBar extends ConsumerWidget {
   const TabTopBar({super.key, this.trailing});
@@ -25,6 +25,12 @@ class TabTopBar extends ConsumerWidget {
           MeritPill(merit: merit),
           const Spacer(),
           if (trailing != null) ...[trailing!, const SizedBox(width: 8)],
+          RoundIconButton(
+            icon: Icons.workspace_premium_outlined,
+            tooltip: '증표',
+            onTap: () => context.push(Routes.tokens),
+          ),
+          const SizedBox(width: 8),
           RoundIconButton(
             icon: Icons.person_outline,
             tooltip: '프로필',

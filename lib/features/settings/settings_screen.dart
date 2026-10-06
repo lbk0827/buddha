@@ -108,7 +108,7 @@ class SettingsScreen extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: const Text('증표'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.go(Routes.tokens),
+              onTap: () => context.push(Routes.tokens),
             ),
 
             // 디버그 빌드에서만 보인다. 옷장을 눌러보려면 공덕이 필요하다.

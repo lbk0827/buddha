@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme.dart';
 import '../home/home_controller.dart';
-import '../shell/app_shell.dart';
-import '../shell/tab_top_bar.dart';
 import 'token_catalog.dart';
 
 /// 「증표」 — 비움의 증표.
@@ -28,79 +26,81 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
     final text = Theme.of(context).textTheme;
     final fg = Theme.of(context).colorScheme.onSurface;
 
-    return SafeArea(
-      bottom: false,
-      child: home.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
-        data: (state) {
-          final unlockedCount =
-              kTokenCatalog.where((t) => t.isUnlocked(state.stats)).length;
+    return Scaffold(
+      appBar: AppBar(title: const Text('증표')),
+      body: SafeArea(
+        bottom: false,
+        child: home.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('$e')),
+          data: (state) {
+            final unlockedCount =
+                kTokenCatalog.where((t) => t.isUnlocked(state.stats)).length;
 
-          final visible = kTokenCatalog.where((t) {
-            if (_filter == 1) return t.isUnlocked(state.stats);
-            if (_filter == 2) return t.group == TokenGroup.season;
-            return true;
-          }).toList();
+            final visible = kTokenCatalog.where((t) {
+              if (_filter == 1) return t.isUnlocked(state.stats);
+              if (_filter == 2) return t.group == TokenGroup.season;
+              return true;
+            }).toList();
 
-          return Column(
-            children: [
-              const TabTopBar(),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(
-                      Tokens.gutter, 16, Tokens.gutter, kHudClearance),
-                  children: [
-                    Text('비움의 증표', style: text.displayMedium),
-                    const SizedBox(height: 6),
-                    Text(
-                      '돈으로만은 못 산다. 수행 이력이 열쇠다.',
-                      style: text.bodyMedium
-                          ?.copyWith(color: fg.withValues(alpha: 0.6)),
-                    ),
-                    const SizedBox(height: 20),
-                    _Stats(state: state),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        _Filter(
-                          label: '전체',
-                          selected: _filter == 0,
-                          onTap: () => setState(() => _filter = 0),
-                        ),
-                        const SizedBox(width: 8),
-                        _Filter(
-                          label: '해제됨 $unlockedCount',
-                          selected: _filter == 1,
-                          onTap: () => setState(() => _filter = 1),
-                        ),
-                        const SizedBox(width: 8),
-                        _Filter(
-                          label: '시즌',
-                          selected: _filter == 2,
-                          onTap: () => setState(() => _filter = 2),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.88,
-                      children: [
-                        for (final t in visible)
-                          _TokenCard(token: t, stats: state.stats),
-                      ],
-                    ),
-                  ],
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(
+                        Tokens.gutter, 16, Tokens.gutter, 32),
+                    children: [
+                      Text('비움의 증표', style: text.displayMedium),
+                      const SizedBox(height: 6),
+                      Text(
+                        '돈으로만은 못 산다. 수행 이력이 열쇠다.',
+                        style: text.bodyMedium
+                            ?.copyWith(color: fg.withValues(alpha: 0.6)),
+                      ),
+                      const SizedBox(height: 20),
+                      _Stats(state: state),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          _Filter(
+                            label: '전체',
+                            selected: _filter == 0,
+                            onTap: () => setState(() => _filter = 0),
+                          ),
+                          const SizedBox(width: 8),
+                          _Filter(
+                            label: '해제됨 $unlockedCount',
+                            selected: _filter == 1,
+                            onTap: () => setState(() => _filter = 1),
+                          ),
+                          const SizedBox(width: 8),
+                          _Filter(
+                            label: '시즌',
+                            selected: _filter == 2,
+                            onTap: () => setState(() => _filter = 2),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      GridView.count(
+                        crossAxisCount: 2,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 0.88,
+                        children: [
+                          for (final t in visible)
+                            _TokenCard(token: t, stats: state.stats),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

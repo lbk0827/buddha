@@ -41,10 +41,10 @@ const List<HudTab> kHudTabs = [
     route: '/seonsa',
   ),
   HudTab(
-    label: '증표',
-    icon: Icons.workspace_premium_outlined,
-    activeIcon: Icons.workspace_premium,
-    route: '/tokens',
+    label: '소원',
+    icon: Icons.volunteer_activism_outlined,
+    activeIcon: Icons.volunteer_activism,
+    route: '/wishes',
   ),
 ];
 

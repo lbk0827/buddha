@@ -56,7 +56,9 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     _targetSec = widget.forcedLengthSec ?? 180;
     _audioOn = widget.forceAudio && Flags.audioAssetAvailable;
     // 회복 선호 기본값은 프로필에서 읽어 첫 3회만 적용한다 (FR-6.5).
-    WidgetsBinding.instance.addPostFrameCallback((_) => _applyRecoveryDefaults());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _applyRecoveryDefaults(),
+    );
   }
 
   Future<void> _applyRecoveryDefaults() async {
@@ -93,13 +95,15 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     if (!mounted) return;
 
     ref.read(sessionControllerProvider.notifier)
-      ..updateSetup(SessionSetup(
-        targetSec: _targetSec,
-        worryText: worry.isEmpty ? null : worry,
-        worryChip: _chip,
-        repeatFlag: _repeatFlag,
-        audioOn: _audioOn,
-      ))
+      ..updateSetup(
+        SessionSetup(
+          targetSec: _targetSec,
+          worryText: worry.isEmpty ? null : worry,
+          worryChip: _chip,
+          repeatFlag: _repeatFlag,
+          audioOn: _audioOn,
+        ),
+      )
       ..setSafetyFlag(flagged);
 
     if (flagged) {
@@ -126,6 +130,29 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     context.push(Routes.sessionReady);
   }
 
+  void _showInfo(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('마음 비우기란'),
+        content: const Text(
+          '잠깐은, 아무것도 안 해도 된다.\n\n'
+          '시작을 누르고 폰을 엎어 두어라.\n'
+          '생각이 떠올라도 괜찮다. 비우려고 애쓰진 말고.\n\n'
+          '쉬는 동안 공덕도 쌓인다. 1분에 10씩.\n'
+          '중간에 폰을 들면, 더 쉴지 여기까지 할지 고르면 된다.',
+          style: TextStyle(height: 1.55),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('닫기'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
@@ -135,45 +162,59 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('마음 비우기')),
+      appBar: AppBar(
+        title: const Text('마음 비우기'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: '마음 비우기란',
+            onPressed: () => _showInfo(context),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
-                    Tokens.gutter, 8, Tokens.gutter, 16),
+                  Tokens.gutter,
+                  8,
+                  Tokens.gutter,
+                  16,
+                ),
                 children: [
                   Text('얼마나 오래 마음을 내려놓을까?', style: text.titleLarge),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Expanded(
-                        child: _LengthChoice(
-                          label: '3분',
-                          selected: _targetSec == 180,
-                          onTap: () => setState(() => _targetSec = 180),
+                      for (final (label, sec) in const [
+                        ('1분', 60),
+                        ('3분', 180),
+                        ('5분', 300),
+                        ('10분', 600),
+                      ]) ...[
+                        if (sec != 60) const SizedBox(width: 8),
+                        Expanded(
+                          child: _LengthChoice(
+                            label: label,
+                            selected: _targetSec == sec,
+                            onTap: () => setState(() => _targetSec = sec),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _LengthChoice(
-                          label: '10분',
-                          selected: _targetSec == 600,
-                          onTap: () => setState(() => _targetSec = 600),
-                        ),
-                      ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 28),
                   Text('태우고 싶은 번뇌 작성하기', style: text.titleLarge),
                   const SizedBox(height: 4),
-                  Text('안 써도 된다.',
-                      style: text.bodyMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.55))),
+                  Text(
+                    '안 써도 된다.',
+                    style: text.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.55),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: _worryController,
@@ -221,7 +262,11 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(
-                  Tokens.gutter, 0, Tokens.gutter, Tokens.gutter),
+                Tokens.gutter,
+                0,
+                Tokens.gutter,
+                Tokens.gutter,
+              ),
               child: Row(
                 children: [
                   // 건너뛰기는 입력칸과 같은 무게로 둔다 (FR-3.1).
@@ -283,8 +328,7 @@ class _LengthChoice extends StatelessWidget {
             width: selected ? 1.8 : 1,
           ),
         ),
-        child: Text(label,
-            style: Theme.of(context).textTheme.titleLarge),
+        child: Text(label, style: Theme.of(context).textTheme.titleLarge),
       ),
     );
   }

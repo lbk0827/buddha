@@ -496,7 +496,7 @@ void main() {
         'assets/avatar/base_lavender.webp',
         'assets/avatar/feet_sneakers.webp',
         'assets/avatar/head_bucket.webp',
-        'assets/avatar/acc_pinkshades.webp',
+        'assets/avatar/acc_cybervisor.webp',
         'assets/avatar/acc_goldbeads.webp',
         'assets/avatar/mouth_bubblegum.webp',
       ]);

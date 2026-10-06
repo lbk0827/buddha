@@ -331,6 +331,54 @@ const List<WardrobeItem> kWardrobe = [
     slot: AvatarSlot.face,
     meritCost: 900,
   ),
+  WardrobeItem(
+    id: 'acc_targetpatch',
+    name: '과녁 안대',
+    slot: AvatarSlot.face,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'acc_snorkel',
+    name: '물안경 스노클',
+    slot: AvatarSlot.face,
+    meritCost: 800,
+  ),
+  WardrobeItem(
+    id: 'acc_vr',
+    name: 'VR 고글',
+    slot: AvatarSlot.face,
+    meritCost: 900,
+  ),
+  WardrobeItem(
+    id: 'acc_cucumber',
+    name: '오이 팩',
+    slot: AvatarSlot.face,
+    meritCost: 500,
+  ),
+  WardrobeItem(
+    id: 'acc_skigoggles',
+    name: '스키 고글',
+    slot: AvatarSlot.face,
+    meritCost: 900,
+  ),
+  WardrobeItem(
+    id: 'acc_heartshades',
+    name: '하트 선글라스',
+    slot: AvatarSlot.face,
+    meritCost: 800,
+  ),
+  WardrobeItem(
+    id: 'acc_partystars',
+    name: '별 파티 안경',
+    slot: AvatarSlot.face,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'acc_cybervisor',
+    name: '사이버 바이저',
+    slot: AvatarSlot.face,
+    meritCost: 1100,
+  ),
 
   // 목
   WardrobeItem(

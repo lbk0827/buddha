@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "about": "부처님 말씀. 초기 경전을 현대 한국어로 풀어 쓴 것. 영어 대조문은 Bhikkhu Sujato 역(SuttaCentral, CC0). 한국어 풀이는 이 앱이 쓴 것이며 외부 감수 전(draft)이다. docs/부처님_말씀_출처.md",
+  "items": [
+    {
+      "id": "BW-01",
+      "text": "마음이 앞선다. 나쁜 마음엔 괴로움이 바퀴처럼 따른다.",
+      "scripture": "법구경",
+      "ref": "1게",
+      "uid": "dhp1",
+      "sourceUrl": "https://suttacentral.net/dhp1/en/sujato",
+      "english": "Intention is the leader of things; intention is first, they’re made by intention. If with corrupt intent you speak or act, suffering follows you, like a wheel, the ox’s foot.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-02",
+      "text": "마음이 앞선다. 맑은 마음엔 행복이 그림자처럼 따른다.",
+      "scripture": "법구경",
+      "ref": "2게",
+      "uid": "dhp2",
+      "sourceUrl": "https://suttacentral.net/dhp2/en/sujato",
+      "english": "Intention is the leader of things; intention is first, they’re made by intention. If with pure intent you speak or act, happiness follows you like a shadow that never leaves.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-03",
+      "text": "「나를 욕했다, 때렸다」 붙들면 미움은 가라앉지 않는다.",
+      "scripture": "법구경",
+      "ref": "3게",
+      "uid": "dhp3",
+      "sourceUrl": "https://suttacentral.net/dhp3/en/sujato",
+      "english": "“They abused me, they hit me! They beat me, they robbed me!” For those who bear such a grudge, hatred is never laid to rest.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-04",
+      "text": "미움은 미움으로 끝나지 않는다. 미워하지 않을 때 끝난다.",
+      "scripture": "법구경",
+      "ref": "5게",
+      "uid": "dhp5",
+      "sourceUrl": "https://suttacentral.net/dhp5/en/sujato",
+      "english": "For never is hatred laid to rest by hate, it’s laid to rest by love: this is an ancient teaching.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-05",
+      "text": "흔들리는 마음을, 지혜로운 이는 화살처럼 곧게 편다.",
+      "scripture": "법구경",
+      "ref": "33게",
+      "uid": "dhp33",
+      "sourceUrl": "https://suttacentral.net/dhp33/en/sujato",
+      "english": "The mind quivers and quakes, hard to guard, hard to curb. The discerning straighten it out, like a fletcher an arrow.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-06",
+      "text": "날뛰는 마음을 길들여라. 길든 마음이 행복을 부른다.",
+      "scripture": "법구경",
+      "ref": "35게",
+      "uid": "dhp35",
+      "sourceUrl": "https://suttacentral.net/dhp35/en/sujato",
+      "english": "Hard to hold back, flighty, alighting where it will; it’s good to tame the mind; a tamed mind leads to bliss.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-07",
+      "text": "바르게 둔 마음은 어떤 가족보다 나를 이롭게 한다.",
+      "scripture": "법구경",
+      "ref": "43게",
+      "uid": "dhp43",
+      "sourceUrl": "https://suttacentral.net/dhp43/en/sujato",
+      "english": "A rightly directed mind would do you more good than your mother or father or any other relative.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-08",
+      "text": "남이 한 일을 따지지 마라. 내가 한 일만 살펴라.",
+      "scripture": "법구경",
+      "ref": "50게",
+      "uid": "dhp50",
+      "sourceUrl": "https://suttacentral.net/dhp50/en/sujato",
+      "english": "Don’t find fault with others, with what they’ve done or left undone. You should only watch yourself, what you’ve done or left undone.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-09",
+      "text": "버려진 쓰레기 더미에서도 향기로운 연꽃이 핀다.",
+      "scripture": "법구경",
+      "ref": "58게",
+      "uid": "dhp58",
+      "sourceUrl": "https://suttacentral.net/dhp58/en/sujato",
+      "english": "From a heap of trash discarded on the highway, a lotus might blossom, fragrant and delightful.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-10",
+      "text": "내 허물을 짚어 주는 이를 보물 알려 주는 이로 여겨라.",
+      "scripture": "법구경",
+      "ref": "76게",
+      "uid": "dhp76",
+      "sourceUrl": "https://suttacentral.net/dhp76/en/sujato",
+      "english": "Regard one who sees your faults as a guide to a hidden treasure. Stay close to one so intelligent and astute who curbs you when you need it. Sticking close to such an impartial person, things get better, not worse.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-11",
+      "text": "지혜로운 이는 바위처럼 칭찬에도 비난에도 꿈쩍 않는다.",
+      "scripture": "법구경",
+      "ref": "81게",
+      "uid": "dhp81",
+      "sourceUrl": "https://suttacentral.net/dhp81/en/sujato",
+      "english": "As the wind cannot stir a solid mass of rock, so too blame and praise do not affect the wise.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-12",
+      "text": "뜻 없는 말 천 마디보다 마음 고요해지는 한마디가 낫다.",
+      "scripture": "법구경",
+      "ref": "100게",
+      "uid": "dhp100",
+      "sourceUrl": "https://suttacentral.net/dhp100/en/sujato",
+      "english": "Better than a thousand meaningless sayings is a single meaningful saying, hearing which brings you peace.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-13",
+      "text": "백만 명을 이긴 사람보다 나 하나를 이긴 사람이 크다.",
+      "scripture": "법구경",
+      "ref": "103게",
+      "uid": "dhp103",
+      "sourceUrl": "https://suttacentral.net/dhp103/en/sujato",
+      "english": "The supreme conqueror is not he who conquers a million men in battle, but he who conquers a single man: himself.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-14",
+      "text": "좋은 일은 서둘러라. 굼뜨면 마음이 나쁜 쪽을 즐긴다.",
+      "scripture": "법구경",
+      "ref": "116게",
+      "uid": "dhp116",
+      "sourceUrl": "https://suttacentral.net/dhp116/en/sujato",
+      "english": "Rush to do good, shield your mind from evil; for when you’re slow to do good, your thoughts delight in wickedness.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-15",
+      "text": "작은 선함도 가볍게 보지 마라. 물방울이 항아리를 채운다.",
+      "scripture": "법구경",
+      "ref": "122게",
+      "uid": "dhp122",
+      "sourceUrl": "https://suttacentral.net/dhp122/en/sujato",
+      "english": "Think not lightly of goodness, that it won’t come back to you. The pot is filled with water falling drop by drop; the attentive one is filled with goodness piled up bit by bit.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-16",
+      "text": "거친 말을 하지 마라. 거친 말은 거친 말로 돌아온다.",
+      "scripture": "법구경",
+      "ref": "133게",
+      "uid": "dhp133",
+      "sourceUrl": "https://suttacentral.net/dhp133/en/sujato",
+      "english": "Don’t speak harshly, they may speak harshly back. For aggressive speech is painful, and the rod may spring back on you.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-17",
+      "text": "나를 이끄는 건 결국 나다. 누가 대신 이끌겠는가.",
+      "scripture": "법구경",
+      "ref": "160게",
+      "uid": "dhp160",
+      "sourceUrl": "https://suttacentral.net/dhp160/en/sujato",
+      "english": "One is indeed the lord of oneself, for who else would be one’s lord? By means of a well-tamed self, one gains a lord that’s rare indeed.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-18",
+      "text": "다시 깨어 사는 사람은 구름을 벗어난 달처럼 빛난다.",
+      "scripture": "법구경",
+      "ref": "172게",
+      "uid": "dhp172",
+      "sourceUrl": "https://suttacentral.net/dhp172/en/sujato",
+      "english": "He who once was heedless, but turned to heedfulness, shines upon this world like the moon freed from clouds.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-19",
+      "text": "나쁜 일은 말고, 좋은 일은 하고, 마음을 맑게 하라.",
+      "scripture": "법구경",
+      "ref": "183게",
+      "uid": "dhp183",
+      "sourceUrl": "https://suttacentral.net/dhp183/en/sujato",
+      "english": "Not to do any evil; to embrace the good; to purify one’s mind: this is the instruction of the Buddhas.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-20",
+      "text": "참고 받아들이는 것이 가장 큰 수행이다.",
+      "scripture": "법구경",
+      "ref": "184게",
+      "uid": "dhp184",
+      "sourceUrl": "https://suttacentral.net/dhp184/en/sujato",
+      "english": "Patient acceptance is the ultimate fervor. Extinguishment is the ultimate, say the Buddhas. No true renunciate injures another, nor does an ascetic hurt another.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-21",
+      "text": "이기고 지는 것을 내려놓은 사람은 편히 잔다.",
+      "scripture": "법구경",
+      "ref": "201게",
+      "uid": "dhp201",
+      "sourceUrl": "https://suttacentral.net/dhp201/en/sujato",
+      "english": "Victory breeds enmity; the defeated sleep badly. The peaceful sleep at ease, having left victory and defeat behind.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-22",
+      "text": "건강이 가장 큰 복이고, 만족이 가장 큰 재산이다.",
+      "scripture": "법구경",
+      "ref": "204게",
+      "uid": "dhp204",
+      "sourceUrl": "https://suttacentral.net/dhp204/en/sujato",
+      "english": "Health is the ultimate blessing; contentment, the ultimate wealth; trust is the ultimate family; extinguishment, the ultimate happiness.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-23",
+      "text": "화는 다정함으로, 거짓은 진실로 이겨라.",
+      "scripture": "법구경",
+      "ref": "223게",
+      "uid": "dhp223",
+      "sourceUrl": "https://suttacentral.net/dhp223/en/sujato",
+      "english": "Defeat anger with kindness, villainy with virtue, stinginess with giving, and lies with truth.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-24",
+      "text": "말이 없어도 많아도 비난받는다. 비난을 피하는 이는 없다.",
+      "scripture": "법구경",
+      "ref": "227게",
+      "uid": "dhp227",
+      "sourceUrl": "https://suttacentral.net/dhp227/en/sujato",
+      "english": "It’s always been this way, Atula, it’s not just today. They blame you when you’re silent, they blame you when you speak a lot, and even when you speak just right: no one in the world escapes blame.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-25",
+      "text": "칭찬만 받는 사람도, 비난만 받는 사람도 없다.",
+      "scripture": "법구경",
+      "ref": "228게",
+      "uid": "dhp228",
+      "sourceUrl": "https://suttacentral.net/dhp228/en/sujato",
+      "english": "There never was, nor will be, nor is there today, someone who is wholly praised or wholly blamed.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-26",
+      "text": "지혜로운 이는 제 허물을 조금씩, 순간순간 덜어 낸다.",
+      "scripture": "법구경",
+      "ref": "239게",
+      "uid": "dhp239",
+      "sourceUrl": "https://suttacentral.net/dhp239/en/sujato",
+      "english": "A smart person would purge their own stains gradually, bit by bit, moment by moment, like a smith smelting silver.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-27",
+      "text": "남의 허물은 쉽게 보이고, 내 허물은 보기 어렵다.",
+      "scripture": "법구경",
+      "ref": "252게",
+      "uid": "dhp252",
+      "sourceUrl": "https://suttacentral.net/dhp252/en/sujato",
+      "english": "It’s easy to see the faults of others, hard to see one’s own. For the faults of others are tossed high like hay, while one’s own are hidden, as a cheat hides a bad hand.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-28",
+      "text": "애써야 하는 건 너 자신이다. 부처는 길을 가리킬 뿐이다.",
+      "scripture": "법구경",
+      "ref": "276게",
+      "uid": "dhp276",
+      "sourceUrl": "https://suttacentral.net/dhp276/en/sujato",
+      "english": "You yourselves must do the work, the Realized Ones just show the way. Meditators practicing absorption are released from Māra’s bonds.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-29",
+      "text": "지어진 모든 것은 변한다. 지혜로 보면 괴로움에서 풀려난다.",
+      "scripture": "법구경",
+      "ref": "277게",
+      "uid": "dhp277",
+      "sourceUrl": "https://suttacentral.net/dhp277/en/sujato",
+      "english": "All conditions are impermanent— when this is seen with wisdom, one grows disillusioned with suffering: this is the path to purity.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-30",
+      "text": "네 마음을 잘 돌봐라. 수렁에서 스스로를 끌어올려라.",
+      "scripture": "법구경",
+      "ref": "327게",
+      "uid": "dhp327",
+      "sourceUrl": "https://suttacentral.net/dhp327/en/sujato",
+      "english": "Delight in diligence! Take good care of your mind! Pull yourself out of this pit, like an elephant sunk in a bog.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-31",
+      "text": "남을 깔보지도, 부러워하지도 마라.",
+      "scripture": "법구경",
+      "ref": "365게",
+      "uid": "dhp365",
+      "sourceUrl": "https://suttacentral.net/dhp365/en/sujato",
+      "english": "A well-off mendicant ought not look down on others, nor should they be envious. A mendicant who envies others does not achieve immersion.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-32",
+      "text": "스스로를 일으키고, 스스로를 돌아보라.",
+      "scripture": "법구경",
+      "ref": "379게",
+      "uid": "dhp379",
+      "sourceUrl": "https://suttacentral.net/dhp379/en/sujato",
+      "english": "Urge yourself on, reflect on yourself. A mendicant self-controlled and mindful will always dwell in happiness.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-33",
+      "text": "아픈 일에 한탄까지 더하면 화살을 두 번 맞는 셈이다.",
+      "scripture": "상윳따 니까야",
+      "ref": "36.6 화살경",
+      "uid": "sn36.6",
+      "sourceUrl": "https://suttacentral.net/sn36.6/en/sujato",
+      "english": "“When an unlearned ordinary person experiences painful physical feelings they sorrow and wail and lament, beating their breast and falling into confusion. It’s like a person who is struck with an arrow, only to be struck with a second arrow. That person experiences the feeling of two arrows. It’s like a person who is struck with an arrow, but was not struck with a second arrow. That person would experience the feeling of one arrow.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-34",
+      "text": "하나뿐인 자식을 지키듯, 모든 생명에 끝없는 마음을 펼쳐라.",
+      "scripture": "숫타니파타",
+      "ref": "1.8 자비경",
+      "uid": "snp1.8",
+      "sourceUrl": "https://suttacentral.net/snp1.8/en/sujato",
+      "english": "Even as a mother would protect with her life her child, her only child, so too for all creatures unfold a boundless heart.",
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "BW-35",
+      "text": "남의 말이라서 믿지 말고, 스스로 알아보고 판단하라.",
+      "scripture": "앙굿따라 니까야",
+      "ref": "3.65 칼라마경",
+      "uid": "an3.65",
+      "sourceUrl": "https://suttacentral.net/an3.65/en/sujato",
+      "english": "Please, Kālāmas, don’t go by oral transmission, don’t go by lineage, don’t go by testament, don’t go by canonical authority, don’t rely on logic, don’t rely on inference, don’t go by reasoned train of thought, don’t go by the acceptance of a view after deliberation, don’t go by the appearance of competence, and don’t think ‘The ascetic is our respected teacher.’ But when you know for yourselves: ‘These things are unskillful, blameworthy, criticized by sensible people, and when you undertake them, they lead to harm and suffering’, then you should give them up.",
+      "reviewStatus": "draft"
+    }
+  ]
+}

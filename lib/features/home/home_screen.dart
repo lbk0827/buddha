@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../core/text_utils.dart';
 import '../avatar/buddha_figure.dart';
 import '../session/session_controller.dart';
 import '../shell/app_shell.dart';
 import '../shell/tab_top_bar.dart';
+import 'buddha_words.dart';
 import 'home_controller.dart';
 
 /// 「절」 — 내 부처님이 있는 곳.
@@ -91,18 +93,17 @@ class _Stage extends StatelessWidget {
   }
 }
 
-/// 하단 — 부처님의 한마디 카드 하나와 [마음 비우기] 버튼 하나.
+/// 하단 — 부처님 말씀 카드 하나와 [마음 비우기] 버튼 하나.
 class _Bottom extends ConsumerWidget {
   const _Bottom({required this.state});
   final TempleHomeState state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final card = state.dailyCard;
+    final word = ref.watch(todaysBuddhaWordProvider).value;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surface = isDark ? const Color(0xFF221F1A) : Colors.white;
     final fg = Theme.of(context).colorScheme.onSurface;
-    final todayMin = state.faceDownTodaySec ~/ 60;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -114,10 +115,10 @@ class _Bottom extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (card != null) ...[
-            InkWell(
-              onTap: () => context.go(Routes.seonsa),
-              borderRadius: BorderRadius.circular(16),
+          if (word != null) ...[
+            Transform.translate(
+              // 부처님과 좀 더 붙게, 화면 아래쪽에서 떨어뜨린다.
+              offset: const Offset(0, -50),
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
@@ -129,22 +130,46 @@ class _Bottom extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: fg.withValues(alpha: 0.07)),
                 ),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '부처님의 한마디',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: fg.withValues(alpha: 0.45),
-                      ),
+                    // 연꽃 — 부처님이 선 연꽃 대좌와 같은 꽃이다. 이모지만 하게,
+                    // 카드 위쪽에 붙인다. docs/GPT요청_부처님말씀_아이콘.md
+                    Image.asset(
+                      'assets/home/icon_lotus.webp',
+                      width: 20,
+                      height: 20,
+                      excludeFromSemantics: true,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      card.text,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15, height: 1.45),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '부처님 말씀',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: fg.withValues(alpha: 0.45),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            keepAll(word.text),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 15, height: 1.45),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            word.citation,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: fg.withValues(alpha: 0.45),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -152,26 +177,29 @@ class _Bottom extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
           ],
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: FilledButton(
-              onPressed: () {
-                ref.read(analyticsProvider).log('home_entry_selected', {
-                  'entry': 'practice',
-                });
-                context.push(Routes.sessionSetup);
-              },
-              child: const Text(
-                '마음 비우기',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+          // 카드보다 좁게 — 화면 폭을 다 채우면 너무 크다.
+          Transform.translate(
+            // 카드처럼 화면 아래쪽에서 떨어뜨린다.
+            offset: const Offset(0, -50),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 56),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton(
+                  onPressed: () {
+                    ref.read(analyticsProvider).log('home_entry_selected', {
+                      'entry': 'practice',
+                    });
+                    context.push(Routes.sessionSetup);
+                  },
+                  child: const Text(
+                    '마음 비우기',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                  ),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            todayMin > 0 ? '오늘 $todayMin분 엎어뒀다.' : '3분이면 된다. 엎어둔 1분에 공덕 10.',
-            style: TextStyle(fontSize: 12, color: fg.withValues(alpha: 0.5)),
           ),
         ],
       ),

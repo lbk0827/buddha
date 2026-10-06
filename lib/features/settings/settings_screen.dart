@@ -110,6 +110,13 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(Routes.tokens),
             ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('출처'),
+              subtitle: const Text('앱에 쓴 소리·그림을 만든 사람들.'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push(Routes.credits),
+            ),
 
             // 디버그 빌드에서만 보인다. 옷장을 눌러보려면 공덕이 필요하다.
             if (kDebugMode) ...[

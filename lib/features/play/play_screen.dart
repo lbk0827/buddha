@@ -162,7 +162,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _addBeads(1);
     _swing(
       _moktakSwing,
-      soundOnset: Duration.zero, // moktak.mp3 는 0ms 부터 소리가 난다
+      soundOnset: Duration.zero, // moktak.wav 는 2ms 부터 소리가 난다
       sound: _moktakSound.knock,
       impact: () {
         HapticFeedback.mediumImpact();

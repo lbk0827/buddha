@@ -6,8 +6,8 @@ import 'effect_audio.dart';
 
 /// 목탁 소리.
 ///
-/// 소리: Freesound 「Mokugyo.wav」(jonopodmore, CC0 1.0). 일본 고야산의 작은
-/// 목어를 원래 천 감은 채로 친 녹음이다. 출처는 docs/사운드_출처.md.
+/// 소리: 공유마당 김용배 「목탁소리(이미지)」(CC BY). 원본의 두 번째 타 하나를
+/// 잘랐다. CC BY 라 앱 안에 출처를 표시해야 한다. 출처는 docs/사운드_출처.md.
 abstract class MoktakSound {
   /// 한 번 친다. 소리를 못 내도 조용히 넘어간다 — 소리 때문에 두드리기가
   /// 막히면 안 된다.
@@ -27,7 +27,7 @@ final moktakSoundProvider = Provider<MoktakSound>((ref) {
 
 class AudioMoktakSound implements MoktakSound {
   /// audioplayers 는 assets/ 를 앞에 붙여 찾는다.
-  static const asset = 'sounds/moktak.mp3';
+  static const asset = 'sounds/moktak.wav';
 
   /// 연타하면 앞 소리가 울리는 중에 다음 소리가 겹친다. 한 플레이어로는
   /// 앞 소리를 끊어야 해서, 여러 개를 돌려 쓴다.

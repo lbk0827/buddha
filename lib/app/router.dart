@@ -18,6 +18,7 @@ import '../features/session/screens/session_ready_screen.dart';
 import '../features/session/screens/session_repeat_screen.dart';
 import '../features/session/screens/session_running_screen.dart';
 import '../features/session/screens/session_setup_screen.dart';
+import '../features/settings/credits_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/shell/app_shell.dart';
 import '../features/temple/temple_screen.dart';
@@ -60,6 +61,7 @@ class Routes {
   static const checkin = '/checkin';
   static const profile = '/profile';
   static const settings = '/settings';
+  static const credits = '/settings/credits';
   static const wardrobe = '/wardrobe';
   static const ordination = '/onboard/ordination';
   static const characterOnboard = '/onboard/character';
@@ -147,6 +149,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.checkin, builder: (_, _) => const CheckinScreen()),
       GoRoute(path: Routes.profile, builder: (_, _) => const ProfileScreen()),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsScreen()),
+      GoRoute(path: Routes.credits, builder: (_, _) => const CreditsScreen()),
       GoRoute(
         path: Routes.ordination,
         builder: (_, _) => const OrdinationScreen(),

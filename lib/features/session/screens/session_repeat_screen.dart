@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../session_controller.dart';
 
 /// 반복 고민 (FR-3.2). 「지난번 그 얘기」 토글이 켜졌을 때만 들어온다.
 /// 자동 키워드 매칭은 하지 않는다 — 사용자가 직접 고른다.
@@ -20,7 +21,7 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
   static const _choices = [
     '아직 그대로다',
     '조금 나아졌다',
-    '다른 게 더 크다',
+    '다른 일이 더 크다',
     '말하고 싶지 않다',
   ];
 
@@ -30,6 +31,8 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
   Widget build(BuildContext context) {
     final previous = ref.watch(_previousWorriesProvider);
     final text = Theme.of(context).textTheme;
+    // 이전 번뇌가 없으면 물을 대상이 없다. 선택지를 숨기고 바로 나가게 한다.
+    final hasPrevious = previous.value?.isNotEmpty ?? false;
 
     return Scaffold(
       appBar: AppBar(title: const Text('지난번 그 얘기')),
@@ -43,11 +46,18 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
                 loading: () => const SizedBox.shrink(),
                 error: (_, _) => const SizedBox.shrink(),
                 data: (list) => list.isEmpty
-                    ? const SizedBox.shrink()
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 28),
+                        child: Text(
+                          '지난번에 적어 둔 번뇌가 없다.\n'
+                          '다음에 번뇌를 적고 엎어 두면, 그때 묻겠다.',
+                          style: text.bodyLarge?.copyWith(height: 1.5),
+                        ),
+                      )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('지난번엔 이랬다.',
+                          Text('지난번엔 이 일이 마음에 걸렸다.',
                               style: text.bodyMedium?.copyWith(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -59,27 +69,31 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
                         ],
                       ),
               ),
-              Text('지금은 어떠냐', style: text.titleLarge),
-              const SizedBox(height: 12),
-              for (final c in _choices)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: OutlinedButton(
-                    onPressed: () => setState(() => _picked = c),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: _picked == c
-                          ? Tokens.saffron.withValues(alpha: 0.16)
-                          : null,
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(c),
+              if (hasPrevious) ...[
+                Text('요즘은 어떤가?', style: text.titleLarge),
+                const SizedBox(height: 12),
+                for (final c in _choices)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton(
+                      onPressed: () => setState(() => _picked = c),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: _picked == c
+                            ? Tokens.saffron.withValues(alpha: 0.16)
+                            : null,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(c),
+                      ),
                     ),
                   ),
-                ),
+              ],
               const Spacer(),
               FilledButton(
-                onPressed: _picked == null ? null : () => context.go(Routes.home),
+                onPressed: hasPrevious && _picked == null
+                    ? null
+                    : () => context.go(Routes.home),
                 child: const Text('됐다'),
               ),
             ],
@@ -90,9 +104,14 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
   }
 }
 
-final _previousWorriesProvider = FutureProvider<List<String>>((ref) async {
-  final sessions =
-      await ref.watch(sessionRepositoryProvider).previousWorries(limit: 4);
+/// 방금 끝낸 세션을 뺀 이전 번뇌들, 최근 것부터.
+final _previousWorriesProvider =
+    FutureProvider.autoDispose<List<String>>((ref) async {
+  final current = ref.read(sessionControllerProvider);
+  final sessions = await ref.watch(sessionRepositoryProvider).previousWorries(
+        limit: 4,
+        excludeId: current.result?.session.id ?? current.sessionId,
+      );
   return sessions
       .map((s) => s.worryText)
       .whereType<String>()

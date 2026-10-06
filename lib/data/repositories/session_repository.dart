@@ -276,9 +276,17 @@ class SessionRepository {
   }
 
   /// 완주 후 "지난번 그 얘기" 화면용 (FR-3.2).
-  Future<List<Session>> previousWorries({int limit = 4}) =>
+  /// 번뇌를 적고 끝난 세션들, 최근 것부터.
+  /// [excludeId] — 방금 끝낸 세션. 「지난번 그 얘기」는 그 세션 다음에 열리므로
+  /// 빼지 않으면 방금 적은 번뇌를 「지난번」이라고 보여 준다.
+  Future<List<Session>> previousWorries({int limit = 4, int? excludeId}) =>
       (_db.select(_db.sessions)
-            ..where((t) => t.worryText.isNotNull() & t.outcome.isNotNull())
+            ..where((t) =>
+                t.worryText.isNotNull() &
+                t.outcome.isNotNull() &
+                (excludeId == null
+                    ? const Constant(true)
+                    : t.id.equals(excludeId).not()))
             ..orderBy([(t) => OrderingTerm.desc(t.startedAt)])
             ..limit(limit))
           .get();

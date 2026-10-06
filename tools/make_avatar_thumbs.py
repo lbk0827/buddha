@@ -54,7 +54,7 @@ HEADS = ["head_shaved", "head_nabal", "head_bamboo", "head_straw",
          "head_beanie", "head_bucket"]
 
 # 물건 자체를 보여주는 것들.
-ITEMS = ["acc_beads", "acc_glasses", "seat_lotus", "halo_ring"]
+ITEMS = ["acc_beads", "acc_glasses", "seat_lotus"]
 
 
 def alpha_bbox(image: Image.Image, threshold: int = 4):

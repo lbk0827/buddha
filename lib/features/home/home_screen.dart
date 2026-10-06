@@ -180,7 +180,7 @@ class _Bottom extends ConsumerWidget {
           // 카드보다 좁게 — 화면 폭을 다 채우면 너무 크다.
           Transform.translate(
             // 카드처럼 화면 아래쪽에서 떨어뜨린다.
-            offset: const Offset(0, -50),
+            offset: const Offset(0, -20),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 56),
               child: SizedBox(

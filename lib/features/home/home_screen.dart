@@ -91,7 +91,7 @@ class _Stage extends StatelessWidget {
   }
 }
 
-/// 하단 — 부처님의 한마디 카드 하나와 [마음 내려놓기] 버튼 하나.
+/// 하단 — 부처님의 한마디 카드 하나와 [마음 비우기] 버튼 하나.
 class _Bottom extends ConsumerWidget {
   const _Bottom({required this.state});
   final TempleHomeState state;
@@ -120,8 +120,10 @@ class _Bottom extends ConsumerWidget {
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
                 decoration: BoxDecoration(
                   color: surface,
                   borderRadius: BorderRadius.circular(16),
@@ -155,13 +157,13 @@ class _Bottom extends ConsumerWidget {
             height: 56,
             child: FilledButton(
               onPressed: () {
-                ref
-                    .read(analyticsProvider)
-                    .log('home_entry_selected', {'entry': 'practice'});
+                ref.read(analyticsProvider).log('home_entry_selected', {
+                  'entry': 'practice',
+                });
                 context.push(Routes.sessionSetup);
               },
               child: const Text(
-                '마음 내려놓기',
+                '마음 비우기',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
               ),
             ),

@@ -135,7 +135,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('마음 내려놓기')),
+      appBar: AppBar(title: const Text('마음 비우기')),
       body: SafeArea(
         child: Column(
           children: [

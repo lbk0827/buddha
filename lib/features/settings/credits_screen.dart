@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
 
-/// 앱에 쓴 남의 저작물 하나. CC BY 처럼 출처 표시 의무가 있는 것만 싣는다.
+/// 앱에 사용한 외부 저작물. CC0도 제작자에게 감사를 전하기 위해 싣는다.
 class Credit {
   const Credit({required this.use, required this.notice, required this.source});
 
@@ -22,6 +22,16 @@ const kCredits = [
     use: '목탁 소리',
     notice: "김용배의 '목탁소리(이미지)'은 CC BY 라이선스로 제공됩니다.",
     source: '한국저작권위원회 공유마당 · gongu.copyright.or.kr',
+  ),
+  Credit(
+    use: '싱잉볼 소리',
+    notice:
+        'dersinnsspace의 “Tibetan bowl_center hit.wav”와 '
+        '“Tibetan bowl_rubbing rim.wav” · CC0 1.0.\n'
+        '앱에 맞게 음량 조정, 모노 변환 및 반복 구간 편집.',
+    source:
+        'Freesound · freesound.org/s/421829/ · freesound.org/s/417115/\n'
+        'creativecommons.org/publicdomain/zero/1.0/',
   ),
 ];
 

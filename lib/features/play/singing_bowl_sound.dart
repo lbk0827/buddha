@@ -8,8 +8,8 @@ import 'effect_audio.dart';
 
 /// 싱잉볼 소리. 치는 소리와, 테두리를 문지르는 동안 이어지는 울림.
 ///
-/// 두 소리 모두 같은 공명 주파수를 사용해 직접 합성했다.
-/// 생성 방법은 tools/synthesize_singing_bowl.py, 기록은 docs/사운드_출처.md.
+/// dersinnsspace의 CC0 녹음을 사용한다.
+/// 가공 방법은 tools/prepare_dersinnsspace_bowl.py, 출처는 docs/사운드_출처.md.
 abstract class SingingBowlSound {
   /// 채로 한 번 친다.
   void strike();
@@ -29,10 +29,10 @@ final singingBowlSoundProvider = Provider<SingingBowlSound>((ref) {
 });
 
 class AudioSingingBowlSound implements SingingBowlSound {
-  static const strikeAsset = 'sounds/singing_bowl_strike_v3.wav';
-  static const rubAsset = 'sounds/singing_bowl_rub_v3.wav';
+  static const strikeAsset = 'sounds/singing_bowl_strike_recorded.wav';
+  static const rubAsset = 'sounds/singing_bowl_rub_recorded.wav';
 
-  /// 치는 소리는 8초를 울린다. 연달아 치면 앞 울림 위에 겹친다.
+  /// 약 19초의 자연스러운 잔향. 연달아 치면 최대 3개까지 겹친다.
   static const voices = 3;
 
   /// 이보다 작게 바뀌면 플레이어에 다시 보내지 않는다. 손가락이 움직일

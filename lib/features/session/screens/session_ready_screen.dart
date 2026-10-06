@@ -69,7 +69,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
             children: [
               const Spacer(),
               Text(
-                '$minutes분이면 된다.\n엎어라.\n진동 오면 시작이다.',
+                '$minutes분이면 된다.\n이제 폰을 엎어 두자.\n진동이 오면 시작이다.',
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               const Spacer(),
@@ -78,7 +78,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
                   height: 64,
                   child: FilledButton(
                     onPressed: _confirm,
-                    child: const Text('엎었다'),
+                    child: const Text('엎어 뒀다'),
                   ),
                 ),
               const SizedBox(height: 8),
@@ -88,7 +88,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
                     ref.read(sessionControllerProvider.notifier).abandonReady();
                     context.go(Routes.home);
                   },
-                  child: const Text('그만두기'),
+                  child: const Text('다음에 하기'),
                 ),
               ),
             ],

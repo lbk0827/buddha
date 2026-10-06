@@ -71,12 +71,12 @@ class _SessionInterruptScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                Text('${formatDuration(practiced)} 했다.',
+                Text('${formatDuration(practiced)} 쉬었다.',
                     style: Theme.of(context).textTheme.displayMedium),
                 const Spacer(),
                 FilledButton(
                   onPressed: _resume,
-                  child: const Text('이어가기'),
+                  child: const Text('더 쉴래'),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton(

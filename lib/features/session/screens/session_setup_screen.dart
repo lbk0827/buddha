@@ -6,6 +6,7 @@ import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/flags.dart';
+import '../../../core/text_utils.dart';
 import '../../safety/safety_detector.dart';
 import '../../worry/burn_animation.dart';
 import '../session_controller.dart';
@@ -18,7 +19,7 @@ const Map<String, String> kWorryChips = {
   'family': '가족',
   'body': '몸',
   'etc': '그냥',
-  'heavy': '많이 힘듦',
+  'heavy': '많이 힘들다',
 };
 
 const int kWorryMaxLength = 80;
@@ -184,7 +185,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                   16,
                 ),
                 children: [
-                  Text('얼마나 오래 마음을 내려놓을까?', style: text.titleLarge),
+                  Text('얼마나 쉴까?', style: text.titleLarge),
                   const SizedBox(height: 10),
                   Row(
                     children: [
@@ -206,10 +207,10 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     ],
                   ),
                   const SizedBox(height: 28),
-                  Text('태우고 싶은 번뇌 작성하기', style: text.titleLarge),
+                  Text('마음에 걸리는 게 있나?', style: text.titleLarge),
                   const SizedBox(height: 4),
                   Text(
-                    '안 써도 된다.',
+                    '적으면 시작할 때 태워 준다. 안 적어도 된다.',
                     style: text.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface
                           .withValues(alpha: 0.55),
@@ -222,12 +223,12 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     maxLines: 2,
                     autofocus: widget.prefillWorry,
                     decoration: const InputDecoration(
-                      hintText: '한 줄이면 충분하다',
+                      hintText: '한 줄이면 된다',
                       counterText: '',
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text('무엇이 그댈 괴롭히는가?', style: text.titleLarge),
+                  Text('어느 쪽 일인가?', style: text.titleLarge),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 8,
@@ -246,14 +247,16 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: const Text('지난번 그 얘기'),
-                    subtitle: const Text('끄면 선사가 이전 번뇌를 꺼내지 않는다.'),
+                    subtitle: Text(
+                      keepAll('켜 두면 끝나고 나서, 지난번에 적은 일이 요즘은 어떤지 묻는다.'),
+                    ),
                     value: _repeatFlag,
                     onChanged: (v) => setState(() => _repeatFlag = v),
                   ),
                   if (Flags.audioAssetAvailable)
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('음원'),
+                      title: const Text('소리'),
                       value: _audioOn,
                       onChanged: (v) => setState(() => _audioOn = v),
                     ),
@@ -276,7 +279,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                         _worryController.clear();
                         _start();
                       },
-                      child: const Text('그냥 시작'),
+                      child: const Text('안 적고 시작'),
                     ),
                   ),
                   const SizedBox(width: 12),

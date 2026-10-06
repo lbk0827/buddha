@@ -56,16 +56,16 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('기록을 기기에 저장해도 되나'),
-        content: const Text('여기 남기는 건 이 폰 안에만 있다. 서버로 보내지 않는다.'),
+        title: const Text('기록을 이 폰에 남겨 둘까?'),
+        content: const Text('이 폰 안에만 남는다. 어디로도 보내지 않는다.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('아니'),
+            child: const Text('안 남길래'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('그래'),
+            child: const Text('남겨 둬'),
           ),
         ],
       ),

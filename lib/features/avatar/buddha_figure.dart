@@ -57,45 +57,63 @@ class BuddhaFigure extends StatelessWidget {
     return layers;
   }
 
-  static Widget _image(String path) => Image.asset(
+  /// 레이어 한 장. 원본은 1024px이지만 화면에 그리는 크기([cacheWidth])로
+  /// 줄여서 풀어 둔다 — 장마다 원본으로 풀면 4MB씩 든다.
+  static Widget _image(String path, int cacheWidth) => Image.asset(
     path,
     key: ValueKey(path),
     fit: BoxFit.contain,
     filterQuality: FilterQuality.medium,
     gaplessPlayback: true,
+    cacheWidth: cacheWidth,
   );
+
+  /// 스프라이트 원본 변 길이. 이보다 크게 풀어 봐야 선명해지지 않는다.
+  static const _spritePx = 1024;
 
   @override
   Widget build(BuildContext context) {
     final animate =
         motion != AvatarMotion.still &&
         !(MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    final cacheWidth = (size * MediaQuery.devicePixelRatioOf(context))
+        .round()
+        .clamp(1, _spritePx);
+    Widget image(String path) => _image(path, cacheWidth);
 
-    final figure = SizedBox(
-      width: size,
-      height: size,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          for (final layer in layersOf(equip))
-            if (animate && layer.popped != null)
-              BubbleGumMotion(
-                key: ValueKey('motion:${layer.path}'),
-                bubble: layer.path,
-                popped: layer.popped!,
-                layer: _image,
-                once: motion == AvatarMotion.once,
-              )
-            else
-              tintedBy(layer.tint, _image(layer.path)),
-        ],
+    // 움직이는 레이어와 그림 전체를 각각 RepaintBoundary로 감싼다.
+    // 풍선껌이 움직여도 나머지 레이어는 다시 그리지 않고,
+    // 숨쉬기로 오르내려도 그려 둔 그림을 옮기기만 한다.
+    final figure = RepaintBoundary(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            for (final layer in layersOf(equip))
+              if (animate && layer.popped != null)
+                RepaintBoundary(
+                  key: ValueKey('motion:${layer.path}'),
+                  child: BubbleGumMotion(
+                    bubble: layer.path,
+                    popped: layer.popped!,
+                    layer: image,
+                    once: motion == AvatarMotion.once,
+                  ),
+                )
+              else
+                tintedBy(layer.tint, image(layer.path)),
+          ],
+        ),
       ),
     );
 
     return Semantics(
       label: '내 부처님',
       image: true,
-      child: breathing ? _Breathe(child: figure) : figure,
+      // 숨쉬기가 화면의 나머지까지 매 프레임 다시 그리게 하지 않도록.
+      child: breathing ? RepaintBoundary(child: _Breathe(child: figure)) : figure,
     );
   }
 }

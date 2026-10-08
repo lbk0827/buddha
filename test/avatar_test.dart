@@ -12,11 +12,20 @@ Widget _wrap(Widget child, {Brightness b = Brightness.light}) => MaterialApp(
   home: Scaffold(body: Center(child: child)),
 );
 
-/// Image.asset이 실제로 가리키는 경로.
+/// Image.asset이 실제로 가리키는 경로. cacheWidth를 주면 ResizeImage로 감싸진다.
+String _assetName(ImageProvider image) => switch (image) {
+  ResizeImage(:final imageProvider) => _assetName(imageProvider),
+  _ => (image as AssetImage).assetName,
+};
+
 List<String> _assetPaths(WidgetTester tester) => tester
     .widgetList<Image>(find.byType(Image))
-    .map((w) => (w.image as AssetImage).assetName)
+    .map((w) => _assetName(w.image))
     .toList();
+
+Finder _imageOf(String path) => find.byWidgetPredicate(
+  (w) => w is Image && _assetName(w.image) == path,
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -516,7 +525,7 @@ void main() {
               matching: find.byType(Image),
             ),
           )
-          .map((w) => (w.image as AssetImage).assetName);
+          .map((w) => _assetName(w.image));
       expect(filtered, [
         'assets/avatar/skin_body.webp',
         'assets/avatar/skin_head_straw.webp',
@@ -682,7 +691,7 @@ void main() {
       final scale = tester.widget<Transform>(
         find
             .ancestor(
-              of: find.image(const AssetImage(bubble)),
+              of: _imageOf(bubble),
               matching: find.byType(Transform),
             )
             .first,

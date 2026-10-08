@@ -56,27 +56,15 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
     int merit,
     TempleHomeState state,
   ) async {
-    final enough = merit >= item.meritCost;
-    final ok = await showDialog<bool>(
+    final ok = await showModalBottomSheet<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(item.name),
-        content: Text(
-          enough
-              ? '공덕 ${item.meritCost}을 치른다. 지금 공덕은 $merit.'
-              : '공덕이 모자란다. ${item.meritCost} 필요한데 지금 $merit뿐이다.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('아니'),
-          ),
-          if (enough)
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('연다'),
-            ),
-        ],
+      backgroundColor: Colors.transparent,
+      // 기본 높이 제한(화면의 9/16)에 걸려 작은 화면에서 아래가 잘리지 않게.
+      isScrollControlled: true,
+      builder: (ctx) => _BuySheet(
+        item: item,
+        preview: _buyPreview(item, _equipOf(state)),
+        merit: merit,
       ),
     );
     if (ok != true || !mounted) return;
@@ -91,6 +79,17 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
       // 입던 모자·가사가 사라지면 안 된다.
       _draft = _equipOf(state).wear(item.slot, item.id);
     });
+  }
+
+  /// 구매 시트에 보여 줄 모습. 지금 부처 재질만 남기고 나머지는 기본 차림
+  /// (기본 가사·민머리)으로 되돌린 뒤 이 아이템 하나만 입힌다. 다른 소품이
+  /// 겹쳐 있으면 무엇을 사는지 잘 안 보인다.
+  static AvatarEquip _buyPreview(WardrobeItem item, AvatarEquip current) {
+    final skin = current.wornIn(AvatarSlot.buddha);
+    final base = skin == null
+        ? kDefaultEquip
+        : kDefaultEquip.wear(AvatarSlot.buddha, skin);
+    return base.wear(item.slot, item.id);
   }
 
   Future<void> _save() async {
@@ -449,6 +448,141 @@ class _WearButton extends StatelessWidget {
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
       ),
       child: const Text('입는다!'),
+    );
+  }
+}
+
+/// 안 가진 아이템을 눌렀을 때 아래에서 올라오는 구매 시트.
+/// 걸친 모습 → 아이템 한 줄(썸네일·이름·슬롯·값) → 값이 적힌 알약 버튼.
+class _BuySheet extends StatelessWidget {
+  const _BuySheet({
+    required this.item,
+    required this.preview,
+    required this.merit,
+  });
+
+  final WardrobeItem item;
+  final AvatarEquip preview;
+  final int merit;
+
+  @override
+  Widget build(BuildContext context) {
+    final fg = Theme.of(context).colorScheme.onSurface;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final enough = merit >= item.meritCost;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1B1915) : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      padding: EdgeInsets.fromLTRB(
+        Tokens.gutter,
+        24,
+        Tokens.gutter,
+        20 + MediaQuery.paddingOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            '지를까?',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 8),
+          BuddhaFigure(equip: preview, size: 170),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.fromLTRB(12, 12, 16, 12),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF221F1A) : Tokens.ivory,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                ItemThumb(item: item, size: 56),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        kSlotNames[item.slot] ?? '',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: fg.withValues(alpha: 0.45),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                _MeritPrice(cost: item.meritCost),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          if (enough)
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(180, 52),
+                padding: const EdgeInsets.symmetric(horizontal: 36),
+                shape: const StadiumBorder(),
+                side: BorderSide(color: fg, width: 2),
+                foregroundColor: fg,
+              ),
+              child: _MeritPrice(cost: item.meritCost, size: 18),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Text(
+                '공덕이 ${item.meritCost - merit} 모자란다.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: fg.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 공덕 아이콘과 값. 상단바 공덕 표시와 같은 아이콘을 쓴다.
+class _MeritPrice extends StatelessWidget {
+  const _MeritPrice({required this.cost, this.size = 16});
+
+  final int cost;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '공덕 $cost',
+      excludeSemantics: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.brightness_7, size: size, color: Tokens.saffron),
+          const SizedBox(width: 6),
+          Text(
+            '$cost',
+            style: TextStyle(fontSize: size, fontWeight: FontWeight.w700),
+          ),
+        ],
+      ),
     );
   }
 }

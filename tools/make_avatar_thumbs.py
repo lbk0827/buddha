@@ -16,7 +16,8 @@ from pathlib import Path
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 from avatar_anchors import REFERENCE
-from build_avatar_assets import ALPHA_FLOOR, MOTION_ONLY, PLACED, save_layer
+from build_avatar_assets import (ALPHA_FLOOR, MOTION_ONLY, PLACED, latest_source,
+                                 save_layer)
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "assets" / "avatar"
@@ -220,7 +221,7 @@ def main() -> None:
     for name in PLACED:
         if name in MOTION_ONLY:
             continue
-        image = Image.open(RAW / f"{name}.png").convert("RGBA")
+        image = Image.open(latest_source(name)).convert("RGBA")
         image.putalpha(image.getchannel("A").point(
             lambda v: 0 if v < ALPHA_FLOOR else v))
         box = pad_box(alpha_bbox(image), *image.size)

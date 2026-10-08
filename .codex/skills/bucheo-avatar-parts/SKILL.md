@@ -17,7 +17,7 @@ description: bucheo_handsome 저장소(C:\src\bucheo_handsome)에서 docs/커스
 
 - 아이템마다 built-in 이미지 생성을 따로 한 번씩(한 아이템에 한 세션). 모두 `Imgs/base_saffron.png`를 화풍 참조로 첨부.
 - 발주서의 해당 차수 프롬프트에 표의 `{아이템}`·`{설명}`·`{착용}`을 채워 쓴다. 다시 생성할 때는 실패한 조건(여백, 방향, 각도)만 강화하고 원문은 유지.
-- 표에 「새로 그리지 않는다」고 적힌 아이템(기존 그림의 색 변형 등)은 생성하지 않고 PIL 로 만든다. 크기·알파·모양을 원본과 픽셀 단위로 같게.
+- 표에 「새로 그리지 않는다」고 적힌 아이템(기존 그림의 색 변형 등)은 생성하지 않고 PIL 로 만든다. 크기·알파·모양을 원본과 픽셀 단위로 같게. 색상(hue) 회전은 흰·회색 부분을 바꾸지 못하니, 그런 부분은 밝기 음영을 살려 목표 색 두 개 사이로 물들인다.
 - 저장: `Imgs/{id}.png`(머리는 `Imgs/head_{영문}_face.png`). 같은 이름이 있으면 덮어쓰지 말고 `_v2`.
 - 발주서 「받고 바로 볼 것」에 걸리면 저장하지 않고 다시. **3번 실패하면 그 아이템은 건너뛰고** 보고한다.
 
@@ -38,6 +38,7 @@ description: bucheo_handsome 저장소(C:\src\bucheo_handsome)에서 docs/커스
 - `kWardrobe`: 해당 슬롯 묶음 끝에 발주서의 id·이름·공덕으로.
 - 굽기: `python tools/build_avatar_assets.py` → (머리·가사면 `python tools/make_avatar_skins.py`) → `python tools/make_avatar_thumbs.py`
 - 빌드의 검사(발 비침, 비침 400px, `MIN_BODY_SKIN` 등)에 걸리면 값이나 그림을 고친다. **검사 기준을 바꾸지 않는다.**
+- 목에 거는 물건은 얼굴을 피하려고 가슴까지 내리지 않는다(턱 밑에 걸치고 손 뒤로). 발은 밑창 아래로 `SHOE_GAP_SHADOW` 어두운 띠가 보이면 신발이 너무 높은 것이다.
 
 ## 3. 검증
 

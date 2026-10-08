@@ -494,10 +494,10 @@ void main() {
         'assets/avatar/halo_ring.webp',
         'assets/avatar/seat_lotus.webp',
         'assets/avatar/base_lavender.webp',
-        'assets/avatar/feet_sneakers.webp',
+        'assets/avatar/feet_platformboots.webp',
         'assets/avatar/head_bucket.webp',
         'assets/avatar/acc_cybervisor.webp',
-        'assets/avatar/acc_goldbeads.webp',
+        'assets/avatar/acc_neckphones_mint.webp',
         'assets/avatar/mouth_grillz.webp',
       ]);
     });

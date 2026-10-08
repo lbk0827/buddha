@@ -399,6 +399,42 @@ const List<WardrobeItem> kWardrobe = [
     slot: AvatarSlot.neck,
     meritCost: 1300,
   ),
+  WardrobeItem(
+    id: 'acc_bib',
+    name: '턱받이',
+    slot: AvatarSlot.neck,
+    meritCost: 500,
+  ),
+  WardrobeItem(
+    id: 'acc_neckpillow',
+    name: '목베개',
+    slot: AvatarSlot.neck,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'acc_lei',
+    name: '꽃목걸이',
+    slot: AvatarSlot.neck,
+    meritCost: 800,
+  ),
+  WardrobeItem(
+    id: 'acc_goldchain',
+    name: '금 체인',
+    slot: AvatarSlot.neck,
+    meritCost: 1500,
+  ),
+  WardrobeItem(
+    id: 'acc_filmcamera',
+    name: '필름 카메라',
+    slot: AvatarSlot.neck,
+    meritCost: 1000,
+  ),
+  WardrobeItem(
+    id: 'acc_neckphones_mint',
+    name: '민트 헤드폰',
+    slot: AvatarSlot.neck,
+    meritCost: 900,
+  ),
 
   // 입 — 풍선껌은 절 화면에서 부풀었다 터져 입에 붙는다 (BubbleGumMotion).
   WardrobeItem(
@@ -457,6 +493,30 @@ const List<WardrobeItem> kWardrobe = [
     name: '흰 운동화',
     slot: AvatarSlot.feet,
     meritCost: 600,
+  ),
+  WardrobeItem(
+    id: 'feet_flippers',
+    name: '오리발',
+    slot: AvatarSlot.feet,
+    meritCost: 700,
+  ),
+  WardrobeItem(
+    id: 'feet_slippers',
+    name: '슬리퍼와 흰 양말',
+    slot: AvatarSlot.feet,
+    meritCost: 500,
+  ),
+  WardrobeItem(
+    id: 'feet_hightops',
+    name: '빨간 스니커즈',
+    slot: AvatarSlot.feet,
+    meritCost: 900,
+  ),
+  WardrobeItem(
+    id: 'feet_platformboots',
+    name: '통굽 부츠',
+    slot: AvatarSlot.feet,
+    meritCost: 1000,
   ),
 
   // 대좌

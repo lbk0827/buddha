@@ -38,7 +38,7 @@ description: bucheo_handsome 저장소(C:\src\bucheo_handsome)에서 docs/커스
 - `kWardrobe`: 해당 슬롯 묶음 끝에 발주서의 id·이름·공덕으로.
 - 굽기: `python tools/build_avatar_assets.py` → (머리·가사면 `python tools/make_avatar_skins.py`) → `python tools/make_avatar_thumbs.py`
 - 빌드의 검사(발 비침, 비침 400px, `MIN_BODY_SKIN` 등)에 걸리면 값이나 그림을 고친다. **검사 기준을 바꾸지 않는다.**
-- 목에 거는 물건은 얼굴을 피하려고 가슴까지 내리지 않는다(턱 밑에 걸치고 손 뒤로). 발은 밑창 아래로 `SHOE_GAP_SHADOW` 어두운 띠가 보이면 신발이 너무 높은 것이다.
+- 목에 거는 물건은 얼굴을 피하려고 가슴까지 내리지 않는다(턱 밑에 걸치고 손 뒤로). 뒤쪽 목둘레가 턱 위로 올라오면 숨길 곳에 `"chin"`을 넣는다. 발은 밑창 아래로 `SHOE_GAP_SHADOW` 어두운 띠가 보이면 신발이 너무 높은 것이다.
 
 ## 3. 검증
 

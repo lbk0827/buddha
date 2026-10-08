@@ -131,7 +131,8 @@ OVERLAYS = {
 #   콧수염    폭(824)을 130px로 맞추고 원본 기준점을 낮춰 아래 끝이 y=392에서 끝나게 한다
 #   막대사탕  지름 110px면 눈에 닿아 90px로 줄이고 입보다 5px 낮춰 사탕 위가 y≈358에 온다
 #   금니 웃음 전체 폭(776)을 70px로 맞춰 원래 입선을 빠짐없이 덮는다
-#   턱받이    전체 폭(850)을 200px로 맞춰 목에서 가슴 위로 내리고 손 뒤로 숨긴다
+#   턱받이    v2: 문구를 위쪽 띠로 올린 그림. 폭 200px, 문구가 손끝 위에 다 보이게
+#             올리고, 턱 위로 올라온 뒤쪽 목둘레는 턱 뒤로 숨긴다("chin")
 #   목베개    전체 폭(840)을 220px로 맞춰 턱 바로 밑(y 505)에 걸고 손 뒤로 숨긴다.
 #             더 내리면 가슴에 떠서 손 앞을 가리고, 더 올리면 입선을 덮는다
 #   꽃목걸이  전체 폭(684)을 215px로 맞춰 가슴까지 내리고 손 뒤로 숨긴다.
@@ -171,7 +172,7 @@ PLACED = {
     "mouth_mustache": ("mouth", 130 / 824, (627, 704), (510, 380), ()),
     "mouth_lollipop": ("mouth", 90 / 480, (164, 632), (510, 405), ()),
     "mouth_grillz": ("mouth", 70 / 776, (627, 667), (510, 400), ()),
-    "acc_bib": ("neck", 200 / 850, (627, 250), (512, 478), ("hands",)),
+    "acc_bib": ("neck", 200 / 962, (632, 544), (512, 484), ("hands", "chin")),
     "acc_neckpillow": ("neck", 220 / 840, (627, 700), (512, 505), ("hands",)),
     "acc_lei": ("neck", 215 / 684, (635, 205), (512, 472), ("hands",)),
     "acc_goldchain": ("neck", 180 / 953, (626.5, 488), (512, 460), ("hands",)),
@@ -349,7 +350,11 @@ def body_masks(character: Character = REFERENCE):
     ImageDraw.Draw(outline).polygon(list(character.hand_outline), fill=255)
     hands = ImageChops.multiply(skin.filter(ImageFilter.MaxFilter(3)), outline)
     hands = hands.filter(ImageFilter.GaussianBlur(0.8))
-    return {"robe": robe, "hands": hands, "skin": skin}
+    # 턱 = 목 자르는 줄보다 위의 살. 목에 두르는 것의 뒤쪽 목둘레는 턱 뒤로 간다.
+    chin = skin.copy()
+    chin.paste(0, (0, character.neck_cut_y, CANVAS, CANVAS))
+    chin = chin.filter(ImageFilter.GaussianBlur(0.8))
+    return {"robe": robe, "hands": hands, "skin": skin, "chin": chin}
 
 
 def hide(layer: Image.Image, mask: Image.Image) -> Image.Image:

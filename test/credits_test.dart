@@ -1,5 +1,7 @@
 import 'package:bucheo_handsome/app/theme.dart';
 import 'package:bucheo_handsome/features/settings/credits_screen.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,5 +21,23 @@ void main() {
       expect(find.text(credit.use), findsOneWidget);
       expect(find.textContaining(credit.notice), findsOneWidget);
     }
+  });
+
+  test('앱에 넣은 글꼴마다 OFL 전문이 함께 들어간다', () {
+    final dir = Directory('assets/google_fonts');
+    final fonts = dir.listSync().map((f) => f.uri.pathSegments.last);
+    for (final family in ['NotoSansKR', 'GowunBatang']) {
+      expect(fonts.any((f) => f.startsWith('$family-')), isTrue);
+      final ofl = File('assets/google_fonts/OFL_$family.txt');
+      expect(ofl.readAsStringSync(), contains('SIL OPEN FONT LICENSE'));
+    }
+  });
+
+  testWidgets('출처 화면에서 오픈소스 라이선스를 열 수 있다', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(theme: AppTheme.light(), home: const CreditsScreen()),
+    );
+    await tester.scrollUntilVisible(find.text('오픈소스 라이선스'), 200);
+    expect(find.text('오픈소스 라이선스'), findsOneWidget);
   });
 }

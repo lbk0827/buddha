@@ -113,7 +113,7 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('출처'),
-              subtitle: const Text('앱에 쓴 소리·그림을 만든 사람들.'),
+              subtitle: const Text('앱에 쓴 소리·글꼴을 만든 사람들과 라이선스.'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(Routes.credits),
             ),

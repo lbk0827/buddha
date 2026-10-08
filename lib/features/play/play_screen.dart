@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../app/providers.dart';
-import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
@@ -25,7 +23,7 @@ import 'singing_bowl_sound.dart';
 
 /// 키캡 무대 최대 높이. 비스듬히 놓인 키링이 목탁보다 커서 무대를 조금 더
 /// 쓴다. 화면이 낮으면 남는 높이만큼 줄어든다.
-const double kKeycapStageHeight = 300;
+const double kKeycapStageHeight = 400;
 
 /// 「놀이」 — 목탁이나 싱잉볼, 키캡이 주인공이다.
 /// 별도 화면을 두지 않고 탭에서 바로 두드린다. 아래 전환 버튼으로 악기를 바꾼다.
@@ -261,7 +259,6 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
 
   @override
   Widget build(BuildContext context) {
-    final home = ref.watch(homeStateProvider).value;
     final instrument = ref.watch(playInstrumentProvider);
     final text = Theme.of(context).textTheme;
     final fg = Theme.of(context).colorScheme.onSurface;
@@ -280,7 +277,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
                     KeycapBoard(
                       ring: kKeycapRings[_keyring],
                       size: Size(
-                        box.maxWidth - 2 * Tokens.gutter,
+                        box.maxWidth - 16,
                         math.max(80, box.maxHeight - 52),
                       ),
                       onPress: _keyPress,
@@ -402,7 +399,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.only(bottom: kHudClearance),
             child: SegmentedButton<PlayInstrument>(
               segments: [
                 for (final i in PlayInstrument.values)
@@ -411,21 +408,6 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
               selected: {instrument},
               showSelectedIcon: false,
               onSelectionChanged: (s) => _select(s.single),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.gutter,
-              0,
-              Tokens.gutter,
-              kHudClearance,
-            ),
-            child: TabCard(
-              label: '번뇌 태우기',
-              body: home == null
-                  ? '한 줄 적으면 선사가 죽비를 준다.'
-                  : '태운 번뇌 ${home.burnedCount} / 108',
-              onTap: () => context.push(Routes.burn),
             ),
           ),
         ],

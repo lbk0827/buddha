@@ -145,9 +145,9 @@ class KeycapPoint {
 /// 그림·글자는 아핀 변환([topFace]) 하나로 붙는다.
 abstract final class KeycapScene {
   /// 3차원 축 하나가 화면에서 가는 방향(키 한 변 = 1).
-  static const ex = Offset(0.82, -0.30);
-  static const ey = Offset(-0.42, -0.46);
-  static const ez = Offset(0, -0.68);
+  static const ex = Offset(0.93, -0.17);
+  static const ey = Offset(-0.30, -0.56);
+  static const ez = Offset(0, -0.58);
 
   /// 보는 사람 쪽 방향 — 화면에서 한 점으로 겹치는 3차원 방향. 이 방향과
   /// 같은 쪽을 보는 면만 그린다.
@@ -166,9 +166,9 @@ abstract final class KeycapScene {
 
   /// 키캡 높이. 윗면은 바닥보다 좁고, 앞쪽이 더 들어가 있다(OEM 모양).
   static const capHeight = 0.5;
-  static const insetSide = 0.11;
-  static const insetFront = 0.15;
-  static const insetBack = 0.06;
+  static const insetSide = 0.09;
+  static const insetFront = 0.12;
+  static const insetBack = 0.05;
   static const bottomRadius = 0.09;
   static const topRadius = 0.15;
 
@@ -186,8 +186,8 @@ abstract final class KeycapScene {
     0.3,
     -housingHeight + 0.12,
   );
-  static const ringWidth = 1.5;
-  static const ringAngle = -1.0;
+  static const ringWidth = 1.35;
+  static const ringAngle = -1.35;
 
   /// keyring.webp 높이 ÷ 폭, 오른쪽 끝 작은 고리 가운데의 가로 자리.
   /// 작은 고리 가운데는 그림 세로 가운데에 있다(tools/build_keycap_assets.py).
@@ -305,14 +305,14 @@ abstract final class KeycapScene {
     ];
   }
 
-  /// 키링 전체(키 네 개, 쇠붙이)를 감싸는 사각형(키 한 변 = 1).
-  static Rect bounds(int keys) {
+  /// 키링 전체(키 네 개, [ring]이면 쇠붙이까지)를 감싸는 사각형(키 한 변 = 1).
+  static Rect bounds(int keys, {bool ring = true}) {
     final pts = <Offset>[
       for (var i = 0; i < keys; i++) ...[
         ...silhouette(i, -0.3),
         ...silhouette(i, 1),
       ],
-      ...ringCorners(),
+      if (ring) ...ringCorners(),
     ];
     var r = Rect.fromPoints(pts.first, pts.first);
     for (final p in pts) {
@@ -765,16 +765,19 @@ class _KeycapBoardState extends State<KeycapBoard>
     super.dispose();
   }
 
+  /// 가로는 쇠붙이까지 넣어 맞추고, 세로는 키캡만 가운데에 둔다. 아래로
+  /// 늘어진 쇠붙이는 칸 밖으로 나가도 된다 — 그래야 키캡이 위로 쏠리지 않는다.
   void _layout() {
-    final b = KeycapScene.bounds(_keys.length);
-    _s = math.min(widget.size.width / b.width, widget.size.height / b.height);
-    final used = b.size * _s;
-    _origin =
-        Offset(
-          (widget.size.width - used.width) / 2,
-          (widget.size.height - used.height) / 2,
-        ) -
-        b.topLeft * _s;
+    final all = KeycapScene.bounds(_keys.length);
+    final keys = KeycapScene.bounds(_keys.length, ring: false);
+    _s = math.min(
+      widget.size.width / all.width,
+      widget.size.height / keys.height,
+    );
+    _origin = Offset(
+      (widget.size.width - all.width * _s) / 2 - all.left * _s,
+      (widget.size.height - keys.height * _s) / 2 - keys.top * _s,
+    );
   }
 
   int? _hit(Offset local) {
@@ -938,7 +941,7 @@ class _KeycapPrint extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = size;
     final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 2;
-    final iconSize = s * 0.5;
+    final iconSize = s * 0.58;
     final big = keycap.big;
     final mark = big != null
         ? Text(
@@ -973,7 +976,7 @@ class _KeycapPrint extends StatelessWidget {
               keycap.label,
               maxLines: 1,
               style: GoogleFonts.notoSansKr(
-                fontSize: s * 0.135,
+                fontSize: s * 0.165,
                 height: 1.1,
                 fontWeight: FontWeight.w700,
                 color: colors.ink,

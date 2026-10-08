@@ -17,6 +17,7 @@ export 'bubble_gum_motion.dart' show AvatarMotion;
 ///
 /// 움직이는 아이템(풍선껌)은 [motion]에 따라 그 레이어만 입을 중심으로
 /// 커졌다 작아진다. 도는 후광(LP·로딩)은 그 레이어만 링 중심을 축으로 돈다.
+/// 후광 레이어는 모두 조금 크게, 위로 올려 그린다(halo_spin.dart 의 HaloFrame).
 /// 기기에서 「동작 줄이기」를 켜면 멈춘 그림이다.
 class BuddhaFigure extends StatelessWidget {
   const BuddhaFigure({
@@ -52,7 +53,15 @@ class BuddhaFigure extends StatelessWidget {
       final item = wardrobeItem(equip.wornIn(slot));
       final path = item?.assetPath;
       if (item == null || path == null) continue;
-      layers.add(AvatarLayer(path, null, item.poppedPath, item.spin));
+      layers.add(
+        AvatarLayer(
+          path,
+          null,
+          item.poppedPath,
+          item.spin,
+          slot == AvatarSlot.halo,
+        ),
+      );
       final skin = item.skinPath;
       if (tint != null && skin != null) layers.add(AvatarLayer(skin, tint));
     }
@@ -92,9 +101,24 @@ class BuddhaFigure extends StatelessWidget {
         height: size,
         child: Stack(
           fit: StackFit.expand,
+          // 후광은 그림 상자 위로 넘친다(HaloFrame).
+          clipBehavior: Clip.none,
           children: [
             for (final layer in layersOf(equip))
-              if (animate && layer.popped != null)
+              if (layer.halo)
+                HaloFrame(
+                  size: size,
+                  child: animate && layer.spin != null
+                      ? RepaintBoundary(
+                          key: ValueKey('spin:${layer.path}'),
+                          child: HaloSpin(
+                            period: layer.spin!,
+                            child: image(layer.path),
+                          ),
+                        )
+                      : image(layer.path),
+                )
+              else if (animate && layer.popped != null)
                 RepaintBoundary(
                   key: ValueKey('motion:${layer.path}'),
                   child: BubbleGumMotion(
@@ -102,14 +126,6 @@ class BuddhaFigure extends StatelessWidget {
                     popped: layer.popped!,
                     layer: image,
                     once: motion == AvatarMotion.once,
-                  ),
-                )
-              else if (animate && layer.spin != null)
-                RepaintBoundary(
-                  key: ValueKey('spin:${layer.path}'),
-                  child: HaloSpin(
-                    period: layer.spin!,
-                    child: image(layer.path),
                   ),
                 )
               else
@@ -131,14 +147,22 @@ class BuddhaFigure extends StatelessWidget {
 /// 겹칠 그림 한 장. [tint]가 있으면 그 재질로 물들여 그린다.
 /// [popped]가 있으면 움직이는 아이템이다 (풍선껌의 터진 껌).
 /// [spin]이 있으면 그 시간마다 한 바퀴 도는 후광이다.
+/// [halo]면 후광 슬롯 레이어라 키우고 올려 그린다(HaloFrame).
 @immutable
 class AvatarLayer {
-  const AvatarLayer(this.path, [this.tint, this.popped, this.spin]);
+  const AvatarLayer(
+    this.path, [
+    this.tint,
+    this.popped,
+    this.spin,
+    this.halo = false,
+  ]);
 
   final String path;
   final SkinTint? tint;
   final String? popped;
   final Duration? spin;
+  final bool halo;
 
   @override
   bool operator ==(Object other) =>
@@ -146,10 +170,11 @@ class AvatarLayer {
       other.path == path &&
       other.tint == tint &&
       other.popped == popped &&
-      other.spin == spin;
+      other.spin == spin &&
+      other.halo == halo;
 
   @override
-  int get hashCode => Object.hash(path, tint, popped, spin);
+  int get hashCode => Object.hash(path, tint, popped, spin, halo);
 
   @override
   String toString() => tint == null ? path : '$path (재질)';

@@ -574,11 +574,22 @@ void main() {
           .toList();
       // 후광·대좌·몸·물든 몸·발·머리·물든 머리·얼굴·목·입
       expect(boxes.length, 10);
-      for (final r in boxes) {
-        expect(r, boxes.first, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
+      // 후광(맨 앞)만 일부러 키우고 올린다(HaloFrame). 나머지는 모두 같아야 한다.
+      final body = boxes[1];
+      for (final r in boxes.skip(1)) {
+        expect(r, body, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
       }
       // 정사각이어야 contain 결과가 모든 레이어에서 같다.
-      expect(boxes.first.width, boxes.first.height);
+      expect(body.width, body.height);
+
+      // 후광은 링 중심을 축으로 kHaloScale 배, kHaloLift 만큼 위.
+      final halo = boxes.first;
+      expect(halo.width, closeTo(body.width * kHaloScale, 0.01));
+      final cx = body.left + (kHaloCenter.x + 1) / 2 * body.width;
+      final cy = body.top + (kHaloCenter.y + 1) / 2 * body.height;
+      final lift = kHaloLift / 1024 * body.height;
+      expect(halo.left, closeTo(cx - (cx - body.left) * kHaloScale, 0.01));
+      expect(halo.top, closeTo(cy - (cy - body.top) * kHaloScale - lift, 0.01));
     });
 
     testWidgets('모든 레이어가 BoxFit.contain', (tester) async {

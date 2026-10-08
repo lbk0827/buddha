@@ -6,6 +6,7 @@ import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../avatar/avatar_equip.dart';
 import '../avatar/buddha_figure.dart';
+import '../avatar/halo_spin.dart';
 import '../home/home_controller.dart';
 import '../ordination/dharma_rank.dart';
 
@@ -29,6 +30,8 @@ class ProfileScreen extends ConsumerWidget {
             Center(
               child: Column(
                 children: [
+                  // 후광이 그림 위로 넘치는데 목록은 넘친 부분을 자른다.
+                  const SizedBox(height: 130 * kHaloOverflow),
                   BuddhaFigure(equip: home?.equip ?? kDefaultEquip, size: 130),
                   const SizedBox(height: 10),
                   Text(home?.dharmaName ?? '법명 없음',

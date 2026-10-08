@@ -526,6 +526,30 @@ const List<WardrobeItem> kWardrobe = [
     slot: AvatarSlot.seat,
     meritCost: 1200,
   ),
+  WardrobeItem(
+    id: 'seat_skateboard',
+    name: '스케이트보드',
+    slot: AvatarSlot.seat,
+    meritCost: 1200,
+  ),
+  WardrobeItem(
+    id: 'seat_bathstool',
+    name: '목욕탕 의자',
+    slot: AvatarSlot.seat,
+    meritCost: 900,
+  ),
+  WardrobeItem(
+    id: 'seat_robovac',
+    name: '로봇청소기',
+    slot: AvatarSlot.seat,
+    meritCost: 1100,
+  ),
+  WardrobeItem(
+    id: 'seat_kickboard',
+    name: '킥보드',
+    slot: AvatarSlot.seat,
+    meritCost: 1300,
+  ),
 
   // 후광
   WardrobeItem(
@@ -533,6 +557,42 @@ const List<WardrobeItem> kWardrobe = [
     name: '후광',
     slot: AvatarSlot.halo,
     meritCost: 1000,
+  ),
+  WardrobeItem(
+    id: 'halo_open',
+    name: 'OPEN 간판',
+    slot: AvatarSlot.halo,
+    meritCost: 1000,
+  ),
+  WardrobeItem(
+    id: 'halo_wifi',
+    name: '와이파이',
+    slot: AvatarSlot.halo,
+    meritCost: 800,
+  ),
+  WardrobeItem(
+    id: 'halo_loading',
+    name: '로딩 중',
+    slot: AvatarSlot.halo,
+    meritCost: 1000,
+  ),
+  WardrobeItem(
+    id: 'halo_lp',
+    name: 'LP 후광',
+    slot: AvatarSlot.halo,
+    meritCost: 1300,
+  ),
+  WardrobeItem(
+    id: 'halo_discoball',
+    name: '디스코볼',
+    slot: AvatarSlot.halo,
+    meritCost: 1200,
+  ),
+  WardrobeItem(
+    id: 'halo_neon',
+    name: '네온 링',
+    slot: AvatarSlot.halo,
+    meritCost: 1100,
   ),
 ];
 

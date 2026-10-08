@@ -491,8 +491,8 @@ void main() {
 
       // Stack 자식 순서가 곧 그리는 순서다.
       expect(_assetPaths(tester), [
-        'assets/avatar/halo_ring.webp',
-        'assets/avatar/seat_lotus.webp',
+        'assets/avatar/halo_neon.webp',
+        'assets/avatar/seat_kickboard.webp',
         'assets/avatar/base_lavender.webp',
         'assets/avatar/feet_platformboots.webp',
         'assets/avatar/head_bucket.webp',

@@ -4,9 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// 놀이 탭에서 두드릴 악기.
 enum PlayInstrument {
+  // 놀이 고르는 버튼은 이 순서로 놓인다.
+  keycap('키캡', '키캡을 꾹 눌렀다 떼면 도각 소리가 난다.'),
   moktak('목탁', '화면을 톡 치면 목탁을 두드린다.'),
-  singingBowl('싱잉볼', '톡 치거나, 테두리를 따라 빙글빙글 문지른다.'),
-  keycap('키캡', '키캡을 꾹 눌렀다 떼면 도각 소리가 난다.');
+  singingBowl('싱잉볼', '톡 치거나, 테두리를 따라 빙글빙글 문지른다.');
 
   const PlayInstrument(this.label, this.howTo);
   final String label;

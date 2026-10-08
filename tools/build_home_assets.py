@@ -1,10 +1,11 @@
 """절 탭 아이콘을 앱 에셋으로 굽는다.
 
-Imgs/icon_lotus.png (1024 캔버스) → assets/home/icon_lotus.webp (192×192)
+Imgs/icon_lotus.png      (1024 캔버스) → assets/home/icon_lotus.webp      (192×192)
+Imgs/icon_meditation.png (1024 캔버스) → assets/home/icon_meditation.webp (192×192)
 
-카드 왼쪽에 40dp 로 놓이는 작은 그림이라, 꽃 영역만 정사각으로 잘라
-줄인다. 1024 캔버스를 그대로 쓰면 투명 여백 때문에 꽃이 작아 보인다.
-192px 은 40dp × 기기 배율 4 를 덮는다.
+연꽃은 「부처님 말씀」 카드, 향은 [명상] 버튼 글자 왼쪽에 놓이는 작은
+그림이라, 그림 영역만 정사각으로 잘라 줄인다. 1024 캔버스를 그대로 쓰면
+투명 여백 때문에 그림이 작아 보인다. 192px 은 40dp × 기기 배율 4 를 덮는다.
 
     python tools/build_home_assets.py
 """
@@ -41,9 +42,10 @@ def square_icon(path: Path) -> Image.Image:
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    save_layer(square_icon(SRC / "icon_lotus.png"), OUT, "icon_lotus")
-    size = (OUT / "icon_lotus.webp").stat().st_size
-    print(f"icon_lotus.webp  {SIZE}×{SIZE}  {size / 1024:.1f}KB")
+    for name in ("icon_lotus", "icon_meditation"):
+        save_layer(square_icon(SRC / f"{name}.png"), OUT, name)
+        size = (OUT / f"{name}.webp").stat().st_size
+        print(f"{name}.webp  {SIZE}×{SIZE}  {size / 1024:.1f}KB")
 
 
 if __name__ == "__main__":

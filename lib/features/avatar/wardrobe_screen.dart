@@ -205,83 +205,82 @@ class _Sheet extends StatelessWidget {
         color: isDark ? const Color(0xFF1B1915) : Tokens.ivory,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
       ),
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: fg.withValues(alpha: 0.18),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 14),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
-              children: [
-                _SlotChip(
-                  label: '전체',
-                  selected: slot == null,
-                  onTap: () => onSlot(null),
+      // 안드로이드 기본 스트레치 효과는 끝까지 당기면 썸네일과 이름을 늘려
+      // 보여 준다. 시트 안 스크롤은 늘어나지 않고 그냥 멈춘다.
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(overscroll: false),
+        child: Column(
+          children: [
+            const SizedBox(height: 14),
+            SizedBox(
+              height: 44,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                // 첫 글자가 아래 그리드 왼쪽 끝과 줄이 맞도록 탭 여백만큼 당긴다.
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Tokens.gutter - _SlotChip.hPad,
                 ),
-                for (final entry in kSlotNames.entries)
+                children: [
                   _SlotChip(
-                    label: entry.value,
-                    selected: slot == entry.key,
-                    onTap: () => onSlot(entry.key),
+                    label: '전체',
+                    selected: slot == null,
+                    onTap: () => onSlot(null),
                   ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
-            child: Row(
-              children: [
-                Text(
-                  '가진 것만',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: fg.withValues(alpha: 0.6),
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Switch(value: ownedOnly, onChanged: onOwnedOnly),
-                const Spacer(),
-                if (dirty)
-                  TextButton(onPressed: onRevert, child: const Text('되돌리기')),
-              ],
-            ),
-          ),
-          Expanded(
-            child: _Grid(
-              items: items,
-              equip: equip,
-              ownedOnly: ownedOnly,
-              onTap: onTapItem,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.gutter,
-              8,
-              Tokens.gutter,
-              20,
-            ),
-            child: SizedBox(
-              height: 52,
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: dirty && !saving ? onSave : null,
-                child: Text(dirty ? '이대로 입는다' : '바뀐 게 없다'),
+                  for (final entry in kSlotNames.entries)
+                    _SlotChip(
+                      label: entry.value,
+                      selected: slot == entry.key,
+                      onTap: () => onSlot(entry.key),
+                    ),
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
+              child: Row(
+                children: [
+                  Text(
+                    '가진 것만',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: fg.withValues(alpha: 0.6),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Switch(value: ownedOnly, onChanged: onOwnedOnly),
+                  const Spacer(),
+                  if (dirty)
+                    TextButton(onPressed: onRevert, child: const Text('되돌리기')),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: _Grid(
+                      items: items,
+                      equip: equip,
+                      ownedOnly: ownedOnly,
+                      onTap: onTapItem,
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 16,
+                    child: Center(
+                      child: _WearButton(
+                        onPressed: dirty && !saving ? onSave : null,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -321,8 +320,8 @@ class _Grid extends ConsumerWidget {
 
     return GridView.count(
       crossAxisCount: 3,
-      // 아래 버튼에 가려 이름이 잘리지 않도록 여유를 준다.
-      padding: const EdgeInsets.fromLTRB(Tokens.gutter, 0, Tokens.gutter, 16),
+      // 떠 있는 입기 버튼에 마지막 줄 이름이 가리지 않도록 여유를 준다.
+      padding: const EdgeInsets.fromLTRB(Tokens.gutter, 0, Tokens.gutter, 80),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
       childAspectRatio: 0.78,
@@ -427,6 +426,34 @@ class _ItemTile extends StatelessWidget {
   }
 }
 
+/// 그리드 위에 늘 떠 있는 작은 알약 버튼.
+/// 바뀐 게 없을 때도 불투명하게 칠한다. 기본 비활성 색은 반투명이라
+/// 뒤의 썸네일이 비쳐 고장 난 것처럼 보인다.
+class _WearButton extends StatelessWidget {
+  const _WearButton({required this.onPressed});
+
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(132, 46),
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        shape: const StadiumBorder(),
+        disabledBackgroundColor: const Color(0xFFDCD4C6),
+        disabledForegroundColor: const Color(0xFF8C8478),
+        elevation: 3,
+        shadowColor: Colors.black38,
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+      ),
+      child: const Text('입는다!'),
+    );
+  }
+}
+
+/// 카테고리 탭. 테두리 없이 글자만 두고, 고른 탭은 굵게 쓰고 밑줄을 긋는다.
 class _SlotChip extends StatelessWidget {
   const _SlotChip({
     required this.label,
@@ -438,30 +465,45 @@ class _SlotChip extends StatelessWidget {
   final bool selected;
   final VoidCallback onTap;
 
+  /// 글자 양옆 여백. 탭 사이 간격은 이것의 두 배가 된다.
+  static const hPad = 9.0;
+
   @override
   Widget build(BuildContext context) {
     final fg = Theme.of(context).colorScheme.onSurface;
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
+    return Semantics(
+      selected: selected,
+      button: true,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(999),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: selected ? Tokens.ink : Colors.transparent,
-            border: Border.all(
-              color: selected ? Tokens.ink : fg.withValues(alpha: 0.18),
-            ),
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              color: selected ? Tokens.ivory : fg,
-              fontWeight: selected ? FontWeight.w700 : null,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: hPad),
+          // 밑줄이 글자 폭만큼 그어지도록 글자 폭에 맞춘다.
+          child: IntrinsicWidth(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: selected ? fg : fg.withValues(alpha: 0.35),
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                // 고르지 않은 탭도 같은 높이의 투명한 줄을 둬서 글자가 들썩이지 않게.
+                Container(
+                  height: 2.5,
+                  decoration: BoxDecoration(
+                    color: selected ? fg : Colors.transparent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

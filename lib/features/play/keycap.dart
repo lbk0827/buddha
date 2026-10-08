@@ -145,9 +145,9 @@ class KeycapPoint {
 /// 그림·글자는 아핀 변환([topFace]) 하나로 붙는다.
 abstract final class KeycapScene {
   /// 3차원 축 하나가 화면에서 가는 방향(키 한 변 = 1).
-  static const ex = Offset(0.93, -0.17);
-  static const ey = Offset(-0.30, -0.56);
-  static const ez = Offset(0, -0.58);
+  static const ex = Offset(0.95, -0.12);
+  static const ey = Offset(-0.24, -0.64);
+  static const ez = Offset(0, -0.50);
 
   /// 보는 사람 쪽 방향 — 화면에서 한 점으로 겹치는 3차원 방향. 이 방향과
   /// 같은 쪽을 보는 면만 그린다.
@@ -773,8 +773,9 @@ class _KeycapBoardState extends State<KeycapBoard>
       ),
   ];
 
-  /// 손가락 → 누르고 있는 키.
-  final _held = <int, int>{};
+  /// 화면에 닿아 있는 손가락마다 누르고 있는 키(키 사이 빈 곳이면 null)와
+  /// 방금 떠난 키.
+  final _fingers = <int, ({int? key, int? left})>{};
 
   late double _s;
   late Offset _origin;
@@ -802,28 +803,50 @@ class _KeycapBoardState extends State<KeycapBoard>
     );
   }
 
-  int? _hit(Offset local) {
+  /// 방금 떠난 키는 윤곽을 이만큼 줄여 따진다. 키 경계에서 손가락이 조금
+  /// 떨려도 두 키가 번갈아 「따닥따닥」 눌리지 않게.
+  static const _reentry = 0.72;
+
+  /// 손가락 아래 키. 누르고 있는 [current] 안이면 그대로(뒤 키 윤곽과
+  /// 겹쳐도 옮겨 가지 않는다), 아니면 앞 키부터 따진다.
+  int? _hit(Offset local, {int? current, int? left}) {
     final p = (local - _origin) / _s;
+    bool inside(int i, {double scale = 1}) {
+      final poly = KeycapScene.silhouette(i, _keys[i].press.value);
+      if (scale == 1) return KeycapScene.contains(poly, p);
+      final c = poly.reduce((a, b) => a + b) / poly.length.toDouble();
+      return KeycapScene.contains([
+        for (final q in poly) c + (q - c) * scale,
+      ], p);
+    }
+
+    if (current != null && inside(current)) return current;
     for (var i = 0; i < _keys.length; i++) {
-      if (KeycapScene.contains(
-        KeycapScene.silhouette(i, _keys[i].press.value),
-        p,
-      )) {
-        return i;
-      }
+      if (inside(i, scale: i == left ? _reentry : 1)) return i;
     }
     return null;
   }
 
   void _down(PointerDownEvent e) {
     final i = _hit(e.localPosition);
-    if (i == null) return;
-    _held[e.pointer] = i;
-    _keys[i].down(e.pointer);
+    _fingers[e.pointer] = (key: i, left: null);
+    if (i != null) _keys[i].down(e.pointer);
+  }
+
+  /// 손가락으로 쓸면 지나가는 키가 차례로 눌렸다 올라온다 — 따다다닥.
+  void _move(PointerMoveEvent e) {
+    final f = _fingers[e.pointer];
+    if (f == null) return;
+    final i = _hit(e.localPosition, current: f.key, left: f.left);
+    if (i == f.key) return;
+    final from = f.key;
+    if (from != null) _keys[from].up(e.pointer);
+    if (i != null) _keys[i].down(e.pointer);
+    _fingers[e.pointer] = (key: i, left: from ?? f.left);
   }
 
   void _up(PointerEvent e) {
-    final i = _held.remove(e.pointer);
+    final i = _fingers.remove(e.pointer)?.key;
     if (i != null) _keys[i].up(e.pointer);
   }
 
@@ -841,6 +864,7 @@ class _KeycapBoardState extends State<KeycapBoard>
     return Listener(
       behavior: HitTestBehavior.opaque,
       onPointerDown: _down,
+      onPointerMove: _move,
       onPointerUp: _up,
       onPointerCancel: _up,
       child: SizedBox.fromSize(

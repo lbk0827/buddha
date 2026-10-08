@@ -459,7 +459,9 @@ void main() {
 
     testWidgets('싱잉볼로 바꾸면 치기가 싱잉볼 소리가 된다', (tester) async {
       await pumpPlay(tester);
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
       expect(find.text(PlayInstrument.singingBowl.howTo), findsOneWidget);
 
@@ -473,7 +475,9 @@ void main() {
 
     testWidgets('싱잉볼을 치면 채가 휘두르고, 소리는 닿기 직전·파문은 닿는 순간', (tester) async {
       await pumpPlay(tester);
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
 
       double malletAngle() => tester
@@ -524,7 +528,9 @@ void main() {
       await tester.pump();
       expect(moktak.knocks, kShowMallets ? 0 : 1);
 
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
       expect(
         find.byType(SwingingMallet),
@@ -538,7 +544,9 @@ void main() {
 
     testWidgets('싱잉볼 둘레를 돌리면 울림이 차오르고, 떼면 잦아든다', (tester) async {
       await pumpPlay(tester);
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
 
       final gesture = await tester.startGesture(_onRim(tester, 0));
@@ -561,7 +569,9 @@ void main() {
     });
 
     Future<void> openKeycaps(WidgetTester tester) async {
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.keycap)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.keycap)),
+      );
       await tester.pumpAndSettle();
       expect(find.text(PlayInstrument.keycap.howTo), findsOneWidget);
     }
@@ -605,7 +615,10 @@ void main() {
       await openKeycaps(tester);
       final center = tester.getCenter(find.byKey(KeycapBoard.keyFor(0)));
       final a = await tester.startGesture(center, pointer: 1);
-      final b = await tester.startGesture(center + const Offset(4, 0), pointer: 2);
+      final b = await tester.startGesture(
+        center + const Offset(4, 0),
+        pointer: 2,
+      );
       await tester.pump(const Duration(milliseconds: 100));
       expect(keys.presses, 1);
       await a.up();
@@ -614,6 +627,48 @@ void main() {
       await b.up();
       await tester.pump(const Duration(milliseconds: 100));
       expect(keys.releases, 1);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('손가락으로 쓸면 지나가는 키가 차례로 눌린다', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      Offset at(int i) => tester.getCenter(find.byKey(KeycapBoard.keyFor(i)));
+      final gesture = await tester.startGesture(at(0));
+      await tester.pump(const Duration(milliseconds: 60));
+      for (var i = 1; i < 4; i++) {
+        // 키 사이를 잘게 나눠 지나간다.
+        for (var k = 1; k <= 6; k++) {
+          await gesture.moveTo(Offset.lerp(at(i - 1), at(i), k / 6)!);
+          await tester.pump(const Duration(milliseconds: 15));
+        }
+      }
+      expect(keys.presses, 4, reason: '지나간 키마다 한 번씩');
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.releases, 3, reason: '떠난 키는 올라온다');
+      await gesture.up();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.releases, 4);
+      expect(play.beads[PlayInstrument.keycap], 4);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('키 경계에서 손가락이 떨려도 같은 키가 거듭 눌리지 않는다', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      Offset at(int i) => tester.getCenter(find.byKey(KeycapBoard.keyFor(i)));
+      final gesture = await tester.startGesture(at(0));
+      await tester.pump(const Duration(milliseconds: 60));
+      // 키 1로 넘어간 뒤, 경계 근처에서 앞뒤로 조금씩 흔든다.
+      await gesture.moveTo(at(1));
+      await tester.pump(const Duration(milliseconds: 60));
+      final edge = Offset.lerp(at(0), at(1), 0.5)!;
+      for (var k = 0; k < 6; k++) {
+        await gesture.moveTo(edge + Offset(k.isEven ? -3 : 3, 0));
+        await tester.pump(const Duration(milliseconds: 20));
+      }
+      expect(keys.presses, lessThanOrEqualTo(3));
+      await gesture.up();
       await tester.pumpAndSettle();
     });
 
@@ -672,7 +727,9 @@ void main() {
 
     testWidgets('싱잉볼을 울리는 동안에도 염주가 넘어간다', (tester) async {
       await pumpPlay(tester);
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text(PlayInstrument.singingBowl.howTo));
       await tester.pump(const Duration(milliseconds: 1500));
@@ -705,7 +762,9 @@ void main() {
 
     testWidgets('문지르다가 목탁으로 바꾸면 울림이 멈춘다', (tester) async {
       await pumpPlay(tester);
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.singingBowl)),
+      );
       await tester.pumpAndSettle();
       final gesture = await tester.startGesture(_onRim(tester, 0));
       for (var i = 1; i <= 60; i++) {
@@ -713,7 +772,9 @@ void main() {
         await tester.pump(const Duration(milliseconds: 16));
       }
       await gesture.up();
-      await tester.tap(find.byKey(InstrumentPicker.keyFor(PlayInstrument.moktak)));
+      await tester.tap(
+        find.byKey(InstrumentPicker.keyFor(PlayInstrument.moktak)),
+      );
       await tester.pump();
       expect(bowl.levels.last, 0);
       await tester.pump(const Duration(seconds: 1));

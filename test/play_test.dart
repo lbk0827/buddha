@@ -5,6 +5,8 @@ import 'package:bucheo_handsome/app/providers.dart';
 import 'package:bucheo_handsome/app/theme.dart';
 import 'package:bucheo_handsome/data/repositories/play_repository.dart';
 import 'package:bucheo_handsome/features/home/home_controller.dart';
+import 'package:bucheo_handsome/features/play/keycap.dart';
+import 'package:bucheo_handsome/features/play/keycap_sound.dart';
 import 'package:bucheo_handsome/features/play/moktak.dart';
 import 'package:bucheo_handsome/features/play/moktak_sound.dart';
 import 'package:bucheo_handsome/features/play/play_instrument.dart';
@@ -54,6 +56,19 @@ class _FakeBowl implements SingingBowlSound {
   void strike() => strikes++;
   @override
   void rub(double level) => levels.add(level);
+  @override
+  Future<void> warmUp() async {}
+  @override
+  Future<void> dispose() async {}
+}
+
+class _FakeKeycap implements KeycapSound {
+  int presses = 0;
+  int releases = 0;
+  @override
+  void press() => presses++;
+  @override
+  void release() => releases++;
   @override
   Future<void> warmUp() async {}
   @override
@@ -298,6 +313,24 @@ void main() {
       }
     });
 
+    test('키캡 그림과 소리가 앱 번들에 있다', () async {
+      final assets = [
+        KeycapBoard.hardwareAsset,
+        for (final ring in kKeycapRings)
+          for (final key in ring.keys)
+            if (key.big == null) key.icon,
+        for (final a in [
+          ...AudioKeycapSound.pressAssets,
+          ...AudioKeycapSound.releaseAssets,
+        ])
+          'assets/$a',
+      ];
+      for (final a in assets) {
+        final data = await rootBundle.load(a);
+        expect(data.lengthInBytes, greaterThan(1000), reason: a);
+      }
+    });
+
     test('목탁·싱잉볼 그림이 앱 번들에 있다', () async {
       for (final a in [
         SingingBowlLayout.bowlAsset,
@@ -377,18 +410,21 @@ void main() {
   group('놀이 화면', () {
     late _FakeMoktak moktak;
     late _FakeBowl bowl;
+    late _FakeKeycap keys;
     late _FakePlay play;
 
     Future<void> pumpPlay(WidgetTester tester, {int beads = 0}) async {
       SharedPreferences.setMockInitialValues({});
       moktak = _FakeMoktak();
       bowl = _FakeBowl();
+      keys = _FakeKeycap();
       play = _FakePlay(beads);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             moktakSoundProvider.overrideWithValue(moktak),
             singingBowlSoundProvider.overrideWithValue(bowl),
+            keycapSoundProvider.overrideWithValue(keys),
             playRepositoryProvider.overrideWithValue(play),
             homeStateProvider.overrideWith(
               (ref) => Completer<TempleHomeState>().future,
@@ -515,6 +551,73 @@ void main() {
         await tester.pump(const Duration(milliseconds: 50));
       }
       expect(bowl.levels.last, lessThan(0.01));
+    });
+
+    Future<void> openKeycaps(WidgetTester tester) async {
+      await tester.tap(find.text('키캡'));
+      await tester.pumpAndSettle();
+      expect(find.text('키캡을 눌러라.'), findsOneWidget);
+    }
+
+    testWidgets('키캡은 닿는 순간 눌리는 소리, 떼는 순간 올라오는 소리', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      final key = find.byKey(KeycapBoard.keyFor(0));
+      final gesture = await tester.startGesture(tester.getCenter(key));
+      await tester.pump();
+      expect(keys.presses, 1, reason: '탭 판정을 기다리지 않는다');
+      expect(keys.releases, 0);
+      expect(play.beads, 1);
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(keys.releases, 0, reason: '누르고 있는 동안은 올라오지 않는다');
+      await gesture.up();
+      await tester.pump();
+      expect(keys.releases, 1);
+      await tester.pumpAndSettle();
+      expect(find.text('1번 눌렀다.'), findsOneWidget);
+      expect(moktak.knocks, 0);
+    });
+
+    testWidgets('톡 치고 바로 떼도 떼는 소리는 조금 뒤에 난다', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byKey(KeycapBoard.keyFor(0))),
+      );
+      await tester.pump(const Duration(milliseconds: 5));
+      await gesture.up();
+      await tester.pump(const Duration(milliseconds: 5));
+      expect(keys.releases, 0, reason: '두 소리가 뭉치지 않게');
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.releases, 1);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('두 손가락으로 같은 키를 누르면 둘 다 떼야 올라온다', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      final center = tester.getCenter(find.byKey(KeycapBoard.keyFor(0)));
+      final a = await tester.startGesture(center, pointer: 1);
+      final b = await tester.startGesture(center + const Offset(4, 0), pointer: 2);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.presses, 1);
+      await a.up();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.releases, 0);
+      await b.up();
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(keys.releases, 1);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('키링을 바꾸면 다른 키캡이 나온다', (tester) async {
+      await pumpPlay(tester);
+      await openKeycaps(tester);
+      expect(find.text('해탈'), findsOneWidget);
+      await tester.tap(find.bySemanticsLabel('키링 ${kKeycapRings[3].name}'));
+      await tester.pumpAndSettle();
+      expect(find.text('해탈'), findsNothing);
+      expect(find.text(kKeycapRings[3].keys.first.label), findsOneWidget);
     });
 
     testWidgets('두드릴 때마다 염주 한 알, 한 바퀴를 돌면 공덕', (tester) async {

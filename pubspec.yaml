@@ -80,6 +80,8 @@ flutter:
     - assets/avatar/
     - assets/avatar/thumbs/
     - assets/sounds/
+    - assets/sounds/keycap/
+    - assets/keycap/
     - assets/play/
     - assets/home/
     - assets/wishes/

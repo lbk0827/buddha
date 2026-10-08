@@ -5,7 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// 놀이 탭에서 두드릴 악기.
 enum PlayInstrument {
   moktak('목탁'),
-  singingBowl('싱잉볼');
+  singingBowl('싱잉볼'),
+  keycap('키캡');
 
   const PlayInstrument(this.label);
   final String label;

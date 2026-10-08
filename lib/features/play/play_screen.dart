@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -12,6 +13,8 @@ import '../../app/theme.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
 import '../shell/tab_top_bar.dart';
+import 'keycap.dart';
+import 'keycap_sound.dart';
 import 'moktak.dart';
 import 'moktak_sound.dart';
 import 'play_instrument.dart';
@@ -20,7 +23,11 @@ import 'prayer_beads.dart';
 import 'singing_bowl.dart';
 import 'singing_bowl_sound.dart';
 
-/// 「놀이」 — 목탁이나 싱잉볼이 주인공이다.
+/// 키캡 무대 최대 높이. 비스듬히 놓인 키링이 목탁보다 커서 무대를 조금 더
+/// 쓴다. 화면이 낮으면 남는 높이만큼 줄어든다.
+const double kKeycapStageHeight = 300;
+
+/// 「놀이」 — 목탁이나 싱잉볼, 키캡이 주인공이다.
 /// 별도 화면을 두지 않고 탭에서 바로 두드린다. 아래 전환 버튼으로 악기를 바꾼다.
 class PlayScreen extends ConsumerStatefulWidget {
   const PlayScreen({super.key});
@@ -64,8 +71,13 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
 
   late final MoktakSound _moktakSound;
   late final SingingBowlSound _bowlSound;
+  late final KeycapSound _keycapSound;
 
   int _knocks = 0;
+  int _keyPresses = 0;
+
+  /// 지금 보이는 키링 ([kKeycapRings]의 자리).
+  int _keyring = 0;
   int _strikes = 0;
   double _rubSeconds = 0;
 
@@ -87,6 +99,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     // dispose 에서는 ref 를 쓸 수 없어 미리 잡아 둔다.
     _moktakSound = ref.read(moktakSoundProvider)..warmUp();
     _bowlSound = ref.read(singingBowlSoundProvider)..warmUp();
+    _keycapSound = ref.read(keycapSoundProvider)..warmUp();
     _enqueueBeads(() => ref.read(playRepositoryProvider).today());
   }
 
@@ -120,15 +133,17 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   }
 
   void _enqueueBeads(Future<BeadCount> Function() step) {
-    _beadQueue = _beadQueue.then((_) async {
-      final beads = await step();
-      if (!mounted) return;
-      setState(() => _beads = beads);
-      if (beads.meritGained > 0) _celebrate(beads.meritGained);
-    }).catchError((Object e) {
-      // 못 남겨도 놀이는 된다.
-      debugPrint('염주를 못 남겼다: $e');
-    });
+    _beadQueue = _beadQueue
+        .then((_) async {
+          final beads = await step();
+          if (!mounted) return;
+          setState(() => _beads = beads);
+          if (beads.meritGained > 0) _celebrate(beads.meritGained);
+        })
+        .catchError((Object e) {
+          // 못 남겨도 놀이는 된다.
+          debugPrint('염주를 못 남겼다: $e');
+        });
   }
 
   void _celebrate(int merit) {
@@ -184,6 +199,13 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
         _bowlRing.forward(from: 0);
       },
     );
+  }
+
+  /// 키캡 소리는 [KeycapButton]이 손가락이 닿고 떨어지는 순간에 부른다.
+  void _keyPress() {
+    _keycapSound.press();
+    setState(() => _keyPresses++);
+    _addBeads(1);
   }
 
   /// 손가락 위치를 입구 타원을 원으로 편 좌표로. 그래야 테두리를 따라 돈 만큼
@@ -264,8 +286,37 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     final text = Theme.of(context).textTheme;
     final fg = Theme.of(context).colorScheme.onSurface;
     final bowl = instrument == PlayInstrument.singingBowl;
+    final keycap = instrument == PlayInstrument.keycap;
 
-    final Widget figure = bowl
+    final Widget figure = keycap
+        ? Flexible(
+            flex: 8,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: kKeycapStageHeight),
+              child: LayoutBuilder(
+                builder: (context, box) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    KeycapBoard(
+                      ring: kKeycapRings[_keyring],
+                      size: Size(
+                        box.maxWidth - 2 * Tokens.gutter,
+                        math.max(80, box.maxHeight - 52),
+                      ),
+                      onPress: _keyPress,
+                      onRelease: _keycapSound.release,
+                    ),
+                    const SizedBox(height: 8),
+                    KeycapRingPicker(
+                      selected: _keyring,
+                      onSelect: (i) => setState(() => _keyring = i),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        : bowl
         ? AnimatedBuilder(
             animation: Listenable.merge([_bowlRing, _bowlSwing]),
             builder: (context, _) => SizedBox.fromSize(
@@ -340,7 +391,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: bowl ? _strike : _knock,
+              onTap: keycap ? null : (bowl ? _strike : _knock),
               onPanStart: bowl ? _rubStart : null,
               onPanUpdate: bowl ? _rubUpdate : null,
               onPanEnd: bowl ? (_) => _rubEnd() : null,
@@ -352,12 +403,20 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
                   figure,
                   const SizedBox(height: 20),
                   Text(
-                    bowl ? '싱잉볼을 울려라.' : '목탁을 두드려라.',
+                    keycap
+                        ? '키캡을 눌러라.'
+                        : bowl
+                        ? '싱잉볼을 울려라.'
+                        : '목탁을 두드려라.',
                     style: text.displayMedium?.copyWith(fontSize: 30),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    bowl
+                    keycap
+                        ? _keyPresses == 0
+                              ? '누르는 소리 말고는 아무것도 없다.'
+                              : '$_keyPresses번 눌렀다.'
+                        : bowl
                         ? _bowlCaption
                         : _knocks == 0
                         ? '세는 것 말고는 아무 일도 안 일어난다.'

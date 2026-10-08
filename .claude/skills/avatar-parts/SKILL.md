@@ -1,6 +1,6 @@
 ---
 name: avatar-parts
-description: 부처님 꾸미기 아이템을 발주서 차수 단위로 진행한다 — Codex에 줄 프롬프트 작성, Codex 결과 검수(비교표·diff·요청 밖 변경), 에뮬레이터 재빌드 확인, 차수별 커밋. "N차 진행하자", "Codex가 끝났대", "파츠 결과 확인해줘", "N차 커밋해줘"처럼 docs/커스터마이징_파츠_발주서.md 의 차수를 다룰 때 쓴다. 새 아이템 아이디어를 내는 건 avatar-parts-brainstorm.
+description: 부처님 꾸미기 아이템을 발주서 차수 단위로 진행한다 — Codex 를 codex exec 로 직접 돌려 생성·등록시키고(또는 프롬프트 작성), Codex 결과 검수(비교표·diff·요청 밖 변경), 에뮬레이터 재빌드 확인, 차수별 커밋. "N차 진행하자", "Codex가 끝났대", "파츠 결과 확인해줘", "N차 커밋해줘"처럼 docs/커스터마이징_파츠_발주서.md 의 차수를 다룰 때 쓴다. 새 아이템 아이디어를 내는 건 avatar-parts-brainstorm.
 ---
 
 # 꾸미기 파츠 — 차수 진행
@@ -40,9 +40,30 @@ $bucheo-avatar-parts 로 발주서 {N}차({슬롯} {개수}종)를 진행해 주
 
 Codex 쪽 스킬이 없거나 사용자가 긴 프롬프트를 원하면 발주서 맨 아래 「Codex에 전달할 프롬프트」를 그 차수로 채워 준다.
 
+### Codex 를 직접 돌리기 (기본)
+
+사용자에게 프롬프트를 건네지 않고 Claude 가 `codex exec`로 직접 실행한다. **백그라운드로** 돌리면 끝났을 때 알림이 오고, 그 알림을 받아 2단계부터 이어 간다. 사용자가 「프롬프트만 줘」라고 하면 그때만 건넨다.
+
+```bash
+CODEX=$(ls -td /c/Users/Admin/AppData/Local/OpenAI/Codex/bin/*/codex.exe | head -1)
+OUT="<scratchpad>/codex_{N}"; mkdir -p "$OUT"
+"$CODEX" exec -c 'windows.sandbox="unelevated"' \
+  --cd C:/src/bucheo_handsome --sandbox workspace-write --add-dir "$OUT" \
+  --color never -o "$OUT/last.txt" "<프롬프트>" > "$OUT/run.log" 2>&1
+```
+Bash 도구의 `run_in_background: true`로 실행한다. 이미지 하나에 수십 초, 차수 하나에 수십 분 걸린다.
+
+- **`-c 'windows.sandbox="unelevated"'`는 꼭 넣는다.** 사용자 설정이 `elevated`인데, Claude 가 띄운 셸에서는 그 샌드박스 준비가 실패해 Codex 의 셸 명령이 하나도 안 돈다(`Failed to create unified exec process: helper_unknown_error`). 이미지 생성 자체는 그래도 되지만 복사·굽기·테스트가 안 된다.
+- `codex.exe`는 Codex 앱 것(`AppData\Local\OpenAI\Codex\bin\<hash>\`)을 쓴다. 앱이 업데이트되면 폴더 이름이 바뀌므로 위처럼 가장 최근 것을 고른다.
+- `workspace-write`는 저장소와 `--add-dir` 폴더에만 쓸 수 있다. 프롬프트 끝에 붙인다:
+  - 「합성 미리보기·비교표는 `{OUT}`에 저장하세요」(기본 위치 `~/.codex/visualizations`에는 못 쓴다)
+  - 「flutter 는 PATH 에 없습니다. `C:\src\flutter\bin\flutter.bat`을 쓰세요」
+- **돌리기 전에 저장소가 조용한지 본다.** 사용자가 Codex 앱이나 다른 세션에서 같은 저장소를 굽고 있으면 몇 초 간격으로 `git status`의 `assets/avatar` 목록이 바뀐다. 그때는 겹쳐 돌리지 않고 사용자에게 묻는다.
+- 끝나면 `$OUT/last.txt`(Codex 의 완료 보고)와 `run.log` 끝부분을 읽고 2단계로 간다. `exec_command failed`가 보이면 위 샌드박스 옵션이 빠진 것이다.
+
 ## 2. Codex 결과 검수
 
-사용자가 Codex 완료 보고를 붙이면:
+Codex 완료 보고(직접 돌렸으면 `$OUT/last.txt`, 아니면 사용자가 붙인 것)를 받으면:
 
 1. **비교표를 연다.** 보고에 적힌 경로의 합성 이미지를 Read 로 본다. 자리, 가림(눈·입선·백호·손), 재질 합성에서 살빛 잔여를 본다.
 2. **diff 를 본다.** `tools/build_avatar_assets.py`, `tools/make_avatar_thumbs.py`, `lib/features/avatar/avatar_equip.dart`, `test/avatar_test.dart`.

@@ -16,8 +16,8 @@ import 'home_controller.dart';
 /// 「절」 — 내 부처님이 있는 곳.
 ///
 /// 레퍼런스 앱의 레이아웃 문법을 따른다: 상단 재화 한 줄 · 가운데 큰
-/// 캐릭터 하나 · 아래 카드 하나 · 하단 전체 폭 버튼 하나.
-/// 버튼은 폰 엎기(3분·10분)로 들어간다. 앱이 사용자를 놓아주는 유일한 입구다.
+/// 캐릭터 하나 · 맨 아래 카드 하나. 카드 위 왼쪽에 명상·달력, 오른쪽에 공덕.
+/// 명상 버튼은 폰 엎기(3분·10분)로 들어간다. 앱이 사용자를 놓아주는 유일한 입구다.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -63,9 +63,100 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           children: [
             const TabTopBar(),
-            Expanded(child: _Stage(state: state)),
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned.fill(child: _Stage(state: state)),
+                  // 아래 말씀 카드 바로 위.
+                  Positioned(
+                    left: Tokens.gutter,
+                    bottom: 12,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CornerButton(
+                          label: '명상',
+                          onTap: () {
+                            ref.read(analyticsProvider).log(
+                                'home_entry_selected', {'entry': 'practice'});
+                            context.push(Routes.sessionSetup);
+                          },
+                          // 향 한 대와 연기 — 세로로 긴 그림이다.
+                          // docs/명상버튼_아이콘_발주서.md
+                          child: Image.asset(
+                            'assets/home/icon_meditation.webp',
+                            width: 44,
+                            height: 44,
+                            excludeFromSemantics: true,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        CornerButton(
+                          label: '달력',
+                          onTap: () => context.push(Routes.calendar),
+                          child: const Icon(
+                              Icons.calendar_month_outlined, size: 28),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    right: Tokens.gutter,
+                    bottom: 12,
+                    child: CornerButton(
+                      label: '공덕',
+                      onTap: () => context.push(Routes.meritShop),
+                      child: const Icon(
+                        Icons.brightness_7,
+                        size: 28,
+                        color: Tokens.saffron,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             _Bottom(state: state),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 그림만 있는 네모 버튼 — 부처님 왼쪽 아래 명상·달력, 오른쪽 아래 공덕.
+class CornerButton extends StatelessWidget {
+  const CornerButton({
+    super.key,
+    required this.label,
+    required this.onTap,
+    required this.child,
+  });
+
+  /// 스크린 리더가 읽는 이름. 화면에는 글자가 없다.
+  final String label;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fg = Theme.of(context).colorScheme.onSurface;
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: isDark ? const Color(0xFF221F1A) : Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: fg.withValues(alpha: 0.08)),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: SizedBox(width: 60, height: 60, child: Center(child: child)),
         ),
       ),
     );
@@ -93,7 +184,7 @@ class _Stage extends StatelessWidget {
   }
 }
 
-/// 하단 — 부처님 말씀 카드 하나와 [마음 비우기] 버튼 하나.
+/// 하단 — 부처님 말씀 카드 하나.
 class _Bottom extends ConsumerWidget {
   const _Bottom({required this.state});
   final TempleHomeState state;
@@ -116,91 +207,54 @@ class _Bottom extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (word != null) ...[
-            Transform.translate(
-              // 부처님과 좀 더 붙게, 화면 아래쪽에서 떨어뜨린다.
-              offset: const Offset(0, -50),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                decoration: BoxDecoration(
-                  color: surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: fg.withValues(alpha: 0.07)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 연꽃 — 부처님이 선 연꽃 대좌와 같은 꽃이다. 이모지만 하게,
-                    // 카드 위쪽에 붙인다. docs/GPT요청_부처님말씀_아이콘.md
-                    Image.asset(
-                      'assets/home/icon_lotus.webp',
-                      width: 20,
-                      height: 20,
-                      excludeFromSemantics: true,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '부처님 말씀',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: fg.withValues(alpha: 0.45),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            keepAll(word.text),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 15, height: 1.45),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            word.citation,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: fg.withValues(alpha: 0.45),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
               ),
-            ),
-            const SizedBox(height: 12),
-          ],
-          // 카드보다 좁게 — 화면 폭을 다 채우면 너무 크다.
-          Transform.translate(
-            // 카드처럼 화면 아래쪽에서 떨어뜨린다.
-            offset: const Offset(0, -20),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 56),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: FilledButton(
-                  onPressed: () {
-                    ref.read(analyticsProvider).log('home_entry_selected', {
-                      'entry': 'practice',
-                    });
-                    context.push(Routes.sessionSetup);
-                  },
-                  child: const Text(
-                    '마음 비우기',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+              decoration: BoxDecoration(
+                color: surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: fg.withValues(alpha: 0.07)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 연꽃 — 부처님이 선 연꽃 대좌와 같은 꽃이다. 이모지만 하게,
+                  // 카드 위쪽에 붙인다. docs/GPT요청_부처님말씀_아이콘.md
+                  Image.asset(
+                    'assets/home/icon_lotus.webp',
+                    width: 20,
+                    height: 20,
+                    excludeFromSemantics: true,
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '부처님 말씀',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: fg.withValues(alpha: 0.45),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          keepAll(word.text),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 15, height: 1.45),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
+          ],
         ],
       ),
     );

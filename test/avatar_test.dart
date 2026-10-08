@@ -2,6 +2,7 @@ import 'package:bucheo_handsome/app/theme.dart';
 import 'package:bucheo_handsome/features/avatar/avatar_equip.dart';
 import 'package:bucheo_handsome/features/avatar/bubble_gum_motion.dart';
 import 'package:bucheo_handsome/features/avatar/buddha_figure.dart';
+import 'package:bucheo_handsome/features/avatar/halo_spin.dart';
 import 'package:bucheo_handsome/features/avatar/item_thumb.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -483,6 +484,23 @@ void main() {
   });
 
   group('BuddhaFigure — 위젯', () {
+    testWidgets('LP·로딩 후광만 돌고, 멈춘 화면에서는 돌지 않는다', (tester) async {
+      for (final id in ['halo_lp', 'halo_loading']) {
+        final equip = kDefaultEquip.wear(AvatarSlot.halo, id);
+        await tester.pumpWidget(
+          _wrap(BuddhaFigure(equip: equip, motion: AvatarMotion.loop)),
+        );
+        expect(find.byType(HaloSpin), findsOneWidget, reason: id);
+        await tester.pumpWidget(_wrap(BuddhaFigure(equip: equip)));
+        expect(find.byType(HaloSpin), findsNothing, reason: id);
+      }
+      final ring = kDefaultEquip.wear(AvatarSlot.halo, 'halo_ring');
+      await tester.pumpWidget(
+        _wrap(BuddhaFigure(equip: ring, motion: AvatarMotion.loop)),
+      );
+      expect(find.byType(HaloSpin), findsNothing);
+    });
+
     testWidgets('기본 착용으로 그려진다', (tester) async {
       await tester.pumpWidget(_wrap(const BuddhaFigure()));
       expect(tester.takeException(), isNull);

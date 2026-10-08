@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bucheo_handsome/features/avatar/bubble_gum_motion.dart';
+import 'package:bucheo_handsome/features/avatar/halo_spin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 앱이 직접 쓰는 기준점은 에셋 도구의 앵커(tools/characters/*.json)와
@@ -18,6 +19,21 @@ void main() {
     final y = (kMouthAnchor.y + 1) * 512;
     expect(x, closeTo((mouth['x'] as num).toDouble(), 1.5));
     expect(y, closeTo((mouth['y'] as num).toDouble(), 1.5));
+  });
+
+  test('도는 후광의 축이 빌드에서 그 후광을 놓은 자리와 같다', () {
+    final build = File('tools/build_avatar_assets.py').readAsStringSync();
+    for (final name in ['halo_lp', 'halo_loading']) {
+      // "halo_lp": ("head", 배율, (원본 기준점), (베이스 기준점), ()) 의 베이스 기준점.
+      final m = RegExp(
+        '"$name": \\("head", .*\\((\\d+), (\\d+)\\), \\(\\)\\)',
+      ).firstMatch(build);
+      expect(m, isNotNull, reason: name);
+      final x = double.parse(m!.group(1)!);
+      final y = double.parse(m.group(2)!);
+      expect((kHaloCenter.x + 1) * 512, closeTo(x, 1.5), reason: name);
+      expect((kHaloCenter.y + 1) * 512, closeTo(y, 1.5), reason: name);
+    }
   });
 
   test('앵커 여섯 개가 다 있고 단위 길이가 양수다', () {

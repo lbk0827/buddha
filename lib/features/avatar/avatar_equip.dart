@@ -133,6 +133,10 @@ class WardrobeItem {
   /// 옷장 칸과 멈춘 화면에는 [assetPath]만 쓴다.
   final String? popped;
 
+  /// 도는 후광의 한 바퀴 시간. 후광 링 중심을 축으로 돈다(HaloSpin).
+  /// 옷장 칸과 멈춘 화면에서는 돌지 않는다.
+  final Duration? spin;
+
   const WardrobeItem({
     required this.id,
     required this.name,
@@ -143,6 +147,7 @@ class WardrobeItem {
     this.skin,
     this.tint,
     this.popped,
+    this.spin,
   });
 
   String get _base => file ?? id;
@@ -575,12 +580,14 @@ const List<WardrobeItem> kWardrobe = [
     name: '로딩 중',
     slot: AvatarSlot.halo,
     meritCost: 1000,
+    spin: Duration(milliseconds: 2400),
   ),
   WardrobeItem(
     id: 'halo_lp',
     name: 'LP 후광',
     slot: AvatarSlot.halo,
     meritCost: 1300,
+    spin: Duration(seconds: 6),
   ),
   WardrobeItem(
     id: 'halo_discoball',

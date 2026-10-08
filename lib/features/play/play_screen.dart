@@ -11,6 +11,7 @@ import '../../app/theme.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
 import '../shell/tab_top_bar.dart';
+import 'instrument_picker.dart';
 import 'keycap.dart';
 import 'keycap_sound.dart';
 import 'moktak.dart';
@@ -87,10 +88,27 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   void initState() {
     super.initState();
     // dispose 에서는 ref 를 쓸 수 없어 미리 잡아 둔다.
-    _moktakSound = ref.read(moktakSoundProvider)..warmUp();
-    _bowlSound = ref.read(singingBowlSoundProvider)..warmUp();
-    _keycapSound = ref.read(keycapSoundProvider)..warmUp();
+    _moktakSound = ref.read(moktakSoundProvider);
+    _bowlSound = ref.read(singingBowlSoundProvider);
+    _keycapSound = ref.read(keycapSoundProvider);
+    _warmUpSounds();
     _loadBeads();
+  }
+
+  Future<void> _warm(PlayInstrument instrument) => switch (instrument) {
+    PlayInstrument.moktak => _moktakSound.warmUp(),
+    PlayInstrument.singingBowl => _bowlSound.warmUp(),
+    PlayInstrument.keycap => _keycapSound.warmUp(),
+  };
+
+  /// 지금 고른 놀이 소리를 먼저, 나머지는 그 뒤에 하나씩 불러온다. 한꺼번에
+  /// 부르면 플랫폼 채널에서 서로 줄을 서서 지금 놀이의 첫 소리가 늦는다.
+  Future<void> _warmUpSounds() async {
+    final first = ref.read(playInstrumentProvider);
+    await _warm(first);
+    for (final i in PlayInstrument.values) {
+      if (i != first) await _warm(i);
+    }
   }
 
   @override
@@ -249,6 +267,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   }
 
   void _select(PlayInstrument instrument) {
+    _warm(instrument);
     if (instrument != PlayInstrument.singingBowl) {
       _rubEnd();
       _rubTicker.stop();
@@ -400,15 +419,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: kHudClearance),
-            child: SegmentedButton<PlayInstrument>(
-              segments: [
-                for (final i in PlayInstrument.values)
-                  ButtonSegment(value: i, label: Text(i.label)),
-              ],
-              selected: {instrument},
-              showSelectedIcon: false,
-              onSelectionChanged: (s) => _select(s.single),
-            ),
+            child: InstrumentPicker(selected: instrument, onSelect: _select),
           ),
         ],
       ),

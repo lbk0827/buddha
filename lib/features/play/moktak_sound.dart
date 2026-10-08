@@ -61,7 +61,10 @@ class AudioMoktakSound implements MoktakSound {
   }
 
   Future<void> _knock() async {
+    final asked = DateTime.now();
     await _prepare();
+    // 준비가 늦어 탭한 지 한참 뒤라면 내지 않는다.
+    if (DateTime.now().difference(asked) > kLateSoundLimit) return;
     if (_broken || _players.isEmpty) return;
     final player = _players[_next];
     _next = (_next + 1) % _players.length;

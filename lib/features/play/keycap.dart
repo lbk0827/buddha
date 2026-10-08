@@ -306,7 +306,13 @@ abstract final class KeycapScene {
   }
 
   /// 키링 전체(키 네 개, [ring]이면 쇠붙이까지)를 감싸는 사각형(키 한 변 = 1).
-  static Rect bounds(int keys, {bool ring = true}) {
+  static Rect bounds(int keys, {bool ring = true}) =>
+      _bounds[(keys, ring)] ??= _measure(keys, ring);
+
+  /// 투영값이 바뀌지 않으니 한 번 잰 값을 쓴다. 화면을 다시 그릴 때마다 재지 않게.
+  static final _bounds = <(int, bool), Rect>{};
+
+  static Rect _measure(int keys, bool ring) {
     final pts = <Offset>[
       for (var i = 0; i < keys; i++) ...[
         ...silhouette(i, -0.3),
@@ -365,16 +371,29 @@ abstract final class KeycapScene {
 
 /// 키링 한 줄을 그린다 — 바닥 그림자, 투명 스위치, 축, 키캡 몸통.
 /// 윗면 그림·글자는 위젯으로 따로 얹는다([KeycapBoard]).
+///
+/// [keys]만 그린다(null 이면 전부). 키마다 따로 그리면 누른 키 하나만 다시
+/// 그려진다 — 앞 키가 뒤 키를 가리니 뒤 키부터 겹쳐 쌓는다. 바닥 그림자는
+/// [shadow]일 때만.
 class KeycapRowPainter extends CustomPainter {
   KeycapRowPainter({
     required this.presses,
     required this.colors,
     required this.s,
     required this.origin,
-  }) : super(repaint: Listenable.merge(presses));
+    this.keys,
+    this.shadow = true,
+  }) : super(
+         repaint: Listenable.merge([
+           for (var i = 0; i < presses.length; i++)
+             if (keys == null || keys.contains(i)) presses[i],
+         ]),
+       );
 
   final List<Animation<double>> presses;
   final KeycapColors colors;
+  final List<int>? keys;
+  final bool shadow;
 
   /// 키 한 변(dp).
   final double s;
@@ -400,9 +419,10 @@ class KeycapRowPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final n = presses.length;
-    _paintShadow(canvas, n);
+    if (shadow) _paintShadow(canvas, n);
     // 뒤(오른쪽)부터 앞(왼쪽)으로.
     for (var i = n - 1; i >= 0; i--) {
+      if (keys != null && !keys!.contains(i)) continue;
       final press = presses[i].value;
       _paintHousing(canvas, i);
       _paintStem(canvas, i, press);
@@ -629,6 +649,8 @@ class KeycapRowPainter extends CustomPainter {
       old.colors != colors ||
       old.s != s ||
       old.origin != origin ||
+      old.shadow != shadow ||
+      !listEquals(old.keys, keys) ||
       !listEquals(old.presses, presses);
 }
 
@@ -814,6 +836,7 @@ class _KeycapBoardState extends State<KeycapBoard>
     final hook = _origin + KeycapScene.project(KeycapScene.hookPoint) * s;
     final ringW = KeycapScene.ringWidth * s;
     final ringH = ringW * KeycapScene.ringAspect;
+    final presses = [for (final k in _keys) k.press];
 
     return Listener(
       behavior: HitTestBehavior.opaque,
@@ -843,16 +866,36 @@ class _KeycapBoardState extends State<KeycapBoard>
                 ),
               ),
             ),
+            // 바닥 그림자 — 한 번 그리고 다시 그리지 않는다.
             Positioned.fill(
-              child: CustomPaint(
-                painter: KeycapRowPainter(
-                  presses: [for (final k in _keys) k.press],
-                  colors: ring.colors,
-                  s: s,
-                  origin: _origin,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: KeycapRowPainter(
+                    presses: presses,
+                    colors: ring.colors,
+                    s: s,
+                    origin: _origin,
+                    keys: const [],
+                  ),
                 ),
               ),
             ),
+            // 키마다 한 층. 누른 키 층만 다시 그린다.
+            for (var i = _keys.length - 1; i >= 0; i--)
+              Positioned.fill(
+                child: RepaintBoundary(
+                  child: CustomPaint(
+                    painter: KeycapRowPainter(
+                      presses: presses,
+                      colors: ring.colors,
+                      s: s,
+                      origin: _origin,
+                      keys: [i],
+                      shadow: false,
+                    ),
+                  ),
+                ),
+              ),
             for (var i = 0; i < _keys.length; i++) ...[
               // 윗면 그림·글자. 뒤 키부터 — 앞 키가 뒤 키 윗면을 가리는 일은 없다.
               AnimatedBuilder(
@@ -1039,6 +1082,31 @@ class KeycapRingPicker extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+/// 키캡 하나를 작게 — 놀이 고르는 버튼에 쓴다. 놀이 화면과 같은 그리기로.
+class KeycapIcon extends StatelessWidget {
+  const KeycapIcon({super.key, required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final b = KeycapScene.bounds(1, ring: false);
+    final s = size / math.max(b.width, b.height);
+    final origin =
+        Offset((size - b.width * s) / 2, (size - b.height * s) / 2) -
+        b.topLeft * s;
+    return CustomPaint(
+      size: Size.square(size),
+      painter: KeycapRowPainter(
+        presses: const [kAlwaysDismissedAnimation],
+        colors: kKeycapRings.last.colors,
+        s: s,
+        origin: origin,
+      ),
     );
   }
 }

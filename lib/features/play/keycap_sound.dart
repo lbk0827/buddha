@@ -47,8 +47,10 @@ class AudioKeycapSound implements KeycapSound {
     'sounds/keycap/up_4.wav',
   ];
 
-  /// 한 파일에 플레이어 둘. 빠르게 치면 같은 타가 겹쳐 울릴 수 있다.
-  static const voicesPerFile = 2;
+  /// 한 파일에 플레이어 하나. 방금 낸 타는 바로 다시 고르지 않으니, 빠르게
+  /// 쳐도 다른 파일이 겹쳐 울린다. 플레이어를 늘리면 처음 불러오는 데 그만큼
+  /// 오래 걸린다.
+  static const voicesPerFile = 1;
 
   final Random _random;
   final _press = _VariantBank('누르는');
@@ -70,7 +72,10 @@ class AudioKeycapSound implements KeycapSound {
   void release() => _play(_release);
 
   Future<void> _play(_VariantBank bank) async {
+    final asked = DateTime.now();
     await _prepare();
+    // 준비가 늦어 탭한 지 한참 뒤라면 내지 않는다.
+    if (DateTime.now().difference(asked) > kLateSoundLimit) return;
     await bank.play(_random);
   }
 

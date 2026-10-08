@@ -70,7 +70,10 @@ class AudioSingingBowlSound implements SingingBowlSound {
   }
 
   Future<void> _strike() async {
+    final asked = DateTime.now();
     await _prepare();
+    // 준비가 늦어 탭한 지 한참 뒤라면 내지 않는다.
+    if (DateTime.now().difference(asked) > kLateSoundLimit) return;
     if (_broken || _strikes.isEmpty) return;
     final player = _strikes[_next];
     _next = (_next + 1) % _strikes.length;

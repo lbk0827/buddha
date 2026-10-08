@@ -20,10 +20,10 @@ void main() {
       expect(PrayerBeads.meritBetween(per, per + 1), 0);
     });
 
-    test('놀이마다 하루 공덕은 한 바퀴분(1)뿐이다', () {
-      expect(PrayerBeads.meritPerRound, 1);
+    test('놀이마다 하루 공덕은 한 바퀴분(10)뿐이다', () {
+      expect(PrayerBeads.meritPerRound, 10);
       expect(PrayerBeads.roundsPerDay, 1);
-      expect(PrayerBeads.meritBetween(0, per * 3), 1);
+      expect(PrayerBeads.meritBetween(0, per * 3), 10);
     });
 
     test('하루 상한을 넘으면 공덕은 멈추고 바퀴는 계속 센다', () {
@@ -75,7 +75,7 @@ void main() {
         for (final i in PlayInstrument.values) {
           final b = await repo.addBeads(i, PrayerBeads.perRound);
           expect(b.today, PrayerBeads.perRound, reason: '$i');
-          expect(b.meritGained, 1, reason: '$i');
+          expect(b.meritGained, 10, reason: '$i');
         }
         // 한 바퀴 더 돌아도 더는 붙지 않는다.
         final again = await repo.addBeads(PlayInstrument.keycap, 200);
@@ -86,7 +86,7 @@ void main() {
         expect(today[PlayInstrument.moktak]!.today, PrayerBeads.perRound);
         expect(today[PlayInstrument.singingBowl]!.today, PrayerBeads.perRound);
         final p = await profile();
-        expect(p.merit, 3);
+        expect(p.merit, 30);
         expect(p.beadRounds, 3 + 1, reason: '바퀴는 공덕과 상관없이 다 센다(키캡 308알 = 2바퀴)');
       });
 

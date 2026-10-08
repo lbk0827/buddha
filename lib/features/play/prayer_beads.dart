@@ -11,7 +11,7 @@ import 'dart:math';
 /// 되지 않게, 처벌 없이 (기획서 v3 「성장·기록 규칙」).
 class PrayerBeads {
   static const int perRound = 108;
-  static const int meritPerRound = 1;
+  static const int meritPerRound = 10;
   static const int roundsPerDay = 1;
 
   /// 그날 [beads]알 넘겼을 때 공덕이 붙은 바퀴 수.

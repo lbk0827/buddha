@@ -580,7 +580,7 @@ void main() {
       await tester.pump();
       expect(keys.releases, 1);
       await tester.pumpAndSettle();
-      expect(find.text('염주 1 / 108 · 다 돌면 공덕 1'), findsOneWidget);
+      expect(find.text('염주 1 / 108 · 다 돌면 공덕 10'), findsOneWidget);
       expect(moktak.knocks, 0);
     });
 
@@ -626,18 +626,18 @@ void main() {
       expect(find.text(kKeycapRings[3].keys.first.label), findsOneWidget);
     });
 
-    testWidgets('두드릴 때마다 염주 한 알, 108알을 채우면 공덕 1', (tester) async {
+    testWidgets('두드릴 때마다 염주 한 알, 108알을 채우면 공덕 10', (tester) async {
       await pumpPlay(tester, beads: {PlayInstrument.moktak: 106});
-      expect(find.text('염주 106 / 108 · 다 돌면 공덕 1'), findsOneWidget);
+      expect(find.text('염주 106 / 108 · 다 돌면 공덕 10'), findsOneWidget);
 
       await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('염주 107 / 108 · 다 돌면 공덕 1'), findsOneWidget);
+      expect(find.text('염주 107 / 108 · 다 돌면 공덕 10'), findsOneWidget);
 
       await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
-      expect(play.merit, 1);
-      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +1'), findsOneWidget);
+      expect(play.merit, 10);
+      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +10'), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 3));
       expect(find.text('오늘 108알 · 오늘 공덕은 받았다'), findsOneWidget);
@@ -646,7 +646,7 @@ void main() {
       await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
       expect(moktak.knocks, 3);
-      expect(play.merit, 1);
+      expect(play.merit, 10);
       expect(find.text('오늘 109알 · 오늘 공덕은 받았다'), findsOneWidget);
     });
 
@@ -657,15 +657,15 @@ void main() {
       );
       expect(find.text('오늘 200알 · 오늘 공덕은 받았다'), findsOneWidget);
       await openKeycaps(tester);
-      expect(find.text('염주 107 / 108 · 다 돌면 공덕 1'), findsOneWidget);
+      expect(find.text('염주 107 / 108 · 다 돌면 공덕 10'), findsOneWidget);
       final gesture = await tester.startGesture(
         tester.getCenter(find.byKey(KeycapBoard.keyFor(1))),
       );
       await tester.pump();
       await gesture.up();
       await tester.pump(const Duration(milliseconds: 200));
-      expect(play.merit, 1, reason: '목탁 공덕을 받았어도 키캡은 따로');
-      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +1'), findsOneWidget);
+      expect(play.merit, 10, reason: '목탁 공덕을 받았어도 키캡은 따로');
+      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +10'), findsOneWidget);
       await tester.pumpAndSettle(const Duration(seconds: 3));
     });
 

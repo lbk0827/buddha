@@ -15,6 +15,12 @@ class SettingKeys {
   static const detection = 'detection';
   static const hideNumbers = 'hideNumbers';
   static const revisitNotifications = 'revisitNotifications';
+
+  /// 걸음 수 읽기를 허락받았는가. 달력·공덕 상점이 본다.
+  static const stepsLinked = 'stepsLinked';
+
+  /// 그날 받은 공덕 보상. {"date": "yyyy-MM-dd", "ids": [...]}
+  static const meritClaims = 'meritClaims';
 }
 
 /// 동의 키. 각 기능 첫 사용 시점에 1회 요청 (FR-1.5).
@@ -132,6 +138,32 @@ class ProfileRepository {
     ));
     return true;
   }
+
+  /// [dateKey] 날에 이미 받은 공덕 보상 ID.
+  Set<String> claimedOn(Profile p, String dateKey) {
+    final c = settingsOf(p)[SettingKeys.meritClaims];
+    if (c is! Map || c['date'] != dateKey) return {};
+    final ids = c['ids'];
+    return ids is List ? ids.whereType<String>().toSet() : {};
+  }
+
+  /// 하루 한 번 받는 공덕 보상. 이미 받았으면 false.
+  Future<bool> claimDailyMerit(String rewardId, int merit, String dateKey) =>
+      _db.transaction(() async {
+        final p = await ensure();
+        final claimed = claimedOn(p, dateKey);
+        if (!claimed.add(rewardId)) return false;
+        final s = settingsOf(p)
+          ..[SettingKeys.meritClaims] = {
+            'date': dateKey,
+            'ids': claimed.toList(),
+          };
+        await _write(ProfilesCompanion(
+          merit: Value(p.merit + merit),
+          settingsJson: Value(jsonEncode(s)),
+        ));
+        return true;
+      });
 
   /// 회복 기본값은 첫 3회만 적용한다 (FR-6.5).
   Future<void> bumpDefaultsApplied() async {

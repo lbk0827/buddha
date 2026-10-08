@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/avatar/wardrobe_screen.dart';
+import '../features/calendar/calendar_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/character_onboard_screen.dart';
 import '../features/onboarding/ordination_screen.dart';
 import '../features/play/play_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/records/records_screen.dart';
+import '../features/shop/merit_shop_screen.dart';
 import '../features/roots/root_screen.dart';
 import '../features/safety/safety_screen.dart';
 import '../features/seonsa/seonsa_screen.dart';
@@ -56,6 +58,8 @@ class Routes {
   static const safety = '/safety';
   static const temple = '/temple';
   static const records = '/records';
+  static const calendar = '/calendar';
+  static const meritShop = '/merit-shop';
   static const test = '/test';
   static const testResult = '/test/result';
   static const checkin = '/checkin';
@@ -135,6 +139,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.safety, builder: (_, _) => const SafetyScreen()),
       GoRoute(path: Routes.temple, builder: (_, _) => const TempleScreen()),
       GoRoute(path: Routes.records, builder: (_, _) => const RecordsScreen()),
+      GoRoute(path: Routes.calendar, builder: (_, _) => const CalendarScreen()),
+      GoRoute(
+        path: Routes.meritShop,
+        builder: (_, _) => const MeritShopScreen(),
+      ),
       GoRoute(path: Routes.test, builder: (_, _) => const TestIntroScreen()),
       GoRoute(
         path: '/test/q/:n',

@@ -7,6 +7,7 @@ import '../data/repositories/play_repository.dart';
 import '../data/repositories/profile_repository.dart';
 import '../data/repositories/session_repository.dart';
 import '../data/repositories/worry_repository.dart';
+import '../data/steps/step_source.dart';
 import '../features/safety/safety_detector.dart';
 import '../services/notification_service.dart';
 
@@ -40,6 +41,9 @@ final playRepositoryProvider =
 
 final tokenRepositoryProvider =
     Provider<TokenRepository>((ref) => TokenRepository(ref.watch(databaseProvider)));
+
+/// 걸음 수. 테스트에서는 가짜로 바꿔 끼운다.
+final stepSourceProvider = Provider<StepSource>((ref) => HealthStepSource());
 
 final analyticsProvider =
     Provider<AnalyticsLog>((ref) => AnalyticsLog(ref.watch(databaseProvider)));

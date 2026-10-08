@@ -275,6 +275,23 @@ class SessionRepository {
     return row.read(sum) ?? 0;
   }
 
+  /// 달력용. [fromKey]~[toKey] 날짜별 명상 시간 합(초). 없는 날은 빠진다.
+  Future<Map<String, int>> practicedSecondsByDay(
+      String fromKey, String toKey) async {
+    final sum = _db.sessions.practicedSec.sum();
+    final day = _db.sessions.localDate;
+    final rows = await (_db.selectOnly(_db.sessions)
+          ..addColumns([day, sum])
+          ..where(day.isBetweenValues(fromKey, toKey) &
+              _db.sessions.outcome.isNotNull())
+          ..groupBy([day]))
+        .get();
+    return {
+      for (final r in rows)
+        if ((r.read(sum) ?? 0) > 0) r.read(day)!: r.read(sum)!,
+    };
+  }
+
   /// 완주 후 "지난번 그 얘기" 화면용 (FR-3.2).
   /// 번뇌를 적고 끝난 세션들, 최근 것부터.
   /// [excludeId] — 방금 끝낸 세션. 「지난번 그 얘기」는 그 세션 다음에 열리므로

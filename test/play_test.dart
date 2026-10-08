@@ -22,20 +22,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakePlay implements PlayRepository {
-  _FakePlay([this.beads = 0]);
-  int beads;
+  _FakePlay([Map<PlayInstrument, int> start = const {}])
+    : beads = {for (final i in PlayInstrument.values) i: start[i] ?? 0};
+  final Map<PlayInstrument, int> beads;
   int merit = 0;
 
   @override
-  Future<BeadCount> today() async => BeadCount(today: beads);
+  Future<Map<PlayInstrument, BeadCount>> today() async => {
+    for (final e in beads.entries) e.key: BeadCount(today: e.value),
+  };
 
   @override
-  Future<BeadCount> addBeads(int n) async {
-    final before = beads;
-    beads += n;
-    final gained = PrayerBeads.meritBetween(before, beads);
+  Future<BeadCount> addBeads(PlayInstrument instrument, int n) async {
+    final before = beads[instrument]!;
+    final after = before + n;
+    beads[instrument] = after;
+    final gained = PrayerBeads.meritBetween(before, after);
     merit += gained;
-    return BeadCount(today: beads, meritGained: gained);
+    return BeadCount(today: after, meritGained: gained);
   }
 }
 
@@ -413,7 +417,10 @@ void main() {
     late _FakeKeycap keys;
     late _FakePlay play;
 
-    Future<void> pumpPlay(WidgetTester tester, {int beads = 0}) async {
+    Future<void> pumpPlay(
+      WidgetTester tester, {
+      Map<PlayInstrument, int> beads = const {},
+    }) async {
       SharedPreferences.setMockInitialValues({});
       moktak = _FakeMoktak();
       bowl = _FakeBowl();
@@ -441,26 +448,26 @@ void main() {
 
     testWidgets('처음엔 목탁이고, 두드리면 목탁 소리', (tester) async {
       await pumpPlay(tester);
-      expect(find.text('목탁을 두드려라.'), findsOneWidget);
-      await tester.tap(find.text('목탁을 두드려라.'));
+      expect(find.text(PlayInstrument.moktak.howTo), findsOneWidget);
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
       expect(moktak.knocks, 1);
       expect(bowl.strikes, 0);
-      expect(find.text('1번 두드렸다.'), findsOneWidget);
+      expect(play.beads[PlayInstrument.moktak], 1);
     });
 
     testWidgets('싱잉볼로 바꾸면 치기가 싱잉볼 소리가 된다', (tester) async {
       await pumpPlay(tester);
       await tester.tap(find.text('싱잉볼'));
       await tester.pumpAndSettle();
-      expect(find.text('싱잉볼을 울려라.'), findsOneWidget);
-      expect(find.text('치거나, 테두리를 천천히 돌려라.'), findsOneWidget);
+      expect(find.text(PlayInstrument.singingBowl.howTo), findsOneWidget);
 
-      await tester.tap(find.text('싱잉볼을 울려라.'));
+      await tester.tap(find.text(PlayInstrument.singingBowl.howTo));
       await tester.pump(const Duration(milliseconds: 1500));
       expect(bowl.strikes, 1);
       expect(moktak.knocks, 0);
-      expect(find.text('1번 쳤다.'), findsOneWidget);
+      expect(play.beads[PlayInstrument.singingBowl], 1);
+      expect(play.beads[PlayInstrument.moktak], 0, reason: '놀이마다 따로 센다');
     });
 
     testWidgets('싱잉볼을 치면 채가 휘두르고, 소리는 닿기 직전·파문은 닿는 순간', (tester) async {
@@ -480,7 +487,7 @@ void main() {
           .entry(1, 0);
       final rest = malletAngle();
 
-      await tester.tap(find.text('싱잉볼을 울려라.'));
+      await tester.tap(find.text(PlayInstrument.singingBowl.howTo));
       await tester.pump(const Duration(milliseconds: 30));
       expect(bowl.strikes, 0, reason: '탭하자마자 소리가 나면 채보다 먼저 울린다');
       await tester.pump(const Duration(milliseconds: 20)); // 50ms
@@ -498,7 +505,7 @@ void main() {
     testWidgets('목탁도 채가 휘두르고 닿기 직전에 소리가 난다', (tester) async {
       await pumpPlay(tester);
       expect(find.byType(SwingingMallet), findsOneWidget);
-      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 50));
       expect(moktak.knocks, 0);
       await tester.pump(const Duration(milliseconds: 20)); // 70ms
@@ -512,7 +519,7 @@ void main() {
         find.byType(SwingingMallet),
         kShowMallets ? findsOneWidget : findsNothing,
       );
-      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump();
       expect(moktak.knocks, kShowMallets ? 0 : 1);
 
@@ -522,7 +529,7 @@ void main() {
         find.byType(SwingingMallet),
         kShowMallets ? findsOneWidget : findsNothing,
       );
-      await tester.tap(find.text('싱잉볼을 울려라.'));
+      await tester.tap(find.text(PlayInstrument.singingBowl.howTo));
       await tester.pump();
       expect(bowl.strikes, kShowMallets ? 0 : 1);
       await tester.pump(const Duration(seconds: 2));
@@ -542,7 +549,6 @@ void main() {
       }
       final peak = bowl.levels.reduce(math.max);
       expect(peak, greaterThan(0.8));
-      expect(find.textContaining('초 울렸다'), findsOneWidget);
       expect(bowl.strikes, 0, reason: '문지르기는 치기가 아니다');
 
       await gesture.up();
@@ -556,7 +562,7 @@ void main() {
     Future<void> openKeycaps(WidgetTester tester) async {
       await tester.tap(find.text('키캡'));
       await tester.pumpAndSettle();
-      expect(find.text('키캡을 눌러라.'), findsOneWidget);
+      expect(find.text(PlayInstrument.keycap.howTo), findsOneWidget);
     }
 
     testWidgets('키캡은 닿는 순간 눌리는 소리, 떼는 순간 올라오는 소리', (tester) async {
@@ -567,14 +573,14 @@ void main() {
       await tester.pump();
       expect(keys.presses, 1, reason: '탭 판정을 기다리지 않는다');
       expect(keys.releases, 0);
-      expect(play.beads, 1);
+      expect(play.beads[PlayInstrument.keycap], 1);
       await tester.pump(const Duration(milliseconds: 300));
       expect(keys.releases, 0, reason: '누르고 있는 동안은 올라오지 않는다');
       await gesture.up();
       await tester.pump();
       expect(keys.releases, 1);
       await tester.pumpAndSettle();
-      expect(find.text('1번 눌렀다.'), findsOneWidget);
+      expect(find.text('염주 1 / 108 · 다 돌면 공덕 1'), findsOneWidget);
       expect(moktak.knocks, 0);
     });
 
@@ -620,30 +626,56 @@ void main() {
       expect(find.text(kKeycapRings[3].keys.first.label), findsOneWidget);
     });
 
-    testWidgets('두드릴 때마다 염주 한 알, 한 바퀴를 돌면 공덕', (tester) async {
-      await pumpPlay(tester, beads: 106);
-      expect(find.text('염주 106 / 108 · 한 바퀴에 공덕 20'), findsOneWidget);
+    testWidgets('두드릴 때마다 염주 한 알, 108알을 채우면 공덕 1', (tester) async {
+      await pumpPlay(tester, beads: {PlayInstrument.moktak: 106});
+      expect(find.text('염주 106 / 108 · 다 돌면 공덕 1'), findsOneWidget);
 
-      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text('염주 107 / 108 · 한 바퀴에 공덕 20'), findsOneWidget);
+      expect(find.text('염주 107 / 108 · 다 돌면 공덕 1'), findsOneWidget);
 
-      await tester.tap(find.text('목탁을 두드려라.'));
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
       await tester.pump(const Duration(milliseconds: 500));
-      expect(play.merit, PrayerBeads.meritPerRound);
-      expect(find.text('한 바퀴 돌았다. 공덕 +20'), findsOneWidget);
+      expect(play.merit, 1);
+      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +1'), findsOneWidget);
 
       await tester.pump(const Duration(seconds: 3));
-      expect(find.text('염주 0 / 108 · 오늘 1바퀴'), findsOneWidget);
+      expect(find.text('오늘 108알 · 오늘 공덕은 받았다'), findsOneWidget);
+
+      // 그 뒤로도 두드리기는 되고 알도 센다. 공덕만 멈춘다.
+      await tester.tap(find.text(PlayInstrument.moktak.howTo));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(moktak.knocks, 3);
+      expect(play.merit, 1);
+      expect(find.text('오늘 109알 · 오늘 공덕은 받았다'), findsOneWidget);
+    });
+
+    testWidgets('놀이마다 따로 세고, 다른 놀이의 공덕은 따로 받는다', (tester) async {
+      await pumpPlay(
+        tester,
+        beads: {PlayInstrument.moktak: 200, PlayInstrument.keycap: 107},
+      );
+      expect(find.text('오늘 200알 · 오늘 공덕은 받았다'), findsOneWidget);
+      await openKeycaps(tester);
+      expect(find.text('염주 107 / 108 · 다 돌면 공덕 1'), findsOneWidget);
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byKey(KeycapBoard.keyFor(1))),
+      );
+      await tester.pump();
+      await gesture.up();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(play.merit, 1, reason: '목탁 공덕을 받았어도 키캡은 따로');
+      expect(find.text('염주 한 바퀴를 돌았다. 공덕 +1'), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
     });
 
     testWidgets('싱잉볼을 울리는 동안에도 염주가 넘어간다', (tester) async {
       await pumpPlay(tester);
       await tester.tap(find.text('싱잉볼'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('싱잉볼을 울려라.'));
+      await tester.tap(find.text(PlayInstrument.singingBowl.howTo));
       await tester.pump(const Duration(milliseconds: 1500));
-      expect(play.beads, 1, reason: '치기는 한 알');
+      expect(play.beads[PlayInstrument.singingBowl], 1, reason: '치기는 한 알');
 
       final gesture = await tester.startGesture(_onRim(tester, 0));
       for (var i = 1; i <= 180; i++) {
@@ -654,15 +686,20 @@ void main() {
       for (var i = 0; i < 80; i++) {
         await tester.pump(const Duration(milliseconds: 50));
       }
-      expect(play.beads, greaterThan(2), reason: '울린 시간만큼 알이 넘어간다');
+      // 3초 동안 1.3초에 한 바퀴 빠르기로 돌렸다 — 두 바퀴.
+      expect(
+        play.beads[PlayInstrument.singingBowl],
+        3,
+        reason: '테두리를 한 바퀴 돌 때마다 한 알, 울림만 남은 동안은 세지 않는다',
+      );
     });
 
     testWidgets('하루 공덕을 다 받으면 그렇다고 알려 준다', (tester) async {
       await pumpPlay(
         tester,
-        beads: PrayerBeads.perRound * PrayerBeads.roundsPerDay + 3,
+        beads: {PlayInstrument.moktak: PrayerBeads.perRound + 3},
       );
-      expect(find.text('염주 3 / 108 · 오늘 공덕은 다 받았다'), findsOneWidget);
+      expect(find.text('오늘 111알 · 오늘 공덕은 받았다'), findsOneWidget);
     });
 
     testWidgets('문지르다가 목탁으로 바꾸면 울림이 멈춘다', (tester) async {

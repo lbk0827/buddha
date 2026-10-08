@@ -73,25 +73,17 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   late final SingingBowlSound _bowlSound;
   late final KeycapSound _keycapSound;
 
-  int _knocks = 0;
-  int _keyPresses = 0;
-
   /// 지금 보이는 키링 ([kKeycapRings]의 자리).
   int _keyring = 0;
-  int _strikes = 0;
-  double _rubSeconds = 0;
 
-  /// 오늘 넘긴 염주. 저장소가 돌려준 값만 쓴다.
-  BeadCount _beads = BeadCount.zero;
+  /// 놀이마다 오늘 넘긴 염주. 저장소가 돌려준 값만 쓴다.
+  final _beads = {for (final i in PlayInstrument.values) i: BeadCount.zero};
 
   /// 저장을 한 줄로 세운다. 늦게 온 결과가 앞선 결과를 덮지 않게.
   Future<void> _beadQueue = Future.value();
 
-  /// 울리는 동안 쌓인 시간. [PrayerBeads.rubSecondsPerBead]마다 한 알.
-  double _rubBeadClock = 0;
-
-  /// 방금 한 바퀴를 돌아 받은 공덕. 잠깐 보여주고 지운다.
-  int? _justGained;
+  /// 방금 한 바퀴를 돌아 공덕을 받은 놀이와 공덕. 잠깐 보여주고 지운다.
+  (PlayInstrument, int)? _justGained;
 
   @override
   void initState() {
@@ -100,7 +92,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _moktakSound = ref.read(moktakSoundProvider)..warmUp();
     _bowlSound = ref.read(singingBowlSoundProvider)..warmUp();
     _keycapSound = ref.read(keycapSoundProvider)..warmUp();
-    _enqueueBeads(() => ref.read(playRepositoryProvider).today());
+    _loadBeads();
   }
 
   @override
@@ -126,29 +118,36 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _timers.add(timer);
   }
 
-  /// 염주 [beads]알을 넘긴다. 바퀴를 다 돌면 공덕이 붙는다.
-  void _addBeads(int beads) {
+  void _loadBeads() {
     final repo = ref.read(playRepositoryProvider);
-    _enqueueBeads(() => repo.addBeads(beads));
+    _queue(() async {
+      final all = await repo.today();
+      if (mounted) setState(() => _beads.addAll(all));
+    });
   }
 
-  void _enqueueBeads(Future<BeadCount> Function() step) {
-    _beadQueue = _beadQueue
-        .then((_) async {
-          final beads = await step();
-          if (!mounted) return;
-          setState(() => _beads = beads);
-          if (beads.meritGained > 0) _celebrate(beads.meritGained);
-        })
-        .catchError((Object e) {
-          // 못 남겨도 놀이는 된다.
-          debugPrint('염주를 못 남겼다: $e');
-        });
+  /// [instrument]의 염주 [beads]알을 넘긴다. 그날 처음 한 바퀴를 다 돌면
+  /// 공덕이 붙는다.
+  void _addBeads(PlayInstrument instrument, int beads) {
+    final repo = ref.read(playRepositoryProvider);
+    _queue(() async {
+      final count = await repo.addBeads(instrument, beads);
+      if (!mounted) return;
+      setState(() => _beads[instrument] = count);
+      if (count.meritGained > 0) _celebrate(instrument, count.meritGained);
+    });
   }
 
-  void _celebrate(int merit) {
+  void _queue(Future<void> Function() step) {
+    _beadQueue = _beadQueue.then((_) => step()).catchError((Object e) {
+      // 못 남겨도 놀이는 된다.
+      debugPrint('염주를 못 남겼다: $e');
+    });
+  }
+
+  void _celebrate(PlayInstrument instrument, int merit) {
     ref.invalidate(homeStateProvider); // 위 공덕 알약을 새로 읽는다
-    setState(() => _justGained = merit);
+    setState(() => _justGained = (instrument, merit));
     _after(const Duration(milliseconds: 2400), () {
       setState(() => _justGained = null);
     });
@@ -173,8 +172,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   }
 
   void _knock() {
-    setState(() => _knocks++);
-    _addBeads(1);
+    _addBeads(PlayInstrument.moktak, 1);
     _swing(
       _moktakSwing,
       soundOnset: Duration.zero, // moktak.wav 는 2ms 부터 소리가 난다
@@ -187,8 +185,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   }
 
   void _strike() {
-    setState(() => _strikes++);
-    _addBeads(1);
+    _addBeads(PlayInstrument.singingBowl, 1);
     _swing(
       _bowlSwing,
       // 합성 타격음은 파일 시작점에서 바로 소리가 난다.
@@ -201,11 +198,10 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     );
   }
 
-  /// 키캡 소리는 [KeycapButton]이 손가락이 닿고 떨어지는 순간에 부른다.
+  /// [KeycapBoard]가 손가락이 닿는 순간 부른다.
   void _keyPress() {
     _keycapSound.press();
-    setState(() => _keyPresses++);
-    _addBeads(1);
+    _addBeads(PlayInstrument.keycap, 1);
   }
 
   /// 손가락 위치를 입구 타원을 원으로 편 좌표로. 그래야 테두리를 따라 돈 만큼
@@ -235,6 +231,9 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
       ..start();
     final offset = _onRim(d.globalPosition);
     if (offset != null) _rub.move(offset, dt);
+    // 테두리를 한 바퀴 돌 때마다 한 알.
+    final turns = _rub.takeTurns();
+    if (turns > 0) _addBeads(PlayInstrument.singingBowl, turns);
   }
 
   void _rubEnd() {
@@ -247,18 +246,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
     _lastTick = elapsed;
     _rub.tick(dt);
     _bowlSound.rub(_rub.level);
-    final sounding = _rub.level > 0.25;
-    setState(() {
-      if (sounding) _rubSeconds += dt;
-    });
-    if (sounding) {
-      _rubBeadClock += dt;
-      final beads = _rubBeadClock ~/ PrayerBeads.rubSecondsPerBead;
-      if (beads > 0) {
-        _rubBeadClock -= beads * PrayerBeads.rubSecondsPerBead;
-        _addBeads(beads);
-      }
-    }
+    setState(() {}); // 테두리 빛
     if (_rub.isSilent && !_moveClock.isRunning) _rubTicker.stop();
   }
 
@@ -269,14 +257,6 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
       _bowlSound.rub(0);
     }
     ref.read(playInstrumentProvider.notifier).select(instrument);
-  }
-
-  String get _bowlCaption {
-    final parts = [
-      if (_strikes > 0) '$_strikes번 쳤다',
-      if (_rubSeconds >= 1) '${_rubSeconds.floor()}초 울렸다',
-    ];
-    return parts.isEmpty ? '치거나, 테두리를 천천히 돌려라.' : '${parts.join(' · ')}.';
   }
 
   @override
@@ -403,30 +383,19 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
                   figure,
                   const SizedBox(height: 20),
                   Text(
-                    keycap
-                        ? '키캡을 눌러라.'
-                        : bowl
-                        ? '싱잉볼을 울려라.'
-                        : '목탁을 두드려라.',
-                    style: text.displayMedium?.copyWith(fontSize: 30),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    keycap
-                        ? _keyPresses == 0
-                              ? '누르는 소리 말고는 아무것도 없다.'
-                              : '$_keyPresses번 눌렀다.'
-                        : bowl
-                        ? _bowlCaption
-                        : _knocks == 0
-                        ? '세는 것 말고는 아무 일도 안 일어난다.'
-                        : '$_knocks번 두드렸다.',
+                    instrument.howTo,
+                    textAlign: TextAlign.center,
                     style: text.bodyMedium?.copyWith(
-                      color: fg.withValues(alpha: 0.55),
+                      color: fg.withValues(alpha: 0.6),
                     ),
                   ),
-                  const SizedBox(height: 14),
-                  BeadLine(beads: _beads, justGained: _justGained),
+                  const SizedBox(height: 8),
+                  BeadLine(
+                    beads: _beads[instrument]!,
+                    justGained: _justGained?.$1 == instrument
+                        ? _justGained!.$2
+                        : null,
+                  ),
                   const Spacer(),
                 ],
               ),
@@ -465,7 +434,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen>
   }
 }
 
-/// 염주 한 줄 — 「염주 37 / 108 · 오늘 2바퀴」.
+/// 그 놀이의 염주 한 줄 — 「염주 37 / 108 · 다 돌면 공덕 1」.
 class BeadLine extends StatelessWidget {
   const BeadLine({super.key, required this.beads, this.justGained});
 
@@ -474,11 +443,10 @@ class BeadLine extends StatelessWidget {
 
   String get _label {
     final gained = justGained;
-    if (gained != null) return '한 바퀴 돌았다. 공덕 +$gained';
-    final progress = '염주 ${beads.inRound} / ${PrayerBeads.perRound}';
-    if (beads.meritDoneToday) return '$progress · 오늘 공덕은 다 받았다';
-    if (beads.roundsToday > 0) return '$progress · 오늘 ${beads.roundsToday}바퀴';
-    return '$progress · 한 바퀴에 공덕 ${PrayerBeads.meritPerRound}';
+    if (gained != null) return '염주 한 바퀴를 돌았다. 공덕 +$gained';
+    if (beads.meritDoneToday) return '오늘 ${beads.today}알 · 오늘 공덕은 받았다';
+    return '염주 ${beads.today} / ${PrayerBeads.perRound} · '
+        '다 돌면 공덕 ${PrayerBeads.meritPerRound}';
   }
 
   @override

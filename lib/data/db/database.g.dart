@@ -1508,6 +1508,42 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _playMoktakTodayMeta = const VerificationMeta(
+    'playMoktakToday',
+  );
+  @override
+  late final GeneratedColumn<int> playMoktakToday = GeneratedColumn<int>(
+    'play_moktak_today',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _playBowlTodayMeta = const VerificationMeta(
+    'playBowlToday',
+  );
+  @override
+  late final GeneratedColumn<int> playBowlToday = GeneratedColumn<int>(
+    'play_bowl_today',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _playKeycapTodayMeta = const VerificationMeta(
+    'playKeycapToday',
+  );
+  @override
+  late final GeneratedColumn<int> playKeycapToday = GeneratedColumn<int>(
+    'play_keycap_today',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _beadRoundsMeta = const VerificationMeta(
     'beadRounds',
   );
@@ -1548,6 +1584,9 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     ownedItemsJson,
     playDate,
     playBeadsToday,
+    playMoktakToday,
+    playBowlToday,
+    playKeycapToday,
     beadRounds,
   ];
   @override
@@ -1763,6 +1802,33 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('play_moktak_today')) {
+      context.handle(
+        _playMoktakTodayMeta,
+        playMoktakToday.isAcceptableOrUnknown(
+          data['play_moktak_today']!,
+          _playMoktakTodayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('play_bowl_today')) {
+      context.handle(
+        _playBowlTodayMeta,
+        playBowlToday.isAcceptableOrUnknown(
+          data['play_bowl_today']!,
+          _playBowlTodayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('play_keycap_today')) {
+      context.handle(
+        _playKeycapTodayMeta,
+        playKeycapToday.isAcceptableOrUnknown(
+          data['play_keycap_today']!,
+          _playKeycapTodayMeta,
+        ),
+      );
+    }
     if (data.containsKey('bead_rounds')) {
       context.handle(
         _beadRoundsMeta,
@@ -1882,6 +1948,18 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.int,
         data['${effectivePrefix}play_beads_today'],
       )!,
+      playMoktakToday: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}play_moktak_today'],
+      )!,
+      playBowlToday: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}play_bowl_today'],
+      )!,
+      playKeycapToday: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}play_keycap_today'],
+      )!,
       beadRounds: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}bead_rounds'],
@@ -1929,8 +2007,8 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? avatarPath;
   final DateTime? ordainedAt;
 
-  /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴를 돌면 쌓인다.
-  /// (엎어두기도 쌓지만 지금은 진입 버튼이 없다.)
+  /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴(놀이마다 하루 한 번)를 돌면 쌓인다.
+  /// 폰을 엎어 둔 1분에도 10씩 쌓인다.
   final int merit;
 
   /// 태운 번뇌 누적. 108개가 「108번뇌 완파」 조건이다.
@@ -1948,11 +2026,17 @@ class Profile extends DataClass implements Insertable<Profile> {
   /// 공덕으로 연 옷장 아이템 ID 목록 JSON.
   final String ownedItemsJson;
 
-  /// [playBeadsToday]가 센 날 (yyyy-MM-dd). 날이 바뀌면 0부터 다시 센다.
+  /// 아래 놀이별 알을 센 날 (yyyy-MM-dd). 날이 바뀌면 0부터 다시 센다.
   final String? playDate;
 
-  /// 그날 넘긴 염주 알. 108알이 한 바퀴다.
+  /// 놀이를 가리지 않고 그날 넘긴 알. 2026-10-08(스키마 5)부터 놀이마다
+  /// 따로 세서 쓰지 않는다. 열을 지우면 옛 기기 마이그레이션이 번거로워 둔다.
   final int playBeadsToday;
+
+  /// 그날 놀이별로 넘긴 알. 108알이 한 바퀴다.
+  final int playMoktakToday;
+  final int playBowlToday;
+  final int playKeycapToday;
 
   /// 지금까지 돈 바퀴. 공덕 상한과 상관없이 다 센다.
   final int beadRounds;
@@ -1983,6 +2067,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     required this.ownedItemsJson,
     this.playDate,
     required this.playBeadsToday,
+    required this.playMoktakToday,
+    required this.playBowlToday,
+    required this.playKeycapToday,
     required this.beadRounds,
   });
   @override
@@ -2032,6 +2119,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       map['play_date'] = Variable<String>(playDate);
     }
     map['play_beads_today'] = Variable<int>(playBeadsToday);
+    map['play_moktak_today'] = Variable<int>(playMoktakToday);
+    map['play_bowl_today'] = Variable<int>(playBowlToday);
+    map['play_keycap_today'] = Variable<int>(playKeycapToday);
     map['bead_rounds'] = Variable<int>(beadRounds);
     return map;
   }
@@ -2082,6 +2172,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           ? const Value.absent()
           : Value(playDate),
       playBeadsToday: Value(playBeadsToday),
+      playMoktakToday: Value(playMoktakToday),
+      playBowlToday: Value(playBowlToday),
+      playKeycapToday: Value(playKeycapToday),
       beadRounds: Value(beadRounds),
     );
   }
@@ -2124,6 +2217,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       ownedItemsJson: serializer.fromJson<String>(json['ownedItemsJson']),
       playDate: serializer.fromJson<String?>(json['playDate']),
       playBeadsToday: serializer.fromJson<int>(json['playBeadsToday']),
+      playMoktakToday: serializer.fromJson<int>(json['playMoktakToday']),
+      playBowlToday: serializer.fromJson<int>(json['playBowlToday']),
+      playKeycapToday: serializer.fromJson<int>(json['playKeycapToday']),
       beadRounds: serializer.fromJson<int>(json['beadRounds']),
     );
   }
@@ -2157,6 +2253,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       'ownedItemsJson': serializer.toJson<String>(ownedItemsJson),
       'playDate': serializer.toJson<String?>(playDate),
       'playBeadsToday': serializer.toJson<int>(playBeadsToday),
+      'playMoktakToday': serializer.toJson<int>(playMoktakToday),
+      'playBowlToday': serializer.toJson<int>(playBowlToday),
+      'playKeycapToday': serializer.toJson<int>(playKeycapToday),
       'beadRounds': serializer.toJson<int>(beadRounds),
     };
   }
@@ -2188,6 +2287,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     String? ownedItemsJson,
     Value<String?> playDate = const Value.absent(),
     int? playBeadsToday,
+    int? playMoktakToday,
+    int? playBowlToday,
+    int? playKeycapToday,
     int? beadRounds,
   }) => Profile(
     id: id ?? this.id,
@@ -2220,6 +2322,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     ownedItemsJson: ownedItemsJson ?? this.ownedItemsJson,
     playDate: playDate.present ? playDate.value : this.playDate,
     playBeadsToday: playBeadsToday ?? this.playBeadsToday,
+    playMoktakToday: playMoktakToday ?? this.playMoktakToday,
+    playBowlToday: playBowlToday ?? this.playBowlToday,
+    playKeycapToday: playKeycapToday ?? this.playKeycapToday,
     beadRounds: beadRounds ?? this.beadRounds,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
@@ -2290,6 +2395,15 @@ class Profile extends DataClass implements Insertable<Profile> {
       playBeadsToday: data.playBeadsToday.present
           ? data.playBeadsToday.value
           : this.playBeadsToday,
+      playMoktakToday: data.playMoktakToday.present
+          ? data.playMoktakToday.value
+          : this.playMoktakToday,
+      playBowlToday: data.playBowlToday.present
+          ? data.playBowlToday.value
+          : this.playBowlToday,
+      playKeycapToday: data.playKeycapToday.present
+          ? data.playKeycapToday.value
+          : this.playKeycapToday,
       beadRounds: data.beadRounds.present
           ? data.beadRounds.value
           : this.beadRounds,
@@ -2325,6 +2439,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('ownedItemsJson: $ownedItemsJson, ')
           ..write('playDate: $playDate, ')
           ..write('playBeadsToday: $playBeadsToday, ')
+          ..write('playMoktakToday: $playMoktakToday, ')
+          ..write('playBowlToday: $playBowlToday, ')
+          ..write('playKeycapToday: $playKeycapToday, ')
           ..write('beadRounds: $beadRounds')
           ..write(')'))
         .toString();
@@ -2358,6 +2475,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     ownedItemsJson,
     playDate,
     playBeadsToday,
+    playMoktakToday,
+    playBowlToday,
+    playKeycapToday,
     beadRounds,
   ]);
   @override
@@ -2390,6 +2510,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.ownedItemsJson == this.ownedItemsJson &&
           other.playDate == this.playDate &&
           other.playBeadsToday == this.playBeadsToday &&
+          other.playMoktakToday == this.playMoktakToday &&
+          other.playBowlToday == this.playBowlToday &&
+          other.playKeycapToday == this.playKeycapToday &&
           other.beadRounds == this.beadRounds);
 }
 
@@ -2420,6 +2543,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String> ownedItemsJson;
   final Value<String?> playDate;
   final Value<int> playBeadsToday;
+  final Value<int> playMoktakToday;
+  final Value<int> playBowlToday;
+  final Value<int> playKeycapToday;
   final Value<int> beadRounds;
   const ProfilesCompanion({
     this.id = const Value.absent(),
@@ -2448,6 +2574,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.ownedItemsJson = const Value.absent(),
     this.playDate = const Value.absent(),
     this.playBeadsToday = const Value.absent(),
+    this.playMoktakToday = const Value.absent(),
+    this.playBowlToday = const Value.absent(),
+    this.playKeycapToday = const Value.absent(),
     this.beadRounds = const Value.absent(),
   });
   ProfilesCompanion.insert({
@@ -2477,6 +2606,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.ownedItemsJson = const Value.absent(),
     this.playDate = const Value.absent(),
     this.playBeadsToday = const Value.absent(),
+    this.playMoktakToday = const Value.absent(),
+    this.playBowlToday = const Value.absent(),
+    this.playKeycapToday = const Value.absent(),
     this.beadRounds = const Value.absent(),
   });
   static Insertable<Profile> custom({
@@ -2506,6 +2638,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? ownedItemsJson,
     Expression<String>? playDate,
     Expression<int>? playBeadsToday,
+    Expression<int>? playMoktakToday,
+    Expression<int>? playBowlToday,
+    Expression<int>? playKeycapToday,
     Expression<int>? beadRounds,
   }) {
     return RawValuesInsertable({
@@ -2537,6 +2672,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (ownedItemsJson != null) 'owned_items_json': ownedItemsJson,
       if (playDate != null) 'play_date': playDate,
       if (playBeadsToday != null) 'play_beads_today': playBeadsToday,
+      if (playMoktakToday != null) 'play_moktak_today': playMoktakToday,
+      if (playBowlToday != null) 'play_bowl_today': playBowlToday,
+      if (playKeycapToday != null) 'play_keycap_today': playKeycapToday,
       if (beadRounds != null) 'bead_rounds': beadRounds,
     });
   }
@@ -2568,6 +2706,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String>? ownedItemsJson,
     Value<String?>? playDate,
     Value<int>? playBeadsToday,
+    Value<int>? playMoktakToday,
+    Value<int>? playBowlToday,
+    Value<int>? playKeycapToday,
     Value<int>? beadRounds,
   }) {
     return ProfilesCompanion(
@@ -2598,6 +2739,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       ownedItemsJson: ownedItemsJson ?? this.ownedItemsJson,
       playDate: playDate ?? this.playDate,
       playBeadsToday: playBeadsToday ?? this.playBeadsToday,
+      playMoktakToday: playMoktakToday ?? this.playMoktakToday,
+      playBowlToday: playBowlToday ?? this.playBowlToday,
+      playKeycapToday: playKeycapToday ?? this.playKeycapToday,
       beadRounds: beadRounds ?? this.beadRounds,
     );
   }
@@ -2685,6 +2829,15 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (playBeadsToday.present) {
       map['play_beads_today'] = Variable<int>(playBeadsToday.value);
     }
+    if (playMoktakToday.present) {
+      map['play_moktak_today'] = Variable<int>(playMoktakToday.value);
+    }
+    if (playBowlToday.present) {
+      map['play_bowl_today'] = Variable<int>(playBowlToday.value);
+    }
+    if (playKeycapToday.present) {
+      map['play_keycap_today'] = Variable<int>(playKeycapToday.value);
+    }
     if (beadRounds.present) {
       map['bead_rounds'] = Variable<int>(beadRounds.value);
     }
@@ -2720,6 +2873,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('ownedItemsJson: $ownedItemsJson, ')
           ..write('playDate: $playDate, ')
           ..write('playBeadsToday: $playBeadsToday, ')
+          ..write('playMoktakToday: $playMoktakToday, ')
+          ..write('playBowlToday: $playBowlToday, ')
+          ..write('playKeycapToday: $playKeycapToday, ')
           ..write('beadRounds: $beadRounds')
           ..write(')'))
         .toString();
@@ -5646,6 +5802,9 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   Value<String> ownedItemsJson,
   Value<String?> playDate,
   Value<int> playBeadsToday,
+  Value<int> playMoktakToday,
+  Value<int> playBowlToday,
+  Value<int> playKeycapToday,
   Value<int> beadRounds,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
@@ -5675,6 +5834,9 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<String> ownedItemsJson,
   Value<String?> playDate,
   Value<int> playBeadsToday,
+  Value<int> playMoktakToday,
+  Value<int> playBowlToday,
+  Value<int> playKeycapToday,
   Value<int> beadRounds,
 });
 
@@ -5814,6 +5976,21 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<int> get playBeadsToday => $composableBuilder(
     column: $table.playBeadsToday,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get playMoktakToday => $composableBuilder(
+    column: $table.playMoktakToday,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get playBowlToday => $composableBuilder(
+    column: $table.playBowlToday,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get playKeycapToday => $composableBuilder(
+    column: $table.playKeycapToday,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5962,6 +6139,21 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get playMoktakToday => $composableBuilder(
+    column: $table.playMoktakToday,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get playBowlToday => $composableBuilder(
+    column: $table.playBowlToday,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get playKeycapToday => $composableBuilder(
+    column: $table.playKeycapToday,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get beadRounds => $composableBuilder(
     column: $table.beadRounds,
     builder: (column) => ColumnOrderings(column),
@@ -6095,6 +6287,21 @@ class $$ProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get playMoktakToday => $composableBuilder(
+    column: $table.playMoktakToday,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get playBowlToday => $composableBuilder(
+    column: $table.playBowlToday,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get playKeycapToday => $composableBuilder(
+    column: $table.playKeycapToday,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get beadRounds => $composableBuilder(
     column: $table.beadRounds,
     builder: (column) => column,
@@ -6155,6 +6362,9 @@ class $$ProfilesTableTableManager
                 Value<String> ownedItemsJson = const Value.absent(),
                 Value<String?> playDate = const Value.absent(),
                 Value<int> playBeadsToday = const Value.absent(),
+                Value<int> playMoktakToday = const Value.absent(),
+                Value<int> playBowlToday = const Value.absent(),
+                Value<int> playKeycapToday = const Value.absent(),
                 Value<int> beadRounds = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
@@ -6183,6 +6393,9 @@ class $$ProfilesTableTableManager
                 ownedItemsJson: ownedItemsJson,
                 playDate: playDate,
                 playBeadsToday: playBeadsToday,
+                playMoktakToday: playMoktakToday,
+                playBowlToday: playBowlToday,
+                playKeycapToday: playKeycapToday,
                 beadRounds: beadRounds,
               ),
           createCompanionCallback:
@@ -6213,6 +6426,9 @@ class $$ProfilesTableTableManager
                 Value<String> ownedItemsJson = const Value.absent(),
                 Value<String?> playDate = const Value.absent(),
                 Value<int> playBeadsToday = const Value.absent(),
+                Value<int> playMoktakToday = const Value.absent(),
+                Value<int> playBowlToday = const Value.absent(),
+                Value<int> playKeycapToday = const Value.absent(),
                 Value<int> beadRounds = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
@@ -6241,6 +6457,9 @@ class $$ProfilesTableTableManager
                 ownedItemsJson: ownedItemsJson,
                 playDate: playDate,
                 playBeadsToday: playBeadsToday,
+                playMoktakToday: playMoktakToday,
+                playBowlToday: playBowlToday,
+                playKeycapToday: playKeycapToday,
                 beadRounds: beadRounds,
               ),
           withReferenceMapper: (p0) => p0

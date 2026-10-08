@@ -86,7 +86,7 @@ class Profiles extends Table {
   TextColumn get avatarPath => text().nullable()();
   DateTimeColumn get ordainedAt => dateTime().nullable()();
 
-  /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴를 돌면 쌓인다.
+  /// 공덕. 번뇌를 태우거나 놀이에서 염주 한 바퀴(놀이마다 하루 한 번)를 돌면 쌓인다.
   /// 폰을 엎어 둔 1분에도 10씩 쌓인다.
   IntColumn get merit => integer().withDefault(const Constant(0))();
 
@@ -105,13 +105,19 @@ class Profiles extends Table {
   /// 공덕으로 연 옷장 아이템 ID 목록 JSON.
   TextColumn get ownedItemsJson => text().withDefault(const Constant('[]'))();
 
-  // --- 놀이 염주 (목탁·싱잉볼) ---
+  // --- 놀이 염주 (목탁·싱잉볼·키캡) ---
 
-  /// [playBeadsToday]가 센 날 (yyyy-MM-dd). 날이 바뀌면 0부터 다시 센다.
+  /// 아래 놀이별 알을 센 날 (yyyy-MM-dd). 날이 바뀌면 0부터 다시 센다.
   TextColumn get playDate => text().nullable()();
 
-  /// 그날 넘긴 염주 알. 108알이 한 바퀴다.
+  /// 놀이를 가리지 않고 그날 넘긴 알. 2026-10-08(스키마 5)부터 놀이마다
+  /// 따로 세서 쓰지 않는다. 열을 지우면 옛 기기 마이그레이션이 번거로워 둔다.
   IntColumn get playBeadsToday => integer().withDefault(const Constant(0))();
+
+  /// 그날 놀이별로 넘긴 알. 108알이 한 바퀴다.
+  IntColumn get playMoktakToday => integer().withDefault(const Constant(0))();
+  IntColumn get playBowlToday => integer().withDefault(const Constant(0))();
+  IntColumn get playKeycapToday => integer().withDefault(const Constant(0))();
 
   /// 지금까지 돈 바퀴. 공덕 상한과 상관없이 다 센다.
   IntColumn get beadRounds => integer().withDefault(const Constant(0))();
@@ -221,8 +227,9 @@ class AppDatabase extends _$AppDatabase {
 
   /// 3 — 아바타 옷장(착용 상태·보유 아이템) 추가.
   /// 4 — 놀이 염주(오늘 넘긴 알·누적 바퀴) 추가.
+  /// 5 — 놀이 염주를 놀이(목탁·싱잉볼·키캡)마다 따로 센다.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -247,6 +254,11 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(profiles, profiles.playDate);
             await m.addColumn(profiles, profiles.playBeadsToday);
             await m.addColumn(profiles, profiles.beadRounds);
+          }
+          if (from < 5) {
+            await m.addColumn(profiles, profiles.playMoktakToday);
+            await m.addColumn(profiles, profiles.playBowlToday);
+            await m.addColumn(profiles, profiles.playKeycapToday);
           }
         },
         beforeOpen: (details) async {

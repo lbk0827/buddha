@@ -1,21 +1,18 @@
 import 'dart:math';
 
-/// 놀이의 공덕 — 염주 한 바퀴.
+/// 놀이의 공덕 — 놀이마다 염주 한 바퀴.
 ///
-/// 목탁을 두드리거나 싱잉볼을 칠 때마다 염주 한 알을 넘긴다. 싱잉볼을 문질러
-/// 울리는 동안에는 [rubSecondsPerBead]마다 한 알. 108알이 한 바퀴고, 한 바퀴를
-/// 돌면 공덕 [meritPerRound]이 붙는다.
+/// 목탁을 두드리거나, 싱잉볼을 치거나 테두리를 한 바퀴 문지르거나, 키캡을
+/// 누를 때마다 그 놀이의 염주 한 알을 넘긴다. 놀이마다 따로 센다.
+/// 108알이 한 바퀴고, 그날 처음 한 바퀴를 돌면 공덕 [meritPerRound]이 붙는다.
 ///
-/// 공덕은 하루 [roundsPerDay]바퀴까지만 붙는다. 그 뒤로도 두드리는 건 그대로
-/// 되고 바퀴도 센다. 막지 않고 공덕만 멈춘다 — 반복이 가장 좋은 벌이가 되지
-/// 않게, 처벌 없이 (기획서 v3 「성장·기록 규칙」).
+/// 공덕은 놀이마다 하루 [roundsPerDay]바퀴까지만 붙는다. 그 뒤로도 놀이는
+/// 그대로 되고 알도 센다. 막지 않고 공덕만 멈춘다 — 반복이 가장 좋은 벌이가
+/// 되지 않게, 처벌 없이 (기획서 v3 「성장·기록 규칙」).
 class PrayerBeads {
   static const int perRound = 108;
-  static const int meritPerRound = 20;
-  static const int roundsPerDay = 5;
-
-  /// 싱잉볼이 이만큼 울리면 한 알. 1분 남짓 울리면 한 바퀴다.
-  static const double rubSecondsPerBead = 0.5;
+  static const int meritPerRound = 1;
+  static const int roundsPerDay = 1;
 
   /// 그날 [beads]알 넘겼을 때 공덕이 붙은 바퀴 수.
   static int meritRounds(int beads) => min(beads ~/ perRound, roundsPerDay);
@@ -29,7 +26,7 @@ class PrayerBeads {
       after ~/ perRound - before ~/ perRound;
 }
 
-/// 염주를 넘긴 뒤의 오늘 상태.
+/// 한 놀이의 오늘 염주.
 class BeadCount {
   const BeadCount({required this.today, this.meritGained = 0});
 

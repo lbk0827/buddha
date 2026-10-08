@@ -27,6 +27,9 @@ class RubMeter {
   double? _lastAngle;
   int _direction = 1;
 
+  /// 아직 바퀴로 세지 않은, 손가락이 테두리를 따라 돈 각도(라디안).
+  double _turned = 0;
+
   /// 지금 울림. 0이면 소리 없음.
   double get level => _level;
 
@@ -53,7 +56,18 @@ class RubMeter {
     if (delta > math.pi) delta -= 2 * math.pi;
     if (delta < -math.pi) delta += 2 * math.pi;
     if (delta != 0) _direction = delta > 0 ? 1 : -1;
+    _turned += delta.abs();
     _target = (delta.abs() / dt / fullSpeed).clamp(0.0, 1.0);
+  }
+
+  /// 지난번 이후 테두리를 다 돈 바퀴 수. 센 만큼 덜어 낸다.
+  ///
+  /// 문지르기는 시간이 아니라 돈 바퀴로 센다. 손을 멈추고 울림만 남아 있는
+  /// 동안에는 늘지 않는다. 방향을 바꿔도 돈 만큼 다 센다.
+  int takeTurns() {
+    final turns = _turned ~/ (2 * math.pi);
+    _turned -= turns * 2 * math.pi;
+    return turns;
   }
 
   /// 손가락을 뗐다.

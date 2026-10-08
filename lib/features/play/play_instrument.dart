@@ -4,12 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// 놀이 탭에서 두드릴 악기.
 enum PlayInstrument {
-  moktak('목탁'),
-  singingBowl('싱잉볼'),
-  keycap('키캡');
+  moktak('목탁', '화면을 톡 치면 목탁을 두드린다.'),
+  singingBowl('싱잉볼', '톡 치거나, 테두리를 따라 빙글빙글 문지른다.'),
+  keycap('키캡', '키캡을 꾹 눌렀다 떼면 도각 소리가 난다.');
 
-  const PlayInstrument(this.label);
+  const PlayInstrument(this.label, this.howTo);
   final String label;
+
+  /// 놀이 방법 한 줄.
+  final String howTo;
 }
 
 /// 마지막에 고른 악기. 다음에 놀이 탭을 열면 그 악기로 시작한다.

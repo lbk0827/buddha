@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../avatar/avatar_equip.dart';
+import '../avatar/buddha_figure.dart';
+import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
 import '../shell/tab_top_bar.dart';
 import 'wish_store.dart';
@@ -11,62 +15,146 @@ import 'wish_widgets.dart';
 
 /// 「소원」 탭 — 연등에 소원을 단다.
 ///
-/// 다른 탭과 같은 배치: 상단바 · 가운데 큰 대상(연등) · 한 줄 · 하단 전체 폭 버튼.
+/// 연등 그림이 상단바 밑까지 깔리고 상단바는 그 위에 떠 있다. 연등 아래에
+/// 내 부처님이 작게 서 있고, 맨 아래 카드 하나에 소원 수와 「소원 빌기」가 있다.
 /// 연등을 누르면 소원을 읽고, 버튼을 누르면 소원을 적는다.
 class WishTabScreen extends ConsumerWidget {
   const WishTabScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final text = Theme.of(context).textTheme;
-    final fg = Theme.of(context).colorScheme.onSurface;
-    final count = ref.watch(wishCountProvider);
+    final equip = ref.watch(homeStateProvider).value?.equip ?? kDefaultEquip;
+    final top = MediaQuery.paddingOf(context).top;
 
-    return SafeArea(
-      bottom: false,
-      child: Column(
+    return Column(
+      children: [
+        Expanded(
+          child: LayoutBuilder(
+            builder: (_, constraints) {
+              final h = constraints.maxHeight;
+              // 홈(240)보다 작게 — 연등 아래 멀리 서 있는 느낌.
+              final figure = (h * .34).clamp(110.0, 170.0);
+              return Stack(
+                children: [
+                  // 첫 줄 연등이 상단바 알약 사이로 살짝 보이도록 조금 내린다.
+                  Positioned.fill(
+                    child: WishLanterns(height: h, topInset: top + 20),
+                  ),
+                  // 연등을 눌러도 부처님 자리에서 읽기가 열리게 터치는 통과시킨다.
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 4,
+                    child: IgnorePointer(
+                      child: Center(
+                        child: BuddhaFigure(
+                          equip: equip,
+                          size: figure,
+                          breathing: true,
+                          motion: AvatarMotion.loop,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(bottom: false, child: TabTopBar()),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(
+            Tokens.gutter,
+            8,
+            Tokens.gutter,
+            kHudClearance,
+          ),
+          child: _WishCard(),
+        ),
+      ],
+    );
+  }
+}
+
+const _hint = '연등에 소원을 달아봐요';
+
+/// 아래 카드 — 왼쪽에 소원 수와 안내, 오른쪽에 작은 「소원 빌기」.
+class _WishCard extends ConsumerWidget {
+  const _WishCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(wishCountProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fg = Theme.of(context).colorScheme.onSurface;
+    final n = count.value ?? 0;
+
+    final headline = count.when(
+      data: (n) => n == 0 ? _hint : '내가 단 소원 $n개',
+      loading: () => '소원을 불러오는 중',
+      error: (_, _) => '소원을 불러오지 못했어요',
+    );
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF221F1A) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: fg.withValues(alpha: 0.07)),
+      ),
+      child: Row(
         children: [
-          const TabTopBar(),
+          SvgPicture.asset(
+            'assets/wishes/lantern.svg',
+            height: 34,
+            excludeFromSemantics: true,
+          ),
+          const SizedBox(width: 10),
           Expanded(
-            flex: 4,
-            child: LayoutBuilder(
-              builder: (_, constraints) =>
-                  WishLanterns(height: constraints.maxHeight),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '연등에 소원을 달아라.',
-            style: text.displayMedium?.copyWith(fontSize: 30),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            count.when(
-              data: (n) => n == 0 ? '연등을 누르면 소원을 읽는다.' : '내가 단 소원 $n개',
-              loading: () => '소원을 불러오는 중',
-              error: (_, _) => '소원을 불러오지 못했어요',
-            ),
-            style: text.bodyMedium?.copyWith(color: fg.withValues(alpha: 0.55)),
-          ),
-          const Spacer(flex: 1),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.gutter,
-              0,
-              Tokens.gutter,
-              kHudClearance,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: FilledButton.icon(
-                onPressed: () => context.push(Routes.wish),
-                icon: const Icon(Icons.volunteer_activism_outlined),
-                label: const Text(
-                  '소원 빌기',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 소원이 있으면 안내는 작은 윗줄로 물러나고 소원 수가 큰 줄이 된다.
+                if (count.hasValue && n > 0) ...[
+                  Text(
+                    _hint,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: fg.withValues(alpha: 0.45),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
+                Text(
+                  headline,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          FilledButton.icon(
+            onPressed: () => context.push(Routes.wish),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(0, 42),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              shape: const StadiumBorder(),
+            ),
+            icon: const Icon(Icons.volunteer_activism_outlined, size: 18),
+            label: const Text(
+              '소원 빌기',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
             ),
           ),
         ],

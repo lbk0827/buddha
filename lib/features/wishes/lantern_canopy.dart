@@ -4,9 +4,18 @@ import 'package:flutter/material.dart';
 
 /// A single ticker and canvas for the whole canopy, including hanging papers.
 class LanternCanopy extends StatefulWidget {
-  const LanternCanopy({super.key, required this.onTap, this.height = 340});
+  const LanternCanopy({
+    super.key,
+    required this.onTap,
+    this.height = 340,
+    this.topInset = 0,
+  });
   final VoidCallback onTap;
   final double height;
+
+  /// 연등을 이만큼 내려 그린다. 빛은 위 끝까지 깔린다 — 상단바 밑으로
+  /// 캔버스를 올려 깔 때 첫 줄이 상태바에 묻히지 않게.
+  final double topInset;
 
   @override
   State<LanternCanopy> createState() => _LanternCanopyState();
@@ -51,6 +60,7 @@ class _LanternCanopyState extends State<LanternCanopy>
             painter: _CanopyPainter(
               wind,
               dark: Theme.of(context).brightness == Brightness.dark,
+              topInset: widget.topInset,
             ),
           ),
         ),
@@ -60,9 +70,11 @@ class _LanternCanopyState extends State<LanternCanopy>
 }
 
 class _CanopyPainter extends CustomPainter {
-  _CanopyPainter(this.wind, {required this.dark}) : super(repaint: wind);
+  _CanopyPainter(this.wind, {required this.dark, this.topInset = 0})
+    : super(repaint: wind);
   final Animation<double> wind;
   final bool dark;
+  final double topInset;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -81,22 +93,30 @@ class _CanopyPainter extends CustomPainter {
         ).createShader(glow),
     );
 
+    canvas.translate(0, topInset);
+    final field = size.height - topInset;
     // Draw the farthest rows first. The vanishing point sits low in the scene.
     for (var row = 6; row >= 0; row--) {
       final depth = row / 6;
       final scale = math.pow(.80, row).toDouble();
       final width = size.width / 4.5 * scale;
       final y =
-          size.height * .73 * (1 - scale) / (1 - math.pow(.80, 6)) -
+          field * .73 * (1 - scale) / (1 - math.pow(.80, 6)) -
           width * .42;
       for (var column = 0; column < 7; column++) {
         final x = size.width / 2 + (column - 3) * width * 1.13;
         final phase = row * 1.73 + column * .91;
         final time = wind.value * math.pi * 2;
-        final sway = math.sin(time + phase) * .024;
+        // The whole lantern swings from the top of its cord, with a faster
+        // wobble on top so neighbours never move in lockstep.
+        final sway =
+            math.sin(time + phase) * .045 +
+            math.sin(time * 3 + phase * 1.7) * .010;
+        final cord = width * .32;
         canvas.save();
-        canvas.translate(x, y + (column.isEven ? 0 : width * .10));
+        canvas.translate(x, y + (column.isEven ? 0 : width * .10) - cord);
         canvas.rotate(sway);
+        canvas.translate(0, cord);
         _lantern(canvas, width, (column + row).isEven, depth);
         _paper(canvas, width, time, phase, depth);
         canvas.restore();
@@ -218,10 +238,12 @@ class _CanopyPainter extends CustomPainter {
     double depth,
   ) {
     canvas.save();
-    // Pivot at the attachment, with a slower swing and a smaller flutter.
+    // Pivot at the attachment. The paper trails the lantern's swing a beat
+    // behind, so it reads as being dragged along rather than moving alone.
     canvas.translate(0, w * .935);
     canvas.rotate(
-      math.sin(time + phase) * .085 + math.sin(time * 2 + phase * 1.4) * .025,
+      math.sin(time + phase - 1.1) * .10 +
+          math.sin(time * 2 + phase * 1.4) * .025,
     );
     canvas.drawLine(
       Offset.zero,
@@ -287,5 +309,5 @@ class _CanopyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_CanopyPainter oldDelegate) => oldDelegate.dark != dark;
+  bool shouldRepaint(_CanopyPainter oldDelegate) => oldDelegate.dark != dark || oldDelegate.topInset != topInset;
 }

@@ -12,12 +12,14 @@ import 'wish_store.dart';
 import 'lantern_canopy.dart';
 
 class WishLanterns extends StatelessWidget {
-  const WishLanterns({super.key, this.height = 340});
+  const WishLanterns({super.key, this.height = 340, this.topInset = 0});
   final double height;
+  final double topInset;
 
   @override
   Widget build(BuildContext context) => LanternCanopy(
     height: height,
+    topInset: topInset,
     onTap: () => showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,

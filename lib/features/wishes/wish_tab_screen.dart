@@ -32,19 +32,26 @@ class WishTabScreen extends ConsumerWidget {
           child: LayoutBuilder(
             builder: (_, constraints) {
               final h = constraints.maxHeight;
-              // 홈(240)보다 작게 — 연등 아래 멀리 서 있는 느낌.
-              final figure = (h * .34).clamp(110.0, 170.0);
+              // 연등은 위쪽에만 — 상태바를 뺀 높이의 절반쯤.
+              final canopy = top + (h - top) * .42;
+              // 홈(240)보다 작게 — 연등 아래 서 있는 느낌.
+              final figure = (h * .40).clamp(140.0, 220.0);
               return Stack(
                 children: [
                   // 첫 줄 연등이 상단바 알약 사이로 살짝 보이도록 조금 내린다.
-                  Positioned.fill(
-                    child: WishLanterns(height: h, topInset: top + 20),
-                  ),
-                  // 연등을 눌러도 부처님 자리에서 읽기가 열리게 터치는 통과시킨다.
                   Positioned(
+                    top: 0,
                     left: 0,
                     right: 0,
-                    bottom: 4,
+                    child: WishLanterns(height: canopy, topInset: top + 20),
+                  ),
+                  // 연등을 눌러도 부처님 자리에서 읽기가 열리게 터치는 통과시킨다.
+                  // 연등 아래 남은 자리 한가운데.
+                  Positioned(
+                    top: canopy - 16,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                     child: IgnorePointer(
                       child: Center(
                         child: BuddhaFigure(

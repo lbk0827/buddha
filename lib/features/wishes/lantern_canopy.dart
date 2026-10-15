@@ -96,12 +96,15 @@ class _CanopyPainter extends CustomPainter {
     canvas.translate(0, topInset);
     final field = size.height - topInset;
     // Draw the farthest rows first. The vanishing point sits low in the scene.
-    for (var row = 6; row >= 0; row--) {
-      final depth = row / 6;
+    // Lanterns are sized by whichever is tighter, so a short canopy gets
+    // smaller lanterns instead of rows piled on top of each other.
+    final front = math.min(size.width / 5.2, field / 2.9);
+    for (var row = 2; row >= 0; row--) {
+      final depth = row / 3;
       final scale = math.pow(.80, row).toDouble();
-      final width = size.width / 4.5 * scale;
+      final width = front * scale;
       final y =
-          field * .73 * (1 - scale) / (1 - math.pow(.80, 6)) -
+          field * .52 * (1 - scale) / (1 - math.pow(.80, 2)) -
           width * .42;
       for (var column = 0; column < 7; column++) {
         final x = size.width / 2 + (column - 3) * width * 1.13;

@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
+import 'temple_stage.dart';
 
 /// 마당. 인정일로 계산된 단계까지의 요소만 그린다 (FR-4.2).
 /// [lanternBright]는 당일 반복 세션 효과 (FR-4.3).
@@ -34,17 +36,17 @@ class TempleYard extends StatelessWidget {
           isDark: isDark,
         ),
         child: Semantics(
-          label: _semanticLabel(),
+          label: _semanticLabel(context.l10n),
           child: const SizedBox.expand(),
         ),
       ),
     );
   }
 
-  String _semanticLabel() {
-    if (stage == 0) return '아직 빈 마당';
-    final names = ['등', '나무', '돌담', '종', '지붕', '일주문'];
-    return '마당에 ${names.take(stage).join(', ')}이 있다';
+  String _semanticLabel(AppLocalizations l10n) {
+    if (stage == 0) return l10n.templeYardEmptyLabel;
+    final names = kTempleStages.take(stage).map((s) => s.name);
+    return l10n.templeYardLabel(names.join(', '));
   }
 }
 

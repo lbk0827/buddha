@@ -10,6 +10,7 @@ import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../../core/time_utils.dart';
 import '../../data/db/database.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 import '../ordination/dharma_rank.dart';
 import '../avatar/buddha_figure.dart';
@@ -59,6 +60,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final fg = Theme.of(context).colorScheme.onSurface;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -88,17 +90,17 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                       ],
                     ],
                   ),
-                  Text('1 / 3 · 30초 컷',
+                  Text(l10n.onboardingOrdainStepProgress(1, 3),
                       style: text.bodySmall
                           ?.copyWith(color: fg.withValues(alpha: 0.55))),
                 ],
               ),
 
               const SizedBox(height: 28),
-              Text('일단 출가부터\n하고 시작하자.',
+              Text(l10n.onboardingOrdainTitle,
                   style: text.displayMedium?.copyWith(height: 1.25)),
               const SizedBox(height: 8),
-              Text('안 믿어도 된다. 이름 하나 받고 가는 거다.',
+              Text(l10n.onboardingOrdainSubtitle,
                   style: text.bodyMedium
                       ?.copyWith(color: fg.withValues(alpha: 0.6))),
 
@@ -123,7 +125,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                             size: 40, color: fg.withValues(alpha: 0.4)),
                       ),
                       const SizedBox(height: 8),
-                      Text('중생 시절',
+                      Text(l10n.onboardingOrdainBeforeLabel,
                           style: text.bodySmall
                               ?.copyWith(color: fg.withValues(alpha: 0.55))),
                     ],
@@ -137,7 +139,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                     children: [
                       const BuddhaFigure(size: 128),
                       const SizedBox(height: 8),
-                      Text('법명 · $_name',
+                      Text(l10n.onboardingOrdainNameLabel(dharmaNameLabel(_name)),
                           style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
@@ -152,7 +154,7 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                 child: TextButton.icon(
                   onPressed: _reroll,
                   icon: const Icon(Icons.refresh, size: 16),
-                  label: const Text('다른 이름'),
+                  label: Text(l10n.onboardingOrdainRerollButton),
                 ),
               ),
               const SizedBox(height: 4),
@@ -173,13 +175,14 @@ class _OrdinationScreenState extends ConsumerState<OrdinationScreen> {
                 height: 56,
                 child: FilledButton(
                   onPressed: _busy ? null : _ordain,
-                  child: Text('${withRo(_name)} 출가하기'),
+                  child: Text(l10n.onboardingOrdainSubmitButton(
+                      dharmaNameLabel(_name), roOf(dharmaNameLabel(_name)))),
                 ),
               ),
               const SizedBox(height: 8),
               Center(
                 child: Text(
-                  '기록은 이 폰 안에만 남는다. 서버로 보내지 않는다.',
+                  l10n.onboardingOrdainPrivacyNote,
                   style: text.bodySmall
                       ?.copyWith(color: fg.withValues(alpha: 0.5)),
                 ),
@@ -213,7 +216,7 @@ class _RankLadder extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('법명은 수행하면 진화한다',
+          Text(context.l10n.onboardingRankLadderTitle,
               style: TextStyle(
                   fontSize: 12, color: fg.withValues(alpha: 0.55))),
           const SizedBox(height: 8),

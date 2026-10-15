@@ -4,11 +4,10 @@ import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
 import '../../core/time_utils.dart';
+import '../../l10n/l10n.dart';
 import 'calendar_data.dart';
 
 final _count = NumberFormat.decimalPattern();
-
-const _weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
 /// 달력 — 하루에 얼마나 걸었고 명상했는지 보는 기록.
 ///
@@ -44,7 +43,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final data = ref.watch(calendarMonthProvider(_month));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('달력')),
+      appBar: AppBar(title: Text(context.l10n.calendarTitle)),
       body: SafeArea(
         child: Column(
           children: [
@@ -56,17 +55,17 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   IconButton(
                     onPressed: () => _shift(-1),
                     icon: const Icon(Icons.chevron_left),
-                    tooltip: '지난달',
+                    tooltip: context.l10n.calendarPrevMonthTooltip,
                   ),
                   Text(
-                    '${_month.year}년 ${_month.month}월',
+                    context.l10n.calendarMonthTitle(_month.year, _month.month),
                     style: const TextStyle(
                         fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   IconButton(
                     onPressed: _isThisMonth ? null : () => _shift(1),
                     icon: const Icon(Icons.chevron_right),
-                    tooltip: '다음 달',
+                    tooltip: context.l10n.calendarNextMonthTooltip,
                   ),
                   const Spacer(),
                   if (data.value case final m?) _MonthTotals(month: m),
@@ -77,7 +76,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             Expanded(
               child: data.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('달력을 못 열었다.\n\n$e')),
+                error: (e, _) =>
+                    Center(child: Text(context.l10n.calendarLoadError('$e'))),
                 data: (m) => ListView(
                   padding: const EdgeInsets.fromLTRB(
                       Tokens.gutter, 16, Tokens.gutter, 24),
@@ -107,8 +107,9 @@ class _MonthTotals extends StatelessWidget {
     final muted =
         Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5);
     final meditation = month.totalPracticedSec == 0
-        ? '명상 없음'
-        : '명상 ${formatDuration(month.totalPracticedSec)}';
+        ? context.l10n.calendarMonthNoMeditation
+        : context.l10n
+            .calendarMonthMeditation(formatDuration(month.totalPracticedSec));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -119,7 +120,8 @@ class _MonthTotals extends StatelessWidget {
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
             TextSpan(
-                text: ' 보', style: TextStyle(fontSize: 14, color: muted)),
+                text: context.l10n.calendarMonthStepsUnit,
+                style: TextStyle(fontSize: 14, color: muted)),
           ])),
         Text(meditation, style: TextStyle(fontSize: 13, color: muted)),
       ],
@@ -133,13 +135,23 @@ class _WeekdayHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fg = Theme.of(context).colorScheme.onSurface;
+    final l = context.l10n;
     return Container(
       color: fg.withValues(alpha: 0.04),
       padding: const EdgeInsets.symmetric(
           horizontal: Tokens.gutter, vertical: 10),
       child: Row(
         children: [
-          for (final w in const ['일', '월', '화', '수', '목', '금', '토'])
+          // 일요일 시작.
+          for (final w in [
+            DateTime.sunday,
+            DateTime.monday,
+            DateTime.tuesday,
+            DateTime.wednesday,
+            DateTime.thursday,
+            DateTime.friday,
+            DateTime.saturday,
+          ].map((d) => weekdayShort(l, d)))
             Expanded(
               child: Text(
                 w,
@@ -209,7 +221,7 @@ class _DayCell extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: _label(),
+      label: _label(context.l10n),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: isFuture ? null : () => _showDetail(context),
@@ -261,17 +273,20 @@ class _DayCell extends StatelessWidget {
     );
   }
 
-  String _label() {
-    final parts = ['${day.date.month}월 ${day.date.day}일'];
-    if (day.steps != null) parts.add('${_count.format(day.steps)}보');
+  String _label(AppLocalizations l) {
+    final parts = [l.calendarDayLabelDate(day.date.month, day.date.day)];
+    if (day.steps != null) {
+      parts.add(l.calendarDayLabelSteps(_count.format(day.steps)));
+    }
     if (day.practicedSec > 0) {
-      parts.add('명상 ${formatDuration(day.practicedSec)}');
+      parts.add(l.calendarDayLabelMeditation(formatDuration(day.practicedSec)));
     }
     return parts.join(', ');
   }
 
   void _showDetail(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l = context.l10n;
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
@@ -284,23 +299,23 @@ class _DayCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${day.date.month}월 ${day.date.day}일 '
-                '${_weekdays[day.date.weekday - 1]}요일',
+                l.calendarDayDetailTitle(day.date.month, day.date.day,
+                    weekdayLong(l, day.date.weekday)),
                 style: text.titleLarge,
               ),
               const SizedBox(height: 16),
               _DetailRow(
-                label: '걸음',
+                label: l.calendarDetailStepsLabel,
                 value: !showSteps
-                    ? '연결 안 함'
+                    ? l.calendarDetailStepsNotLinked
                     : day.steps == null
-                        ? '기록 없음'
-                        : '${_count.format(day.steps)}보',
+                        ? l.calendarDetailStepsNone
+                        : l.calendarDetailSteps(_count.format(day.steps)),
               ),
               _DetailRow(
-                label: '명상',
+                label: l.calendarDetailMeditationLabel,
                 value: day.practicedSec == 0
-                    ? '안 했다'
+                    ? l.calendarDetailMeditationNone
                     : formatDuration(day.practicedSec),
               ),
             ],
@@ -353,8 +368,8 @@ class _LinkStepsCardState extends ConsumerState<_LinkStepsCard> {
     if (!mounted) return;
     setState(() => _busy = false);
     if (!ok) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('걸음 수를 못 읽었다. 건강 앱에서 허락하면 보인다.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(context.l10n.calendarLinkStepsFailed)));
     }
   }
 
@@ -370,17 +385,18 @@ class _LinkStepsCardState extends ConsumerState<_LinkStepsCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('걸음 수도 함께 볼까?',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          Text(context.l10n.calendarLinkStepsTitle,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
           const SizedBox(height: 4),
           Text(
-            '건강 앱의 걸음 수를 읽기만 한다. 어디로도 보내지 않는다.',
+            context.l10n.calendarLinkStepsBody,
             style: TextStyle(fontSize: 14, color: fg.withValues(alpha: 0.6)),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
             onPressed: _busy ? null : _link,
-            child: const Text('걸음 수 연결'),
+            child: Text(context.l10n.calendarLinkStepsButton),
           ),
         ],
       ),

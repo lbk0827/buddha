@@ -2,6 +2,8 @@
 /// 실물 굿즈·가격·구매는 이번 범위에서 뺐다 — 해제 여부만 보여준다.
 library;
 
+import '../../l10n/l10n.dart';
+
 /// 해제 조건이 읽는 누적값.
 class PracticeStats {
   final int burnedCount;
@@ -23,10 +25,6 @@ enum TokenGroup { practice, season }
 
 class TokenDef {
   final String id;
-  final String name;
-
-  /// 조건 문구. 잠겨 있을 때 그대로 보여준다.
-  final String requirementLabel;
   final TokenGroup group;
 
   /// 현재 진척과 목표를 뽑는다. 목표가 0이면 조건 없는 증표.
@@ -35,12 +33,32 @@ class TokenDef {
 
   const TokenDef({
     required this.id,
-    required this.name,
-    required this.requirementLabel,
     required this.group,
     required this.progressOf,
     required this.goal,
   });
+
+  /// 증표 이름. [id] 로 문자열 테이블에서 고른다.
+  String get name => switch (id) {
+        'burn108' => L.current.tokensNameBurn108,
+        'bow100' => L.current.tokensNameBow100,
+        'gate30' => L.current.tokensNameGate30,
+        'first' => L.current.tokensNameFirst,
+        'merit1000' => L.current.tokensNameMerit1000,
+        'winter' => L.current.tokensNameWinter,
+        _ => id,
+      };
+
+  /// 조건 문구. 잠겨 있을 때 그대로 보여준다.
+  String get requirementLabel => switch (id) {
+        'burn108' => L.current.tokensRequirementBurn108,
+        'bow100' => L.current.tokensRequirementBow100,
+        'gate30' => L.current.tokensRequirementGate30,
+        'first' => L.current.tokensRequirementFirst,
+        'merit1000' => L.current.tokensRequirementMerit1000,
+        'winter' => L.current.tokensRequirementWinter,
+        _ => '',
+      };
 
   bool isUnlocked(PracticeStats s) => goal == 0 || progressOf(s) >= goal;
 
@@ -52,56 +70,44 @@ class TokenDef {
   }
 
   String progressLabel(PracticeStats s) {
-    if (goal == 0) return '조건 없음';
-    return '${progressOf(s)} / $goal';
+    if (goal == 0) return L.current.tokensProgressNoCondition;
+    return L.current.tokensProgress(progressOf(s), goal);
   }
 }
 
 const List<TokenDef> kTokenCatalog = [
   TokenDef(
     id: 'burn108',
-    name: '108번뇌 완파',
-    requirementLabel: '번뇌 108개 태움',
     group: TokenGroup.practice,
     progressOf: _burned,
     goal: 108,
   ),
   TokenDef(
     id: 'bow100',
-    name: '엎기 100회',
-    requirementLabel: '엎어두기 100회',
     group: TokenGroup.practice,
     progressOf: _bows,
     goal: 100,
   ),
   TokenDef(
     id: 'gate30',
-    name: '무결(無缺)',
-    requirementLabel: '절 문 30일 안 닫힘',
     group: TokenGroup.practice,
     progressOf: _days,
     goal: 30,
   ),
   TokenDef(
     id: 'first',
-    name: '첫 엎기',
-    requirementLabel: '한 번 엎어두면',
     group: TokenGroup.practice,
     progressOf: _bows,
     goal: 1,
   ),
   TokenDef(
     id: 'merit1000',
-    name: '공덕 천',
-    requirementLabel: '공덕 1,000',
     group: TokenGroup.practice,
     progressOf: _merit,
     goal: 1000,
   ),
   TokenDef(
     id: 'winter',
-    name: '동지 한정 · 탱화',
-    requirementLabel: '시즌 증표',
     group: TokenGroup.season,
     progressOf: _zero,
     goal: 0,

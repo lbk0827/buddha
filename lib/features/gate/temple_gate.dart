@@ -2,6 +2,8 @@
 /// 오늘 한 번이라도 엎어두면 그날 문은 지킨 것이다.
 library;
 
+import '../../l10n/l10n.dart';
+
 class GateState {
   final bool visitedToday;
   final Duration remaining;
@@ -25,9 +27,9 @@ class GateState {
   }
 
   String get headline {
-    if (visitedToday) return '오늘 절 다녀왔다';
-    if (closingSoon) return '절 문 곧 닫힌다';
-    return '절 문 · $remainingLabel 남음';
+    if (visitedToday) return L.current.gateHeadlineVisited;
+    if (closingSoon) return L.current.gateHeadlineClosingSoon;
+    return L.current.gateHeadlineRemaining(remainingLabel);
   }
 }
 

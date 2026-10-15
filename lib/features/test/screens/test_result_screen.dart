@@ -6,6 +6,7 @@ import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../data/content/models.dart';
+import '../../../l10n/l10n.dart';
 import '../../dialogue/share_card.dart';
 import '../scorer.dart';
 import '../test_controller.dart';
@@ -39,6 +40,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
     final content = ref.watch(contentProvider).value?.test;
     final outcome = ref.watch(testControllerProvider.notifier).currentOutcome();
     final text = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     if (content == null || outcome == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -46,10 +48,10 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
 
     final typeResult =
         outcome.typeId == null ? null : content.typeResults[outcome.typeId];
-    final headline = _headline(outcome, typeResult);
+    final headline = _headline(l10n, outcome, typeResult);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('결과')),
+      appBar: AppBar(title: Text(l10n.testResultTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(Tokens.gutter),
@@ -61,7 +63,9 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
               Text(headline.line!, style: text.headlineMedium),
             ],
             const SizedBox(height: 8),
-            Text('응답 ${outcome.answeredCount} / 건너뜀 ${outcome.skippedCount}',
+            Text(
+                l10n.testResultAnswerCount(
+                    outcome.answeredCount, outcome.skippedCount),
                 style: text.bodyMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -77,7 +81,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                   shareDialogueCard(context, headline.line!);
                 },
                 icon: const Icon(Icons.ios_share, size: 18),
-                label: const Text('나누기'),
+                label: Text(l10n.testResultShare),
               ),
 
             const Divider(height: 48),
@@ -88,7 +92,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                   direction: dir, content: content.directions[dir]),
 
             if (outcome.recovery.isNotEmpty) ...[
-              Text('회복은 이렇게', style: text.titleLarge),
+              Text(l10n.testResultRecoveryTitle, style: text.titleLarge),
               const SizedBox(height: 8),
               if (outcome.recovery.length == 1)
                 _DirectionBlock(
@@ -97,7 +101,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                 )
               else ...[
                 // 동점이면 사용자가 고른다 (FR-6.5).
-                Text('둘 다 비슷하게 나왔다. 어느 쪽이 더 너 같냐.',
+                Text(l10n.testResultRecoveryTie,
                     style: text.bodyLarge),
                 const SizedBox(height: 8),
                 RadioGroup<String>(
@@ -121,7 +125,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
             if (typeResult?.symbol != null)
               ExpansionTile(
                 tilePadding: EdgeInsets.zero,
-                title: const Text('상징'),
+                title: Text(l10n.testResultSymbol),
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -141,7 +145,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                             : null));
                 context.push('${Routes.sessionSetup}?len=$len');
               },
-              child: const Text('3분 시작'),
+              child: Text(l10n.testResultStartThreeMinutes),
             ),
             const SizedBox(height: 10),
             OutlinedButton(
@@ -151,9 +155,9 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                     .applyToProfile(outcome, recoveryChoice: _recoveryChoice);
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('프로필에 넣었다.')));
+                    SnackBar(content: Text(l10n.testResultAppliedSnack)));
               },
-              child: const Text('프로필에 적용'),
+              child: Text(l10n.testResultApplyToProfile),
             ),
             const SizedBox(height: 10),
             TextButton(
@@ -161,7 +165,7 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
                 ref.read(testControllerProvider.notifier).reset();
                 context.go(Routes.test);
               },
-              child: const Text('다시 하기'),
+              child: Text(l10n.testResultRetry),
             ),
             const SizedBox(height: 10),
             _FeelRating(
@@ -177,18 +181,22 @@ class _TestResultScreenState extends ConsumerState<TestResultScreen> {
 
   int _lengthForRecovery(String? dir) => dir == 'Q' ? 600 : 180;
 
-  _Headline _headline(TestOutcome outcome, TypeResultContent? type) {
+  _Headline _headline(
+      AppLocalizations l10n, TestOutcome outcome, TypeResultContent? type) {
     switch (outcome.state) {
       case TestState.representative:
-        return _Headline(type?.name ?? '결과', type?.line);
+        return _Headline(type?.name ?? l10n.testResultTitle, type?.line);
       case TestState.mixed:
-        return const _Headline('두 쪽이 섞여 있다', '하나로 안 묶인다. 그게 틀린 건 아니다.');
+        return _Headline(l10n.testResultMixedTitle, l10n.testResultMixedLine);
       case TestState.tendency:
-        return const _Headline('한쪽으로 기운다', '아직 한 방향만 뚜렷하다.');
+        return _Headline(
+            l10n.testResultTendencyTitle, l10n.testResultTendencyLine);
       case TestState.reservedInsufficient:
-        return const _Headline('아직 모르겠다', '답이 모자란다. 더 답하면 보인다.');
+        return _Headline(l10n.testResultInsufficientTitle,
+            l10n.testResultInsufficientLine);
       case TestState.reservedScattered:
-        return const _Headline('고르게 흩어져 있다', '한쪽으로 안 쏠린다. 요즘이 그런 때다.');
+        return _Headline(
+            l10n.testResultScatteredTitle, l10n.testResultScatteredLine);
     }
   }
 }
@@ -246,13 +254,13 @@ class _FeelRatingState extends State<_FeelRating> {
   Widget build(BuildContext context) {
     if (_score != null) {
       return Center(
-        child: Text('그래. 참고하겠다.',
+        child: Text(context.l10n.testResultFeelThanks,
             style: Theme.of(context).textTheme.bodyMedium),
       );
     }
     return Column(
       children: [
-        Text('나 같냐?', style: Theme.of(context).textTheme.bodyMedium),
+        Text(context.l10n.testResultFeelQuestion, style: Theme.of(context).textTheme.bodyMedium),
         const SizedBox(height: 4),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

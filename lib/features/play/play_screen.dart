@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
 import '../shell/tab_top_bar.dart';
@@ -434,12 +435,15 @@ class BeadLine extends StatelessWidget {
   final BeadCount beads;
   final int? justGained;
 
-  String get _label {
+  String _label(AppLocalizations l) {
     final gained = justGained;
-    if (gained != null) return '염주 한 바퀴를 돌았다. 공덕 +$gained';
-    if (beads.meritDoneToday) return '오늘 ${beads.today}알 · 오늘 공덕은 받았다';
-    return '염주 ${beads.today} / ${PrayerBeads.perRound} · '
-        '다 돌면 공덕 ${PrayerBeads.meritPerRound}';
+    if (gained != null) return l.playBeadsRoundDone(gained);
+    if (beads.meritDoneToday) return l.playBeadsMeritDoneToday(beads.today);
+    return l.playBeadsProgress(
+      beads.today,
+      PrayerBeads.perRound,
+      PrayerBeads.meritPerRound,
+    );
   }
 
   @override
@@ -449,7 +453,7 @@ class BeadLine extends StatelessWidget {
     return Semantics(
       liveRegion: highlight,
       child: Text(
-        _label,
+        _label(context.l10n),
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: highlight ? Tokens.saffron : fg.withValues(alpha: 0.45),
           fontWeight: highlight ? FontWeight.w700 : null,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 import '../shell/tab_top_bar.dart';
 import 'avatar_equip.dart';
@@ -103,8 +104,9 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen> {
       _draft = null;
       _saving = false;
     });
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('갈아입었다.')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.avatarWardrobeSavedSnack)),
+    );
   }
 
   @override
@@ -221,7 +223,7 @@ class _Sheet extends StatelessWidget {
                 ),
                 children: [
                   _SlotChip(
-                    label: '전체',
+                    label: context.l10n.avatarWardrobeTabAll,
                     selected: slot == null,
                     onTap: () => onSlot(null),
                   ),
@@ -240,7 +242,7 @@ class _Sheet extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    '가진 것만',
+                    context.l10n.avatarWardrobeOwnedOnly,
                     style: TextStyle(
                       fontSize: 13,
                       color: fg.withValues(alpha: 0.6),
@@ -250,7 +252,10 @@ class _Sheet extends StatelessWidget {
                   Switch(value: ownedOnly, onChanged: onOwnedOnly),
                   const Spacer(),
                   if (dirty)
-                    TextButton(onPressed: onRevert, child: const Text('되돌리기')),
+                    TextButton(
+                      onPressed: onRevert,
+                      child: Text(context.l10n.avatarWardrobeRevert),
+                    ),
                 ],
               ),
             ),
@@ -311,7 +316,7 @@ class _Grid extends ConsumerWidget {
     if (visible.isEmpty) {
       return Center(
         child: Text(
-          '여기엔 가진 게 없다.',
+          context.l10n.avatarWardrobeEmptyOwned,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
@@ -410,7 +415,9 @@ class _ItemTile extends StatelessWidget {
           ),
           const SizedBox(height: 1),
           Text(
-            owned ? '가짐' : '공덕 ${item.meritCost}',
+            owned
+                ? context.l10n.avatarWardrobeItemOwned
+                : context.l10n.avatarWardrobeItemPrice(item.meritCost),
             style: TextStyle(
               fontSize: 11,
               color: owned
@@ -447,7 +454,7 @@ class _WearButton extends StatelessWidget {
         shadowColor: Colors.black38,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
       ),
-      child: const Text('입는다!'),
+      child: Text(context.l10n.avatarWardrobeWearButton),
     );
   }
 }
@@ -485,9 +492,9 @@ class _BuySheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            '지를까?',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          Text(
+            context.l10n.avatarBuySheetTitle,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
           BuddhaFigure(equip: preview, size: 170),
@@ -547,7 +554,7 @@ class _BuySheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(
-                '공덕이 ${item.meritCost - merit} 모자란다.',
+                context.l10n.avatarBuySheetShortOfMerit(item.meritCost - merit),
                 style: TextStyle(
                   fontSize: 14,
                   color: fg.withValues(alpha: 0.6),
@@ -570,7 +577,7 @@ class _MeritPrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: '공덕 $cost',
+      label: context.l10n.avatarMeritPriceSemantics(cost),
       excludeSemantics: true,
       child: Row(
         mainAxisSize: MainAxisSize.min,

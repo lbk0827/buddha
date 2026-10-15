@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../data/db/database.dart';
 import '../home/home_controller.dart';
+import '../../l10n/l10n.dart';
 
 import '../../app/providers.dart';
 import '../../app/router.dart';
@@ -29,18 +30,20 @@ class SettingsScreen extends ConsumerWidget {
     final settings = repo.settingsOf(profile);
     final consents = repo.consentsOf(profile);
     final voice = settings[SettingKeys.voice] as String? ?? 'none';
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('설정')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: Tokens.gutter),
           children: [
-            const _SectionLabel('음성 안내'),
-            for (final entry in const {
-              'none': '없음',
-              'minimal': '최소',
-              'default': '기본',
+            _SectionLabel(l10n.settingsSectionVoice),
+            // 키는 저장되는 설정값이라 그대로 둔다.
+            for (final entry in {
+              'none': l10n.settingsVoiceNone,
+              'minimal': l10n.settingsVoiceMinimal,
+              'default': l10n.settingsVoiceDefault,
             }.entries)
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -51,11 +54,11 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => repo.setSetting(SettingKeys.voice, entry.key),
               ),
 
-            const _SectionLabel('알림'),
+            _SectionLabel(l10n.settingsSectionNotifications),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('다시 오라는 알림'),
-              subtitle: const Text('동의하면 다음 날 1회, 이후 주 1회 이하.'),
+              title: Text(l10n.settingsRevisitTitle),
+              subtitle: Text(l10n.settingsRevisitSubtitle),
               value: consents[ConsentKeys.notifications] != null,
               onChanged: (v) async {
                 if (v) {
@@ -66,65 +69,65 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
 
-            const _SectionLabel('수행'),
+            _SectionLabel(l10n.settingsSectionPractice),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('삼배 의식'),
+              title: Text(l10n.settingsSambaeTitle),
               value: settings[SettingKeys.sambaeRitual] == true,
               onChanged: (v) => repo.setSetting(SettingKeys.sambaeRitual, v),
             ),
             if (Flags.sensorSelectable)
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('감지 방식'),
+                title: Text(l10n.settingsDetectionTitle),
                 subtitle: Text(
                     settings[SettingKeys.detection] as String? ?? 'timer'),
               ),
 
-            const _SectionLabel('기록'),
+            _SectionLabel(l10n.settingsSectionRecords),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('숫자 가리기'),
-              subtitle: const Text('인정일·연속 숫자를 감춘다.'),
+              title: Text(l10n.settingsHideNumbersTitle),
+              subtitle: Text(l10n.settingsHideNumbersSubtitle),
               value: settings[SettingKeys.hideNumbers] == true,
               onChanged: (v) => repo.setSetting(SettingKeys.hideNumbers, v),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('기록을 기기에 저장'),
-              subtitle: const Text('서버로 보내지 않는다.'),
+              title: Text(l10n.settingsStoreRecordsTitle),
+              subtitle: Text(l10n.settingsStoreRecordsSubtitle),
               value: consents[ConsentKeys.recordStorage] != null,
               onChanged: (v) => repo.setConsent(ConsentKeys.recordStorage, v),
             ),
 
-            const _SectionLabel('그 밖에'),
+            _SectionLabel(l10n.settingsSectionMore),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('프로필'),
+              title: Text(l10n.settingsProfileItem),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(Routes.profile),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('증표'),
+              title: Text(l10n.settingsTokensItem),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(Routes.tokens),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('출처'),
-              subtitle: const Text('앱에 쓴 소리·글꼴을 만든 사람들과 라이선스.'),
+              title: Text(l10n.settingsCreditsItem),
+              subtitle: Text(l10n.settingsCreditsItemSubtitle),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(Routes.credits),
             ),
 
             // 디버그 빌드에서만 보인다. 옷장을 눌러보려면 공덕이 필요하다.
             if (kDebugMode) ...[
-              const _SectionLabel('디버그'),
+              _SectionLabel(context.l10n.settingsDebugSection),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('공덕 $kDebugStartingMerit 더 받기'),
-                subtitle: Text('지금 공덕 ${profile.merit}'),
+                title: Text(context.l10n.settingsDebugAddMerit(kDebugStartingMerit)),
+                subtitle: Text(context.l10n.settingsDebugCurrentMerit(profile.merit)),
                 trailing: const Icon(Icons.add),
                 onTap: () async {
                   final db = ref.read(databaseProvider);
@@ -137,12 +140,12 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
 
-            const _SectionLabel('데이터'),
+            _SectionLabel(l10n.settingsSectionData),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('데이터 삭제',
-                  style: TextStyle(color: Tokens.seal)),
-              subtitle: const Text('기기에 있는 전부. 되돌릴 수 없다.'),
+              title: Text(l10n.settingsWipeTitle,
+                  style: const TextStyle(color: Tokens.seal)),
+              subtitle: Text(l10n.settingsWipeSubtitle),
               onTap: () => _confirmWipe(context, ref),
             ),
             const SizedBox(height: 32),
@@ -153,20 +156,21 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmWipe(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('전부 지울까'),
-        content: const Text('기록·번뇌·테스트 결과·절이 모두 사라진다. 되돌릴 수 없다.'),
+        title: Text(l10n.settingsWipeDialogTitle),
+        content: Text(l10n.settingsWipeDialogBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('아니'),
+            child: Text(l10n.settingsWipeCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('지운다',
-                style: TextStyle(color: Tokens.seal)),
+            child: Text(l10n.settingsWipeConfirm,
+                style: const TextStyle(color: Tokens.seal)),
           ),
         ],
       ),

@@ -7,20 +7,24 @@ import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/flags.dart';
 import '../../../core/text_utils.dart';
+import '../../../l10n/l10n.dart';
 import '../../safety/safety_detector.dart';
 import '../../worry/burn_animation.dart';
 import '../session_controller.dart';
 
-/// 주제 칩 (FR-2.1).
-const Map<String, String> kWorryChips = {
-  'work': '일',
-  'people': '사람',
-  'money': '돈',
-  'family': '가족',
-  'body': '몸',
-  'etc': '그냥',
-  'heavy': '많이 힘들다',
-};
+/// 주제 칩 (FR-2.1). 키는 DB 에 저장되는 값이고, 값은 화면에 보이는 이름이다.
+Map<String, String> get kWorryChips {
+  final l = L.current;
+  return {
+    'work': l.sessionWorryChipWork,
+    'people': l.sessionWorryChipPeople,
+    'money': l.sessionWorryChipMoney,
+    'family': l.sessionWorryChipFamily,
+    'body': l.sessionWorryChipBody,
+    'etc': l.sessionWorryChipEtc,
+    'heavy': l.sessionWorryChipHeavy,
+  };
+}
 
 const int kWorryMaxLength = 80;
 
@@ -135,19 +139,15 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('마음 비우기란'),
-        content: const Text(
-          '잠깐은, 아무것도 안 해도 된다.\n\n'
-          '시작을 누르고 폰을 엎어 두어라.\n'
-          '생각이 떠올라도 괜찮다. 비우려고 애쓰진 말고.\n\n'
-          '쉬는 동안 공덕도 쌓인다. 1분에 10씩.\n'
-          '중간에 폰을 들면, 더 쉴지 여기까지 할지 고르면 된다.',
-          style: TextStyle(height: 1.55),
+        title: Text(context.l10n.sessionSetupInfoTitle),
+        content: Text(
+          context.l10n.sessionSetupInfoBody,
+          style: const TextStyle(height: 1.55),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('닫기'),
+            child: Text(context.l10n.sessionSetupInfoClose),
           ),
         ],
       ),
@@ -164,11 +164,11 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('마음 비우기'),
+        title: Text(context.l10n.sessionSetupTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            tooltip: '마음 비우기란',
+            tooltip: context.l10n.sessionSetupInfoTooltip,
             onPressed: () => _showInfo(context),
           ),
         ],
@@ -185,20 +185,17 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                   16,
                 ),
                 children: [
-                  Text('얼마나 쉴까?', style: text.titleLarge),
+                  Text(context.l10n.sessionSetupLengthQuestion, style: text.titleLarge),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      for (final (label, sec) in const [
-                        ('1분', 60),
-                        ('3분', 180),
-                        ('5분', 300),
-                        ('10분', 600),
-                      ]) ...[
+                      for (final sec in const [60, 180, 300, 600]) ...[
                         if (sec != 60) const SizedBox(width: 8),
                         Expanded(
                           child: _LengthChoice(
-                            label: label,
+                            label: context.l10n.sessionSetupLengthOption(
+                              sec ~/ 60,
+                            ),
                             selected: _targetSec == sec,
                             onTap: () => setState(() => _targetSec = sec),
                           ),
@@ -207,10 +204,10 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     ],
                   ),
                   const SizedBox(height: 28),
-                  Text('마음에 걸리는 게 있나?', style: text.titleLarge),
+                  Text(context.l10n.sessionSetupWorryQuestion, style: text.titleLarge),
                   const SizedBox(height: 4),
                   Text(
-                    '적으면 시작할 때 태워 준다. 안 적어도 된다.',
+                    context.l10n.sessionSetupWorryHelp,
                     style: text.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface
                           .withValues(alpha: 0.55),
@@ -222,13 +219,13 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                     maxLength: kWorryMaxLength,
                     maxLines: 2,
                     autofocus: widget.prefillWorry,
-                    decoration: const InputDecoration(
-                      hintText: '한 줄이면 된다',
+                    decoration: InputDecoration(
+                      hintText: context.l10n.sessionSetupWorryHint,
                       counterText: '',
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text('어느 쪽 일인가?', style: text.titleLarge),
+                  Text(context.l10n.sessionSetupChipQuestion, style: text.titleLarge),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 8,
@@ -246,9 +243,9 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                   const SizedBox(height: 20),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('지난번 그 얘기'),
+                    title: Text(context.l10n.sessionSetupRepeatTitle),
                     subtitle: Text(
-                      keepAll('켜 두면 끝나고 나서, 지난번에 적은 일이 요즘은 어떤지 묻는다.'),
+                      keepAll(context.l10n.sessionSetupRepeatSubtitle),
                     ),
                     value: _repeatFlag,
                     onChanged: (v) => setState(() => _repeatFlag = v),
@@ -256,7 +253,7 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                   if (Flags.audioAssetAvailable)
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('소리'),
+                      title: Text(context.l10n.sessionSetupSoundTitle),
                       value: _audioOn,
                       onChanged: (v) => setState(() => _audioOn = v),
                     ),
@@ -279,14 +276,14 @@ class _SessionSetupScreenState extends ConsumerState<SessionSetupScreen> {
                         _worryController.clear();
                         _start();
                       },
-                      child: const Text('안 적고 시작'),
+                      child: Text(context.l10n.sessionSetupSkipWorryButton),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: FilledButton(
                       onPressed: _start,
-                      child: const Text('시작'),
+                      child: Text(context.l10n.sessionSetupStartButton),
                     ),
                   ),
                 ],

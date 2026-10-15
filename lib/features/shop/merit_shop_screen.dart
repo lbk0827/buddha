@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../core/time_utils.dart';
+import '../../l10n/l10n.dart';
 import '../calendar/calendar_data.dart';
 import '../home/home_controller.dart';
 import '../shell/tab_top_bar.dart';
@@ -31,7 +32,7 @@ class MeritShopScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('공덕'),
+        title: Text(context.l10n.shopTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: Tokens.gutter),
@@ -44,7 +45,7 @@ class MeritShopScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(
               Tokens.gutter, 8, Tokens.gutter, 32),
           children: [
-            const _SectionTitle('공덕 받기'),
+            _SectionTitle(context.l10n.shopEarnSection),
             _RewardRow(
               icon: Icons.wb_sunny_outlined,
               title: kDailyMerit.title,
@@ -57,11 +58,12 @@ class MeritShopScreen extends ConsumerWidget {
             ),
             _RewardRow(
               icon: Icons.ondemand_video_outlined,
-              title: '광고 보고 공덕 받기',
-              description: '광고 하나에 공덕 $kAdMerit. 하루 $kAdViewsPerDay번까지.',
+              title: context.l10n.shopAdRewardTitle,
+              description: context.l10n
+                  .shopAdRewardDescription(kAdMerit, kAdViewsPerDay),
               action: _PillButton(
                 label: '0/$kAdViewsPerDay',
-                onTap: () => _comingSoon(context, '광고'),
+                onTap: () => _comingSoon(context, context.l10n.shopAdComingSoon),
                 muted: true,
               ),
             ),
@@ -72,7 +74,7 @@ class MeritShopScreen extends ConsumerWidget {
                 description: r.description,
                 action: !linked
                     ? _PillButton(
-                        label: '걸음 연결',
+                        label: context.l10n.shopLinkStepsButton,
                         onTap: () => _link(context, ref),
                       )
                     : _ClaimButton(
@@ -80,12 +82,13 @@ class MeritShopScreen extends ConsumerWidget {
                         claimed: claimed.contains(r.id),
                         ready: (steps ?? 0) >= r.minSteps!,
                         progress: steps == null
-                            ? '걷는 중'
-                            : '${_count.format(steps)}보',
+                            ? context.l10n.shopStepsWalking
+                            : context.l10n
+                                .shopStepsCount(_count.format(steps)),
                       ),
               ),
             const SizedBox(height: 28),
-            const _SectionTitle('공덕 묶음'),
+            _SectionTitle(context.l10n.shopBundleSection),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -95,7 +98,7 @@ class MeritShopScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: _BundleCard(
                         bundle: b,
-                        onTap: () => _comingSoon(context, '결제'),
+                        onTap: () => _comingSoon(context, context.l10n.shopPaymentComingSoon),
                       ),
                     ),
                   ),
@@ -107,17 +110,17 @@ class MeritShopScreen extends ConsumerWidget {
     );
   }
 
-  static void _comingSoon(BuildContext context, String what) {
+  static void _comingSoon(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('$what는 아직 준비 중이다.')));
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   static Future<void> _link(BuildContext context, WidgetRef ref) async {
     final ok = await linkSteps(ref);
     if (!ok && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('걸음 수를 못 읽었다. 건강 앱에서 허락하면 보인다.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(context.l10n.shopStepsLinkFailed)));
     }
   }
 }
@@ -216,10 +219,10 @@ class _ClaimButtonState extends ConsumerState<_ClaimButton> {
   @override
   Widget build(BuildContext context) {
     if (widget.claimed) {
-      return const _PillButton(label: '받았다', muted: true);
+      return _PillButton(label: context.l10n.shopClaimed, muted: true);
     }
     if (!widget.ready) {
-      return _PillButton(label: widget.progress ?? '아직', muted: true);
+      return _PillButton(label: widget.progress ?? context.l10n.shopNotYet, muted: true);
     }
     return _PillButton(
       label: '+${widget.reward.merit}',

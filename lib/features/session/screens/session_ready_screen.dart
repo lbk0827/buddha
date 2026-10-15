@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/flags.dart';
+import '../../../l10n/l10n.dart';
 import '../session_controller.dart';
 import '../session_timing.dart';
 
@@ -38,7 +39,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
       ref.read(sessionControllerProvider.notifier).abandonReady();
       context.go(Routes.home);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('다음에 하자. 급한 건 없다.')),
+        SnackBar(content: Text(context.l10n.sessionReadyTimeoutSnack)),
       );
     });
   }
@@ -69,7 +70,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
             children: [
               const Spacer(),
               Text(
-                '$minutes분이면 된다.\n이제 폰을 엎어 두자.\n진동이 오면 시작이다.',
+                context.l10n.sessionReadyPrompt(minutes),
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               const Spacer(),
@@ -78,7 +79,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
                   height: 64,
                   child: FilledButton(
                     onPressed: _confirm,
-                    child: const Text('엎어 뒀다'),
+                    child: Text(context.l10n.sessionReadyConfirmButton),
                   ),
                 ),
               const SizedBox(height: 8),
@@ -88,7 +89,7 @@ class _SessionReadyScreenState extends ConsumerState<SessionReadyScreen> {
                     ref.read(sessionControllerProvider.notifier).abandonReady();
                     context.go(Routes.home);
                   },
-                  child: const Text('다음에 하기'),
+                  child: Text(context.l10n.sessionReadyLaterButton),
                 ),
               ),
             ],

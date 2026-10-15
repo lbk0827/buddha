@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
+
 import 'avatar_equip.dart';
 import 'bubble_gum_motion.dart';
 import 'halo_spin.dart';
@@ -143,7 +145,7 @@ class BuddhaFigure extends StatelessWidget {
     );
 
     return Semantics(
-      label: '내 부처님',
+      label: context.l10n.avatarFigureSemantics,
       image: true,
       // 숨쉬기가 화면의 나머지까지 매 프레임 다시 그리게 하지 않도록.
       child: breathing ? RepaintBoundary(child: _Breathe(child: figure)) : figure,

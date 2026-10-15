@@ -5,7 +5,7 @@ fonts.gstatic.com 원본 → assets/google_fonts/*.ttf (앱에 나가는 것)
 google_fonts 는 실행 중에 폰트를 내려받는데, 한글 폰트는 굵기마다 6MB 라
 첫 실행이 느리고 오프라인이면 못 받는다. 그래서 앱에 넣고 내려받기를 끈다
 (lib/main.dart). 원본 그대로면 여섯 개 31MB 라, 한글 완성형 11,172자 전부와
-자모·라틴·문장부호, 그리고 lib/·assets/content/ 에 실제로 나오는 글자(한자
+자모·라틴·문장부호, 그리고 lib/(문자열 테이블 lib/l10n/*.arb 포함)·assets/content/ 에 실제로 나오는 글자(한자
 등)만 남긴다. 사용자가 치는 한글은 빠짐없이 나온다.
 
 lib/ 나 assets/content/ 에 새 한자·기호를 넣었으면 다시 돌린다.
@@ -46,6 +46,7 @@ UNICODES = (
 
 def used_text() -> str:
     files = list((ROOT / "lib").rglob("*.dart"))
+    files += list((ROOT / "lib" / "l10n").glob("*.arb"))
     files += [p for p in (ROOT / "assets" / "content").rglob("*") if p.is_file()]
     chars = set()
     for p in files:

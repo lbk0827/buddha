@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../core/flags.dart';
 import '../../core/time_utils.dart';
+import '../../l10n/l10n.dart';
 import '../../data/repositories/session_repository.dart';
 import 'session_timing.dart';
 
@@ -345,5 +346,7 @@ final sessionControllerProvider =
 String completionLine({required int practicedSec, required bool heavyChip}) {
   final t = formatDuration(practicedSec);
   // 칩 "많이 힘듦"에서는 유머 없이 (FR-3.8).
-  return heavyChip ? '$t 뒀다. 그거면 됐다.' : '$t 뒀다. 오늘은 여기까지.';
+  return heavyChip
+      ? L.current.sessionCompletionLineHeavy(t)
+      : L.current.sessionCompletionLine(t);
 }

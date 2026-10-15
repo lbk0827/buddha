@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../l10n/l10n.dart';
+
 /// 내 부처님의 레이어. 나열 순서가 그대로 그리는 순서다.
 /// 후광 → 대좌 → 몸(가사) → 발 → 머리 → 얼굴 → 목 → 입
 ///
@@ -14,16 +16,16 @@ import 'dart:convert';
 enum AvatarSlot { buddha, halo, seat, robe, feet, head, face, neck, mouth }
 
 /// 옷장 탭에 나오는 순서.
-const Map<AvatarSlot, String> kSlotNames = {
-  AvatarSlot.buddha: '부처',
-  AvatarSlot.head: '머리',
-  AvatarSlot.robe: '가사',
-  AvatarSlot.face: '얼굴',
-  AvatarSlot.mouth: '입',
-  AvatarSlot.neck: '목',
-  AvatarSlot.feet: '발',
-  AvatarSlot.seat: '대좌',
-  AvatarSlot.halo: '후광',
+Map<AvatarSlot, String> get kSlotNames => {
+  AvatarSlot.buddha: L.current.avatarSlotBuddha,
+  AvatarSlot.head: L.current.avatarSlotHead,
+  AvatarSlot.robe: L.current.avatarSlotRobe,
+  AvatarSlot.face: L.current.avatarSlotFace,
+  AvatarSlot.mouth: L.current.avatarSlotMouth,
+  AvatarSlot.neck: L.current.avatarSlotNeck,
+  AvatarSlot.feet: L.current.avatarSlotFeet,
+  AvatarSlot.seat: L.current.avatarSlotSeat,
+  AvatarSlot.halo: L.current.avatarSlotHalo,
 };
 
 /// 한 벌. 슬롯마다 아이템 하나.
@@ -109,7 +111,6 @@ class SkinTint {
 
 class WardrobeItem {
   final String id;
-  final String name;
   final AvatarSlot slot;
 
   /// 공덕으로 연다. 0이면 처음부터 가지고 있다.
@@ -144,7 +145,6 @@ class WardrobeItem {
 
   const WardrobeItem({
     required this.id,
-    required this.name,
     required this.slot,
     this.meritCost = 0,
     this.file,
@@ -155,6 +155,74 @@ class WardrobeItem {
     this.spin,
     this.sole = 0,
   });
+
+  /// 화면에 나오는 이름. 문자열 테이블에서 id 로 찾는다.
+  String get name => switch (id) {
+    'buddha_flesh' => L.current.avatarItemBuddhaFlesh,
+    'buddha_stone' => L.current.avatarItemBuddhaStone,
+    'buddha_porcelain' => L.current.avatarItemBuddhaPorcelain,
+    'buddha_jade' => L.current.avatarItemBuddhaJade,
+    'buddha_pink' => L.current.avatarItemBuddhaPink,
+    'buddha_gold' => L.current.avatarItemBuddhaGold,
+    'head_shaved' => L.current.avatarItemHeadShaved,
+    'head_nabal' => L.current.avatarItemHeadNabal,
+    'head_bamboo' => L.current.avatarItemHeadBamboo,
+    'head_straw' => L.current.avatarItemHeadStraw,
+    'head_beanie' => L.current.avatarItemHeadBeanie,
+    'head_bucket' => L.current.avatarItemHeadBucket,
+    'robe_saffron' => L.current.avatarItemRobeSaffron,
+    'robe_temple' => L.current.avatarItemRobeTemple,
+    'robe_ash' => L.current.avatarItemRobeAsh,
+    'robe_crimson' => L.current.avatarItemRobeCrimson,
+    'robe_lavender' => L.current.avatarItemRobeLavender,
+    'acc_glasses' => L.current.avatarItemAccGlasses,
+    'acc_sunglasses' => L.current.avatarItemAccSunglasses,
+    'acc_trafficlight' => L.current.avatarItemAccTrafficlight,
+    'acc_pinkshades' => L.current.avatarItemAccPinkshades,
+    'acc_targetpatch' => L.current.avatarItemAccTargetpatch,
+    'acc_snorkel' => L.current.avatarItemAccSnorkel,
+    'acc_vr' => L.current.avatarItemAccVr,
+    'acc_cucumber' => L.current.avatarItemAccCucumber,
+    'acc_skigoggles' => L.current.avatarItemAccSkigoggles,
+    'acc_heartshades' => L.current.avatarItemAccHeartshades,
+    'acc_partystars' => L.current.avatarItemAccPartystars,
+    'acc_cybervisor' => L.current.avatarItemAccCybervisor,
+    'acc_beads' => L.current.avatarItemAccBeads,
+    'acc_neckphones' => L.current.avatarItemAccNeckphones,
+    'acc_goldbeads' => L.current.avatarItemAccGoldbeads,
+    'acc_bib' => L.current.avatarItemAccBib,
+    'acc_neckpillow' => L.current.avatarItemAccNeckpillow,
+    'acc_lei' => L.current.avatarItemAccLei,
+    'acc_goldchain' => L.current.avatarItemAccGoldchain,
+    'acc_filmcamera' => L.current.avatarItemAccFilmcamera,
+    'acc_neckphones_mint' => L.current.avatarItemAccNeckphonesMint,
+    'mouth_bubblegum' => L.current.avatarItemMouthBubblegum,
+    'mouth_pacifier' => L.current.avatarItemMouthPacifier,
+    'mouth_bungeoppang' => L.current.avatarItemMouthBungeoppang,
+    'mouth_tteokkochi' => L.current.avatarItemMouthTteokkochi,
+    'mouth_whistle' => L.current.avatarItemMouthWhistle,
+    'mouth_mustache' => L.current.avatarItemMouthMustache,
+    'mouth_lollipop' => L.current.avatarItemMouthLollipop,
+    'mouth_grillz' => L.current.avatarItemMouthGrillz,
+    'feet_sneakers' => L.current.avatarItemFeetSneakers,
+    'feet_flippers' => L.current.avatarItemFeetFlippers,
+    'feet_slippers' => L.current.avatarItemFeetSlippers,
+    'feet_hightops' => L.current.avatarItemFeetHightops,
+    'feet_platformboots' => L.current.avatarItemFeetPlatformboots,
+    'seat_lotus' => L.current.avatarItemSeatLotus,
+    'seat_skateboard' => L.current.avatarItemSeatSkateboard,
+    'seat_bathstool' => L.current.avatarItemSeatBathstool,
+    'seat_robovac' => L.current.avatarItemSeatRobovac,
+    'seat_kickboard' => L.current.avatarItemSeatKickboard,
+    'halo_ring' => L.current.avatarItemHaloRing,
+    'halo_open' => L.current.avatarItemHaloOpen,
+    'halo_wifi' => L.current.avatarItemHaloWifi,
+    'halo_loading' => L.current.avatarItemHaloLoading,
+    'halo_lp' => L.current.avatarItemHaloLp,
+    'halo_discoball' => L.current.avatarItemHaloDiscoball,
+    'halo_neon' => L.current.avatarItemHaloNeon,
+    _ => id,
+  };
 
   String get _base => file ?? id;
 
@@ -178,14 +246,12 @@ const List<WardrobeItem> kWardrobe = [
   // 부처 — 몸과 얼굴의 살에 재질을 입힌다. 모자·가사·소품은 제 색 그대로다.
   WardrobeItem(
     id: 'buddha_flesh',
-    name: '살빛 부처',
     slot: AvatarSlot.buddha,
     file: 'head_shaved',
     hasLayer: false,
   ),
   WardrobeItem(
     id: 'buddha_stone',
-    name: '돌부처',
     slot: AvatarSlot.buddha,
     meritCost: 500,
     file: 'head_shaved',
@@ -196,7 +262,6 @@ const List<WardrobeItem> kWardrobe = [
   // 색으로 옮기는 것만으로는 그게 안 나와서 갈색 피부처럼 보인다.
   WardrobeItem(
     id: 'buddha_porcelain',
-    name: '백자부처',
     slot: AvatarSlot.buddha,
     meritCost: 800,
     file: 'head_shaved',
@@ -205,7 +270,6 @@ const List<WardrobeItem> kWardrobe = [
   ),
   WardrobeItem(
     id: 'buddha_jade',
-    name: '옥부처',
     slot: AvatarSlot.buddha,
     meritCost: 1100,
     file: 'head_shaved',
@@ -215,7 +279,6 @@ const List<WardrobeItem> kWardrobe = [
   // 핑꾸 — 형광 핫핑크. 전시장에 서 있던 벨벳 핑크 불상에서 왔다.
   WardrobeItem(
     id: 'buddha_pink',
-    name: '핑꾸부처',
     slot: AvatarSlot.buddha,
     meritCost: 1300,
     file: 'head_shaved',
@@ -224,7 +287,6 @@ const List<WardrobeItem> kWardrobe = [
   ),
   WardrobeItem(
     id: 'buddha_gold',
-    name: '황금부처',
     slot: AvatarSlot.buddha,
     meritCost: 1500,
     file: 'head_shaved',
@@ -233,43 +295,33 @@ const List<WardrobeItem> kWardrobe = [
   ),
 
   // 머리 — 민머리는 베이스 그대로라 겹칠 그림이 없다.
-  WardrobeItem(
-    id: 'head_shaved',
-    name: '민머리',
-    slot: AvatarSlot.head,
-    hasLayer: false,
-  ),
+  WardrobeItem(id: 'head_shaved', slot: AvatarSlot.head, hasLayer: false),
   WardrobeItem(
     id: 'head_nabal',
-    name: '나발',
     slot: AvatarSlot.head,
     meritCost: 300,
     skin: 'skin_head_nabal',
   ),
   WardrobeItem(
     id: 'head_bamboo',
-    name: '삿갓',
     slot: AvatarSlot.head,
     meritCost: 500,
     skin: 'skin_head_bamboo',
   ),
   WardrobeItem(
     id: 'head_straw',
-    name: '밀짚모자',
     slot: AvatarSlot.head,
     meritCost: 700,
     skin: 'skin_head_straw',
   ),
   WardrobeItem(
     id: 'head_beanie',
-    name: '비니',
     slot: AvatarSlot.head,
     meritCost: 400,
     skin: 'skin_head_beanie',
   ),
   WardrobeItem(
     id: 'head_bucket',
-    name: '버킷햇',
     slot: AvatarSlot.head,
     meritCost: 500,
     skin: 'skin_head_bucket',
@@ -279,14 +331,12 @@ const List<WardrobeItem> kWardrobe = [
   // 살은 가사가 달라도 같은 픽셀이라 살 레이어 한 장을 같이 쓴다.
   WardrobeItem(
     id: 'robe_saffron',
-    name: '황토 가사',
     slot: AvatarSlot.robe,
     file: 'base_saffron',
     skin: 'skin_body',
   ),
   WardrobeItem(
     id: 'robe_temple',
-    name: '먹물 가사',
     slot: AvatarSlot.robe,
     meritCost: 200,
     file: 'base_temple',
@@ -294,7 +344,6 @@ const List<WardrobeItem> kWardrobe = [
   ),
   WardrobeItem(
     id: 'robe_ash',
-    name: '잿빛 가사',
     slot: AvatarSlot.robe,
     meritCost: 400,
     file: 'base_ash',
@@ -302,7 +351,6 @@ const List<WardrobeItem> kWardrobe = [
   ),
   WardrobeItem(
     id: 'robe_crimson',
-    name: '홍가사',
     slot: AvatarSlot.robe,
     meritCost: 900,
     file: 'base_crimson',
@@ -310,7 +358,6 @@ const List<WardrobeItem> kWardrobe = [
   ),
   WardrobeItem(
     id: 'robe_lavender',
-    name: '라벤더 가사',
     slot: AvatarSlot.robe,
     meritCost: 600,
     file: 'base_lavender',
@@ -318,131 +365,30 @@ const List<WardrobeItem> kWardrobe = [
   ),
 
   // 얼굴
-  WardrobeItem(
-    id: 'acc_glasses',
-    name: '안경',
-    slot: AvatarSlot.face,
-    meritCost: 600,
-  ),
-  WardrobeItem(
-    id: 'acc_sunglasses',
-    name: '동그란 선글라스',
-    slot: AvatarSlot.face,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'acc_trafficlight',
-    name: '신호등 선글라스',
-    slot: AvatarSlot.face,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'acc_pinkshades',
-    name: '핑크 선글라스',
-    slot: AvatarSlot.face,
-    meritCost: 900,
-  ),
-  WardrobeItem(
-    id: 'acc_targetpatch',
-    name: '과녁 안대',
-    slot: AvatarSlot.face,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'acc_snorkel',
-    name: '물안경 스노클',
-    slot: AvatarSlot.face,
-    meritCost: 800,
-  ),
-  WardrobeItem(
-    id: 'acc_vr',
-    name: 'VR 고글',
-    slot: AvatarSlot.face,
-    meritCost: 900,
-  ),
-  WardrobeItem(
-    id: 'acc_cucumber',
-    name: '오이 팩',
-    slot: AvatarSlot.face,
-    meritCost: 500,
-  ),
-  WardrobeItem(
-    id: 'acc_skigoggles',
-    name: '스키 고글',
-    slot: AvatarSlot.face,
-    meritCost: 900,
-  ),
-  WardrobeItem(
-    id: 'acc_heartshades',
-    name: '하트 선글라스',
-    slot: AvatarSlot.face,
-    meritCost: 800,
-  ),
-  WardrobeItem(
-    id: 'acc_partystars',
-    name: '별 파티 안경',
-    slot: AvatarSlot.face,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'acc_cybervisor',
-    name: '사이버 바이저',
-    slot: AvatarSlot.face,
-    meritCost: 1100,
-  ),
+  WardrobeItem(id: 'acc_glasses', slot: AvatarSlot.face, meritCost: 600),
+  WardrobeItem(id: 'acc_sunglasses', slot: AvatarSlot.face, meritCost: 700),
+  WardrobeItem(id: 'acc_trafficlight', slot: AvatarSlot.face, meritCost: 700),
+  WardrobeItem(id: 'acc_pinkshades', slot: AvatarSlot.face, meritCost: 900),
+  WardrobeItem(id: 'acc_targetpatch', slot: AvatarSlot.face, meritCost: 700),
+  WardrobeItem(id: 'acc_snorkel', slot: AvatarSlot.face, meritCost: 800),
+  WardrobeItem(id: 'acc_vr', slot: AvatarSlot.face, meritCost: 900),
+  WardrobeItem(id: 'acc_cucumber', slot: AvatarSlot.face, meritCost: 500),
+  WardrobeItem(id: 'acc_skigoggles', slot: AvatarSlot.face, meritCost: 900),
+  WardrobeItem(id: 'acc_heartshades', slot: AvatarSlot.face, meritCost: 800),
+  WardrobeItem(id: 'acc_partystars', slot: AvatarSlot.face, meritCost: 700),
+  WardrobeItem(id: 'acc_cybervisor', slot: AvatarSlot.face, meritCost: 1100),
 
   // 목
-  WardrobeItem(
-    id: 'acc_beads',
-    name: '단주',
-    slot: AvatarSlot.neck,
-    meritCost: 150,
-  ),
-  WardrobeItem(
-    id: 'acc_neckphones',
-    name: '목에 건 헤드폰',
-    slot: AvatarSlot.neck,
-    meritCost: 900,
-  ),
-  WardrobeItem(
-    id: 'acc_goldbeads',
-    name: '금빛 단주',
-    slot: AvatarSlot.neck,
-    meritCost: 1300,
-  ),
-  WardrobeItem(
-    id: 'acc_bib',
-    name: '턱받이',
-    slot: AvatarSlot.neck,
-    meritCost: 500,
-  ),
-  WardrobeItem(
-    id: 'acc_neckpillow',
-    name: '목베개',
-    slot: AvatarSlot.neck,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'acc_lei',
-    name: '꽃목걸이',
-    slot: AvatarSlot.neck,
-    meritCost: 800,
-  ),
-  WardrobeItem(
-    id: 'acc_goldchain',
-    name: '금 체인',
-    slot: AvatarSlot.neck,
-    meritCost: 1500,
-  ),
-  WardrobeItem(
-    id: 'acc_filmcamera',
-    name: '필름 카메라',
-    slot: AvatarSlot.neck,
-    meritCost: 1000,
-  ),
+  WardrobeItem(id: 'acc_beads', slot: AvatarSlot.neck, meritCost: 150),
+  WardrobeItem(id: 'acc_neckphones', slot: AvatarSlot.neck, meritCost: 900),
+  WardrobeItem(id: 'acc_goldbeads', slot: AvatarSlot.neck, meritCost: 1300),
+  WardrobeItem(id: 'acc_bib', slot: AvatarSlot.neck, meritCost: 500),
+  WardrobeItem(id: 'acc_neckpillow', slot: AvatarSlot.neck, meritCost: 700),
+  WardrobeItem(id: 'acc_lei', slot: AvatarSlot.neck, meritCost: 800),
+  WardrobeItem(id: 'acc_goldchain', slot: AvatarSlot.neck, meritCost: 1500),
+  WardrobeItem(id: 'acc_filmcamera', slot: AvatarSlot.neck, meritCost: 1000),
   WardrobeItem(
     id: 'acc_neckphones_mint',
-    name: '민트 헤드폰',
     slot: AvatarSlot.neck,
     meritCost: 900,
   ),
@@ -450,168 +396,75 @@ const List<WardrobeItem> kWardrobe = [
   // 입 — 풍선껌은 절 화면에서 부풀었다 터져 입에 붙는다 (BubbleGumMotion).
   WardrobeItem(
     id: 'mouth_bubblegum',
-    name: '풍선껌',
     slot: AvatarSlot.mouth,
     meritCost: 800,
     popped: 'mouth_bubblegum_popped',
   ),
-  WardrobeItem(
-    id: 'mouth_pacifier',
-    name: '쪽쪽이',
-    slot: AvatarSlot.mouth,
-    meritCost: 600,
-  ),
-  WardrobeItem(
-    id: 'mouth_bungeoppang',
-    name: '붕어빵',
-    slot: AvatarSlot.mouth,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'mouth_tteokkochi',
-    name: '떡꼬치',
-    slot: AvatarSlot.mouth,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'mouth_whistle',
-    name: '호루라기',
-    slot: AvatarSlot.mouth,
-    meritCost: 600,
-  ),
-  WardrobeItem(
-    id: 'mouth_mustache',
-    name: '콧수염',
-    slot: AvatarSlot.mouth,
-    meritCost: 500,
-  ),
-  WardrobeItem(
-    id: 'mouth_lollipop',
-    name: '소용돌이 사탕',
-    slot: AvatarSlot.mouth,
-    meritCost: 700,
-  ),
-  WardrobeItem(
-    id: 'mouth_grillz',
-    name: '금니 웃음',
-    slot: AvatarSlot.mouth,
-    meritCost: 1200,
-  ),
+  WardrobeItem(id: 'mouth_pacifier', slot: AvatarSlot.mouth, meritCost: 600),
+  WardrobeItem(id: 'mouth_bungeoppang', slot: AvatarSlot.mouth, meritCost: 700),
+  WardrobeItem(id: 'mouth_tteokkochi', slot: AvatarSlot.mouth, meritCost: 700),
+  WardrobeItem(id: 'mouth_whistle', slot: AvatarSlot.mouth, meritCost: 600),
+  WardrobeItem(id: 'mouth_mustache', slot: AvatarSlot.mouth, meritCost: 500),
+  WardrobeItem(id: 'mouth_lollipop', slot: AvatarSlot.mouth, meritCost: 700),
+  WardrobeItem(id: 'mouth_grillz', slot: AvatarSlot.mouth, meritCost: 1200),
 
   // 발
   WardrobeItem(
     id: 'feet_sneakers',
-    name: '흰 운동화',
     slot: AvatarSlot.feet,
     meritCost: 600,
     sole: 13,
   ),
   WardrobeItem(
     id: 'feet_flippers',
-    name: '오리발',
     slot: AvatarSlot.feet,
     meritCost: 700,
     sole: 35,
   ),
   WardrobeItem(
     id: 'feet_slippers',
-    name: '슬리퍼와 흰 양말',
     slot: AvatarSlot.feet,
     meritCost: 500,
     sole: 15,
   ),
   WardrobeItem(
     id: 'feet_hightops',
-    name: '빨간 스니커즈',
     slot: AvatarSlot.feet,
     meritCost: 900,
     sole: 5,
   ),
   WardrobeItem(
     id: 'feet_platformboots',
-    name: '통굽 부츠',
     slot: AvatarSlot.feet,
     meritCost: 1000,
     sole: 26,
   ),
 
   // 대좌
-  WardrobeItem(
-    id: 'seat_lotus',
-    name: '연꽃 대좌',
-    slot: AvatarSlot.seat,
-    meritCost: 1200,
-  ),
-  WardrobeItem(
-    id: 'seat_skateboard',
-    name: '스케이트보드',
-    slot: AvatarSlot.seat,
-    meritCost: 1200,
-  ),
-  WardrobeItem(
-    id: 'seat_bathstool',
-    name: '목욕탕 의자',
-    slot: AvatarSlot.seat,
-    meritCost: 900,
-  ),
-  WardrobeItem(
-    id: 'seat_robovac',
-    name: '로봇청소기',
-    slot: AvatarSlot.seat,
-    meritCost: 1100,
-  ),
-  WardrobeItem(
-    id: 'seat_kickboard',
-    name: '킥보드',
-    slot: AvatarSlot.seat,
-    meritCost: 1300,
-  ),
+  WardrobeItem(id: 'seat_lotus', slot: AvatarSlot.seat, meritCost: 1200),
+  WardrobeItem(id: 'seat_skateboard', slot: AvatarSlot.seat, meritCost: 1200),
+  WardrobeItem(id: 'seat_bathstool', slot: AvatarSlot.seat, meritCost: 900),
+  WardrobeItem(id: 'seat_robovac', slot: AvatarSlot.seat, meritCost: 1100),
+  WardrobeItem(id: 'seat_kickboard', slot: AvatarSlot.seat, meritCost: 1300),
 
   // 후광
-  WardrobeItem(
-    id: 'halo_ring',
-    name: '후광',
-    slot: AvatarSlot.halo,
-    meritCost: 1000,
-  ),
-  WardrobeItem(
-    id: 'halo_open',
-    name: 'OPEN 간판',
-    slot: AvatarSlot.halo,
-    meritCost: 1000,
-  ),
-  WardrobeItem(
-    id: 'halo_wifi',
-    name: '와이파이',
-    slot: AvatarSlot.halo,
-    meritCost: 800,
-  ),
+  WardrobeItem(id: 'halo_ring', slot: AvatarSlot.halo, meritCost: 1000),
+  WardrobeItem(id: 'halo_open', slot: AvatarSlot.halo, meritCost: 1000),
+  WardrobeItem(id: 'halo_wifi', slot: AvatarSlot.halo, meritCost: 800),
   WardrobeItem(
     id: 'halo_loading',
-    name: '로딩 중',
     slot: AvatarSlot.halo,
     meritCost: 1000,
     spin: Duration(milliseconds: 2400),
   ),
   WardrobeItem(
     id: 'halo_lp',
-    name: 'LP 후광',
     slot: AvatarSlot.halo,
     meritCost: 1300,
     spin: Duration(seconds: 6),
   ),
-  WardrobeItem(
-    id: 'halo_discoball',
-    name: '디스코볼',
-    slot: AvatarSlot.halo,
-    meritCost: 1200,
-  ),
-  WardrobeItem(
-    id: 'halo_neon',
-    name: '네온 링',
-    slot: AvatarSlot.halo,
-    meritCost: 1100,
-  ),
+  WardrobeItem(id: 'halo_discoball', slot: AvatarSlot.halo, meritCost: 1200),
+  WardrobeItem(id: 'halo_neon', slot: AvatarSlot.halo, meritCost: 1100),
 ];
 
 /// 출가하면 이것부터 입는다. 전부 공덕 0짜리다.

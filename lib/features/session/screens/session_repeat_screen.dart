@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../l10n/l10n.dart';
 import '../session_controller.dart';
 
 /// 반복 고민 (FR-3.2). 「지난번 그 얘기」 토글이 켜졌을 때만 들어온다.
@@ -18,14 +19,15 @@ class SessionRepeatScreen extends ConsumerStatefulWidget {
 }
 
 class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
-  static const _choices = [
-    '아직 그대로다',
-    '조금 나아졌다',
-    '다른 일이 더 크다',
-    '말하고 싶지 않다',
-  ];
+  /// 고른 답은 저장하지 않는다. 화면 안에서만 쓰니 순서(번호)로 기억한다.
+  static List<String> _choices(AppLocalizations l) => [
+        l.sessionRepeatChoiceSame,
+        l.sessionRepeatChoiceBetter,
+        l.sessionRepeatChoiceOther,
+        l.sessionRepeatChoicePrivate,
+      ];
 
-  String? _picked;
+  int? _picked;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
     final hasPrevious = previous.value?.isNotEmpty ?? false;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('지난번 그 얘기')),
+      appBar: AppBar(title: Text(context.l10n.sessionRepeatTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Tokens.gutter),
@@ -49,15 +51,14 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
                     ? Padding(
                         padding: const EdgeInsets.only(bottom: 28),
                         child: Text(
-                          '지난번에 적어 둔 번뇌가 없다.\n'
-                          '다음에 번뇌를 적고 엎어 두면, 그때 묻겠다.',
+                          context.l10n.sessionRepeatEmpty,
                           style: text.bodyLarge?.copyWith(height: 1.5),
                         ),
                       )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('지난번엔 이 일이 마음에 걸렸다.',
+                          Text(context.l10n.sessionRepeatPreviousLabel,
                               style: text.bodyMedium?.copyWith(
                                   color: Theme.of(context)
                                       .colorScheme
@@ -70,15 +71,16 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
                       ),
               ),
               if (hasPrevious) ...[
-                Text('요즘은 어떤가?', style: text.titleLarge),
+                Text(context.l10n.sessionRepeatQuestion,
+                    style: text.titleLarge),
                 const SizedBox(height: 12),
-                for (final c in _choices)
+                for (final (i, c) in _choices(context.l10n).indexed)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: OutlinedButton(
-                      onPressed: () => setState(() => _picked = c),
+                      onPressed: () => setState(() => _picked = i),
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: _picked == c
+                        backgroundColor: _picked == i
                             ? Tokens.saffron.withValues(alpha: 0.16)
                             : null,
                       ),
@@ -94,7 +96,7 @@ class _SessionRepeatScreenState extends ConsumerState<SessionRepeatScreen> {
                 onPressed: hasPrevious && _picked == null
                     ? null
                     : () => context.go(Routes.home),
-                child: const Text('됐다'),
+                child: Text(context.l10n.sessionRepeatDoneButton),
               ),
             ],
           ),

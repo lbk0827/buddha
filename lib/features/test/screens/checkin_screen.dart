@@ -5,25 +5,27 @@ import 'package:go_router/go_router.dart';
 import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../l10n/l10n.dart';
 
 /// 오늘의 체크인 1문항 (FR-6.6).
 /// 오늘 기본값만 바꾼다. 유형·법명은 건드리지 않는다.
 class CheckinScreen extends ConsumerWidget {
   const CheckinScreen({super.key});
 
-  static const _options = [
-    ('X', '짧게 끊고 싶다', 180),
-    ('O', '누구 옆에 있고 싶다', 180),
-    ('M', '몸을 움직이고 싶다', 180),
-    ('Q', '조용히 오래 있고 싶다', 600),
-  ];
+  static List<(String, String, int)> _options(AppLocalizations l10n) => [
+        ('X', l10n.testCheckinOptionShort, 180),
+        ('O', l10n.testCheckinOptionCompany, 180),
+        ('M', l10n.testCheckinOptionMove, 180),
+        ('Q', l10n.testCheckinOptionLong, 600),
+      ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final text = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('오늘의 체크인')),
+      appBar: AppBar(title: Text(l10n.testCheckinTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Tokens.gutter),
@@ -31,9 +33,9 @@ class CheckinScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
-              Text('오늘은 어느 쪽이냐', style: text.displayMedium),
+              Text(l10n.testCheckinQuestion, style: text.displayMedium),
               const SizedBox(height: 24),
-              for (final (dir, label, len) in _options)
+              for (final (dir, label, len) in _options(l10n))
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: OutlinedButton(
@@ -56,7 +58,7 @@ class CheckinScreen extends ConsumerWidget {
               Center(
                 child: TextButton(
                   onPressed: () => context.go(Routes.home),
-                  child: const Text('건너뛰기'),
+                  child: Text(l10n.testCheckinSkip),
                 ),
               ),
             ],

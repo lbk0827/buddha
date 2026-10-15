@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../avatar/avatar_equip.dart';
 import '../avatar/buddha_figure.dart';
 import '../home/home_controller.dart';
@@ -88,8 +89,6 @@ class WishTabScreen extends ConsumerWidget {
   }
 }
 
-const _hint = '연등에 소원을 달아봐요';
-
 /// 아래 카드 — 왼쪽에 소원 수와 안내, 오른쪽에 작은 「소원 빌기」.
 class _WishCard extends ConsumerWidget {
   const _WishCard();
@@ -97,14 +96,15 @@ class _WishCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = ref.watch(wishCountProvider);
+    final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final fg = Theme.of(context).colorScheme.onSurface;
     final n = count.value ?? 0;
 
     final headline = count.when(
-      data: (n) => n == 0 ? _hint : '내가 단 소원 $n개',
-      loading: () => '소원을 불러오는 중',
-      error: (_, _) => '소원을 불러오지 못했어요',
+      data: (n) => n == 0 ? l10n.wishesTabTapHint : l10n.wishesTabMyCount(n),
+      loading: () => l10n.wishesTabLoading,
+      error: (_, _) => l10n.wishesTabLoadError,
     );
 
     return Container(
@@ -130,7 +130,7 @@ class _WishCard extends ConsumerWidget {
                 // 소원이 있으면 안내는 작은 윗줄로 물러나고 소원 수가 큰 줄이 된다.
                 if (count.hasValue && n > 0) ...[
                   Text(
-                    _hint,
+                    l10n.wishesTabTapHint,
                     style: TextStyle(
                       fontSize: 11,
                       color: fg.withValues(alpha: 0.45),
@@ -159,9 +159,9 @@ class _WishCard extends ConsumerWidget {
               shape: const StadiumBorder(),
             ),
             icon: const Icon(Icons.volunteer_activism_outlined, size: 18),
-            label: const Text(
-              '소원 빌기',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            label: Text(
+              l10n.wishesTabWriteButton,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
             ),
           ),
         ],

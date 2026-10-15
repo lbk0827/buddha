@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../temple/temple_stage.dart';
 
 /// 첫 완주 후 1회 제안. 건너뛰기 가능하고, 기본 캐릭터·법명 없음으로도
@@ -34,8 +35,10 @@ class _CharacterOnboardScreenState
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider).value;
-    final last = dharmaLastSyllable(profile?.creditedDays ?? 1) ?? '견';
+    final last = dharmaLastSyllable(profile?.creditedDays ?? 1) ??
+        dharmaLastSyllable(1)!;
     final text = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -45,9 +48,9 @@ class _CharacterOnboardScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Spacer(),
-              Text('이름 하나 줄까.', style: text.displayMedium),
+              Text(l10n.onboardingCharacterTitle, style: text.displayMedium),
               const SizedBox(height: 8),
-              Text('안 받아도 된다. 나중에 설정에서 바꿔도 된다.',
+              Text(l10n.onboardingCharacterSubtitle,
                   style: text.bodyMedium?.copyWith(
                       color: Theme.of(context)
                           .colorScheme
@@ -67,20 +70,24 @@ class _CharacterOnboardScreenState
                     ),
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('${entry.key}$last — ${entry.value}'),
+                      child: Text(l10n.onboardingCharacterOption(
+                          dharmaComposedName(entry.key, last), entry.value)),
                     ),
                   ),
                 ),
               const Spacer(),
               FilledButton(
                 onPressed: _first == null ? null : () => _finish(),
-                child: Text(_first == null ? '하나 골라라' : '$_first$last 로 하겠다'),
+                child: Text(_first == null
+                    ? l10n.onboardingCharacterPickPrompt
+                    : l10n.onboardingCharacterConfirm(
+                        dharmaComposedName(_first!, last))),
               ),
               const SizedBox(height: 8),
               Center(
                 child: TextButton(
                   onPressed: () => _finish(skip: true),
-                  child: const Text('건너뛰기'),
+                  child: Text(l10n.onboardingCharacterSkip),
                 ),
               ),
             ],

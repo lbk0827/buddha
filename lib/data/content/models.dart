@@ -1,6 +1,8 @@
 /// assets/content/*.json 파서. PRD 「콘텐츠 JSON」 스키마를 그대로 따른다.
 library;
 
+import '../../l10n/l10n.dart';
+
 enum DialogueRole { guide, observe, humor, ack, question, choice }
 
 enum DialogueIntensity { low, mid }
@@ -355,7 +357,7 @@ class TestContent {
     }
 
     return TestContent(
-      basis: m['basis']?.toString() ?? '최근 한 달의 나',
+      basis: m['basis']?.toString() ?? L.current.dataTestFallbackBasis,
       elements: ((m['elements'] as Map?)?.cast<String, dynamic>() ?? {})
           .map((k, v) => MapEntry(k, _strings(v))),
       types: ((m['types'] as Map?)?.cast<String, dynamic>() ?? {})
@@ -407,11 +409,12 @@ class SafetyScreenText {
   });
 
   factory SafetyScreenText.fromJson(Map<String, dynamic> m) => SafetyScreenText(
-        title: m['title']?.toString() ?? '잠깐 멈추자.',
-        body: m['body']?.toString() ??
-            '지금 많이 힘들어 보인다. 혼자 두고 싶지 않다. 아래 번호는 언제든 연결된다.',
-        primaryButton: m['primaryButton']?.toString() ?? '상담 연락처 보기',
-        secondaryButton: m['secondaryButton']?.toString() ?? '아니에요, 계속할게요',
+        title: m['title']?.toString() ?? L.current.dataSafetyFallbackTitle,
+        body: m['body']?.toString() ?? L.current.dataSafetyFallbackBody,
+        primaryButton: m['primaryButton']?.toString() ??
+            L.current.dataSafetyFallbackPrimaryButton,
+        secondaryButton: m['secondaryButton']?.toString() ??
+            L.current.dataSafetyFallbackSecondaryButton,
       );
 }
 
@@ -433,13 +436,16 @@ class SafetyContent {
         keywords: const [],
         patterns: const [],
         screen: SafetyScreenText.fromJson(const {}),
-        contacts: const [
+        contacts: [
           SafetyContact(
-              name: '자살예방상담전화', number: '109', hours: '24시간', note: null),
+              name: L.current.dataSafetyFallbackSuicideHotline,
+              number: '109',
+              hours: L.current.dataSafetyFallbackAllDay,
+              note: null),
           SafetyContact(
-              name: '정신건강위기상담전화',
+              name: L.current.dataSafetyFallbackMentalHealthHotline,
               number: '1577-0199',
-              hours: '24시간',
+              hours: L.current.dataSafetyFallbackAllDay,
               note: null),
         ],
       );

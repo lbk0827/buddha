@@ -1,0 +1,8 @@
+# 문자열 테이블: lib/l10n/app_<언어>.arb. 한국어가 원본(템플릿)이다.
+# 키를 바꾸거나 더하면 flutter gen-l10n (pub get · run · build 때도 돈다).
+arb-dir: lib/l10n
+template-arb-file: app_ko.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: true
+untranslated-messages-file: build/l10n_untranslated.json

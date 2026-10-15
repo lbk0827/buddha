@@ -1,47 +1,57 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 
 class HudTab {
-  final String label;
+  /// 탭 이름을 문자열 테이블에서 고른다.
+  final String Function(AppLocalizations) labelOf;
   final IconData icon;
   final IconData activeIcon;
   final String route;
   const HudTab({
-    required this.label,
+    required this.labelOf,
     required this.icon,
     required this.activeIcon,
     required this.route,
   });
+
+  String get label => labelOf(L.current);
 }
+
+String _templeLabel(AppLocalizations l) => l.shellTabTemple;
+String _wardrobeLabel(AppLocalizations l) => l.shellTabWardrobe;
+String _playLabel(AppLocalizations l) => l.shellTabPlay;
+String _seonsaLabel(AppLocalizations l) => l.shellTabSeonsa;
+String _wishesLabel(AppLocalizations l) => l.shellTabWishes;
 
 const List<HudTab> kHudTabs = [
   HudTab(
-    label: '절',
+    labelOf: _templeLabel,
     icon: Icons.temple_buddhist_outlined,
     activeIcon: Icons.temple_buddhist,
     route: '/',
   ),
   HudTab(
-    label: '꾸미기',
+    labelOf: _wardrobeLabel,
     icon: Icons.checkroom_outlined,
     activeIcon: Icons.checkroom,
     route: '/wardrobe',
   ),
   HudTab(
-    label: '놀이',
+    labelOf: _playLabel,
     icon: Icons.local_fire_department_outlined,
     activeIcon: Icons.local_fire_department,
     route: '/play',
   ),
   HudTab(
-    label: '선사',
+    labelOf: _seonsaLabel,
     icon: Icons.chat_bubble_outline,
     activeIcon: Icons.chat_bubble,
     route: '/seonsa',
   ),
   HudTab(
-    label: '소원',
+    labelOf: _wishesLabel,
     icon: Icons.volunteer_activism_outlined,
     activeIcon: Icons.volunteer_activism,
     route: '/wishes',
@@ -112,7 +122,7 @@ class _HudItem extends StatelessWidget {
     return Semantics(
       selected: selected,
       button: true,
-      label: tab.label,
+      label: tab.labelOf(context.l10n),
       child: InkResponse(
         onTap: onTap,
         containedInkWell: true,

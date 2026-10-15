@@ -7,6 +7,7 @@ import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../../data/content/models.dart';
+import '../../l10n/l10n.dart';
 
 /// 말씀의 뿌리 3단 펼치기 (FR-5.2).
 /// reviewStatus == public 항목만 여기까지 온다 (FR-5.1).
@@ -43,13 +44,13 @@ class _RootScreenState extends ConsumerState<RootScreen> {
     }
     if (root == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('말씀의 뿌리')),
-        body: const Center(child: Text('아직 열리지 않은 말이다.')),
+        appBar: AppBar(title: Text(context.l10n.rootsTitle)),
+        body: Center(child: Text(context.l10n.rootsNotOpenYet)),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('말씀의 뿌리')),
+      appBar: AppBar(title: Text(context.l10n.rootsTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(Tokens.gutter),
@@ -58,7 +59,7 @@ class _RootScreenState extends ConsumerState<RootScreen> {
             const SizedBox(height: 24),
 
             if (_depth == 1)
-              OutlinedButton(onPressed: _expand, child: const Text('왜 그런데')),
+              OutlinedButton(onPressed: _expand, child: Text(context.l10n.rootsWhyButton)),
 
             if (_depth >= 2) ...[
               Text(root.plainExplanation,
@@ -66,7 +67,8 @@ class _RootScreenState extends ConsumerState<RootScreen> {
               const SizedBox(height: 24),
               if (_depth == 2)
                 OutlinedButton(
-                    onPressed: _expand, child: const Text('어디서 나온 말인데')),
+                    onPressed: _expand,
+                    child: Text(context.l10n.rootsSourceButton)),
             ],
 
             if (_depth >= 3) _ScriptureBlock(root: root),
@@ -86,7 +88,7 @@ class _RootScreenState extends ConsumerState<RootScreen> {
               OutlinedButton(
                 onPressed: () =>
                     context.push('${Routes.sessionSetup}?prefillWorry=1&len=180'),
-                child: const Text('한 줄 적고 3분'),
+                child: Text(context.l10n.rootsWorryButton),
               ),
             ],
           ],
@@ -136,7 +138,7 @@ class _ScriptureBlock extends StatelessWidget {
                       ?.copyWith(color: fg.withValues(alpha: 0.7))),
               const SizedBox(height: 4),
               // 의역임을 숨기지 않는다 (FR-5.2).
-              Text('현대어로 풀었다',
+              Text(context.l10n.rootsParaphraseNote,
                   style: text.bodySmall
                       ?.copyWith(color: fg.withValues(alpha: 0.5))),
             ],
@@ -144,13 +146,13 @@ class _ScriptureBlock extends StatelessWidget {
         ),
         if (root.originalContext != null) ...[
           const SizedBox(height: 20),
-          Text('맥락', style: text.titleLarge),
+          Text(context.l10n.rootsContextHeading, style: text.titleLarge),
           const SizedBox(height: 6),
           Text(root.originalContext!, style: text.bodyLarge),
         ],
         if (root.traditionNote != null) ...[
           const SizedBox(height: 20),
-          Text('전통 노트', style: text.titleLarge),
+          Text(context.l10n.rootsTraditionHeading, style: text.titleLarge),
           const SizedBox(height: 6),
           Text(root.traditionNote!, style: text.bodyLarge),
         ],
@@ -163,7 +165,7 @@ class _ScriptureBlock extends StatelessWidget {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text('원문 보기'),
+            child: Text(context.l10n.rootsViewOriginal),
           ),
           if (s.sourceNote != null)
             Text(s.sourceNote!,

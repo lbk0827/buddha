@@ -6,6 +6,7 @@ import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
 import '../../core/text_utils.dart';
+import '../../l10n/l10n.dart';
 import '../avatar/buddha_figure.dart';
 import '../session/session_controller.dart';
 import '../shell/app_shell.dart';
@@ -56,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Padding(
         padding: const EdgeInsets.all(Tokens.gutter),
-        child: Center(child: Text('지금은 절 문이 안 열린다.\n\n$e')),
+        child: Center(child: Text(context.l10n.homeLoadError('$e'))),
       ),
       data: (state) => SafeArea(
         bottom: false,
@@ -75,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CornerButton(
-                          label: '명상',
+                          label: context.l10n.homeMeditationButton,
                           onTap: () {
                             ref.read(analyticsProvider).log(
                                 'home_entry_selected', {'entry': 'practice'});
@@ -92,7 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         const SizedBox(height: 12),
                         CornerButton(
-                          label: '달력',
+                          label: context.l10n.homeCalendarButton,
                           onTap: () => context.push(Routes.calendar),
                           child: const Icon(
                               Icons.calendar_month_outlined, size: 28),
@@ -104,7 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     right: Tokens.gutter,
                     bottom: 12,
                     child: CornerButton(
-                      label: '공덕',
+                      label: context.l10n.homeMeritButton,
                       onTap: () => context.push(Routes.meritShop),
                       child: const Icon(
                         Icons.brightness_7,
@@ -235,7 +236,7 @@ class _Bottom extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '부처님 말씀',
+                          context.l10n.homeBuddhaWordsLabel,
                           style: TextStyle(
                             fontSize: 11,
                             color: fg.withValues(alpha: 0.45),

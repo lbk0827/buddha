@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 
 /// 탭들이 공유하는 상단바. 좌: 공덕 / 우: 원형 버튼(증표 · 프로필).
@@ -27,13 +28,13 @@ class TabTopBar extends ConsumerWidget {
           if (trailing != null) ...[trailing!, const SizedBox(width: 8)],
           RoundIconButton(
             icon: Icons.workspace_premium_outlined,
-            tooltip: '증표',
+            tooltip: context.l10n.shellTopBarTokensTooltip,
             onTap: () => context.push(Routes.tokens),
           ),
           const SizedBox(width: 8),
           RoundIconButton(
             icon: Icons.person_outline,
-            tooltip: '프로필',
+            tooltip: context.l10n.shellTopBarProfileTooltip,
             onTap: () => context.push(Routes.profile),
           ),
         ],
@@ -55,7 +56,7 @@ class MeritPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final fg = Theme.of(context).colorScheme.onSurface;
     return Semantics(
-      label: '공덕 $merit',
+      label: context.l10n.shellMeritSemantics(merit),
       child: Container(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 14),

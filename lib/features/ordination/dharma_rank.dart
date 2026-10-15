@@ -2,31 +2,40 @@
 /// 법명은 수행하면 진화한다: 무념 → 무념대사 → 무념선사 → ?
 library;
 
+import '../../l10n/l10n.dart';
+
 class DharmaRank {
   final int index;
-
-  /// 법명 뒤에 붙는 말. 0단계는 아무것도 안 붙는다.
-  final String suffix;
-
-  /// 옆에 적히는 신분.
-  final String station;
   final int requiredBows;
 
-  const DharmaRank({
-    required this.index,
-    required this.suffix,
-    required this.station,
-    required this.requiredBows,
-  });
+  const DharmaRank({required this.index, required this.requiredBows});
 
-  String nameFor(String base) => '$base$suffix';
+  /// 옆에 적히는 신분.
+  String get station => switch (index) {
+    1 => L.current.ordinationStationDaesa,
+    2 => L.current.ordinationStationSeonsa,
+    3 => L.current.ordinationStationJosa,
+    _ => L.current.ordinationStationSami,
+  };
+
+  /// 단계에 맞춘 법명. 0단계는 법명 그대로다.
+  /// [base] 는 저장된 법명이고, 화면 표기는 [dharmaNameLabel] 로 바꾼다.
+  String nameFor(String base) {
+    final name = dharmaNameLabel(base);
+    return switch (index) {
+      1 => L.current.ordinationRankNameDaesa(name),
+      2 => L.current.ordinationRankNameSeonsa(name),
+      3 => L.current.ordinationRankNameJosa(name),
+      _ => name,
+    };
+  }
 }
 
 const List<DharmaRank> kDharmaRanks = [
-  DharmaRank(index: 0, suffix: '', station: '사미', requiredBows: 0),
-  DharmaRank(index: 1, suffix: '대사', station: '대사', requiredBows: 30),
-  DharmaRank(index: 2, suffix: '선사', station: '선사', requiredBows: 108),
-  DharmaRank(index: 3, suffix: '조사', station: '조사', requiredBows: 500),
+  DharmaRank(index: 0, requiredBows: 0),
+  DharmaRank(index: 1, requiredBows: 30),
+  DharmaRank(index: 2, requiredBows: 108),
+  DharmaRank(index: 3, requiredBows: 500),
 ];
 
 DharmaRank rankForBows(int bowCount) {
@@ -45,6 +54,8 @@ DharmaRank? nextRankAfter(int bowCount) {
 }
 
 /// 출가할 때 주는 법명 후보. 사용자가 고르지 않으면 무작위로 하나 준다.
+/// 고른 값이 프로필(dharmaName)에 그대로 저장되고 [kDharmaMeanings] 의 키라서
+/// 한국어 그대로 둔다. 화면에는 [dharmaNameLabel] 을 거쳐 보인다.
 const List<String> kDharmaNames = [
   '무념',
   '무심',
@@ -58,16 +69,32 @@ const List<String> kDharmaNames = [
   '법운',
 ];
 
+/// 저장된 법명 → 화면 표기. 저장값은 언어와 상관없이 한국어로 둔다.
+String dharmaNameLabel(String stored) => switch (stored) {
+  '무념' => L.current.ordinationNameMunyeom,
+  '무심' => L.current.ordinationNameMusim,
+  '적조' => L.current.ordinationNameJeokjo,
+  '일현' => L.current.ordinationNameIlhyeon,
+  '해안' => L.current.ordinationNameHaean,
+  '청안' => L.current.ordinationNameCheongan,
+  '보월' => L.current.ordinationNameBowol,
+  '지안' => L.current.ordinationNameJian,
+  '현우' => L.current.ordinationNameHyeonu,
+  '법운' => L.current.ordinationNameBeopun,
+  _ => stored,
+};
+
 /// 법명의 뜻. 출가 화면에서 한 줄로 보여준다.
-const Map<String, String> kDharmaMeanings = {
-  '무념': '생각이 없는 게 아니라, 생각에 끌려가지 않는다는 뜻',
-  '무심': '마음을 없앤 게 아니라, 마음에 머물지 않는다는 뜻',
-  '적조': '고요히 비춘다. 가만히 있어도 보인다는 뜻',
-  '일현': '하나가 드러난다. 여럿을 좇지 않는다는 뜻',
-  '해안': '바다의 언덕. 파도를 보되 휩쓸리지 않는다는 뜻',
-  '청안': '맑은 눈. 흐려도 다시 맑아진다는 뜻',
-  '보월': '보배로운 달. 이지러져도 다시 찬다는 뜻',
-  '지안': '지혜의 언덕. 몰라도 딛고 선다는 뜻',
-  '현우': '드러난 벗. 혼자가 아니라는 뜻',
-  '법운': '법의 구름. 형체 없이 덮는다는 뜻',
+/// 키는 저장되는 법명([kDharmaNames])이라 그대로 두고, 뜻만 문자열 테이블에서 온다.
+Map<String, String> get kDharmaMeanings => {
+  '무념': L.current.ordinationMeaningMunyeom,
+  '무심': L.current.ordinationMeaningMusim,
+  '적조': L.current.ordinationMeaningJeokjo,
+  '일현': L.current.ordinationMeaningIlhyeon,
+  '해안': L.current.ordinationMeaningHaean,
+  '청안': L.current.ordinationMeaningCheongan,
+  '보월': L.current.ordinationMeaningBowol,
+  '지안': L.current.ordinationMeaningJian,
+  '현우': L.current.ordinationMeaningHyeonu,
+  '법운': L.current.ordinationMeaningBeopun,
 };

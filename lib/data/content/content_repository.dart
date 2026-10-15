@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../../core/flags.dart';
+import 'content_locale.dart';
 import 'models.dart';
 
 const int kSupportedSchemaVersion = 1;
 
-/// 번들 JSON 로더. schemaVersion이 맞지 않거나 파일이 깨졌으면
+/// 번들 JSON 로더. 파일은 언어별 폴더에서 읽는다 ([loadContentString]).
+/// schemaVersion이 맞지 않거나 파일이 깨졌으면
 /// 오류 화면을 띄우지 않고 빈 풀로 계속 간다 (PRD 버전 관리).
 class ContentBundle {
   final List<DialogueItem> dialogues;
@@ -59,22 +61,22 @@ class ContentRepository {
     final errors = <String>[];
 
     final dialogues = await _loadList(
-      'assets/content/dialogues.json',
+      'dialogues.json',
       DialogueItem.fromJson,
       errors,
     );
     final roots = await _loadList(
-      'assets/content/roots.json',
+      'roots.json',
       RootItem.fromJson,
       errors,
     );
     final test = await _loadObject(
-      'assets/content/test.json',
+      'test.json',
       TestContent.fromJson,
       errors,
     );
     final safety = await _loadObject(
-          'assets/content/safety.json',
+          'safety.json',
           SafetyContent.fromJson,
           errors,
         ) ??
@@ -92,7 +94,7 @@ class ContentRepository {
   Future<Map<String, dynamic>?> _readJson(
       String path, List<String> errors) async {
     try {
-      final raw = await _bundle.loadString(path);
+      final raw = await loadContentString(_bundle, path);
       final decoded = jsonDecode(raw);
       if (decoded is! Map<String, dynamic>) {
         errors.add('$path: 최상위가 객체가 아니다');

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/l10n.dart';
 import 'wish_store.dart';
 
 class WishScreen extends ConsumerStatefulWidget {
@@ -21,6 +22,7 @@ class _WishScreenState extends ConsumerState<WishScreen> {
   }
 
   Future<void> save() async {
+    final l10n = context.l10n;
     setState(() {
       saving = true;
       error = null;
@@ -32,12 +34,12 @@ class _WishScreenState extends ConsumerState<WishScreen> {
       if (!mounted) return;
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('소원을 연등에 달았어요.')));
+          .showSnackBar(SnackBar(content: Text(l10n.wishesSavedSnack)));
     } catch (_) {
       if (mounted) {
         setState(() {
           saving = false;
-          error = '저장하지 못했어요. 다시 시도해 주세요.';
+          error = l10n.wishesSaveError;
         });
       }
     }
@@ -45,7 +47,7 @@ class _WishScreenState extends ConsumerState<WishScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('소원 빌기')),
+    appBar: AppBar(title: Text(context.l10n.wishesWriteTitle)),
     body: SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -53,7 +55,7 @@ class _WishScreenState extends ConsumerState<WishScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              '모든 이의 소원이\n이루어지기를',
+              context.l10n.wishesWriteHeadline,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displayMedium,
             ),
@@ -67,13 +69,16 @@ class _WishScreenState extends ConsumerState<WishScreen> {
               maxLines: 12,
               textCapitalization: TextCapitalization.sentences,
               onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                hintText: '마음속 소원을 적어 보세요',
+              decoration: InputDecoration(
+                hintText: context.l10n.wishesWriteHint,
                 alignLabelWithHint: true,
               ),
             ),
             const SizedBox(height: 12),
-            const Text('소원은 이 기기에 저장됩니다.', textAlign: TextAlign.center),
+            Text(
+              context.l10n.wishesStoredLocallyNote,
+              textAlign: TextAlign.center,
+            ),
             if (error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 12),
@@ -85,7 +90,11 @@ class _WishScreenState extends ConsumerState<WishScreen> {
             const SizedBox(height: 24),
             FilledButton(
               onPressed: saving || controller.text.trim().isEmpty ? null : save,
-              child: Text(saving ? '소원을 다는 중…' : '작성 완료'),
+              child: Text(
+                saving
+                    ? context.l10n.wishesSaving
+                    : context.l10n.wishesSubmitButton,
+              ),
             ),
           ],
         ),

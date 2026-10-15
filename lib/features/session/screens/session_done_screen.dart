@@ -7,6 +7,7 @@ import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/time_utils.dart';
 import '../../../data/content/models.dart';
+import '../../../l10n/l10n.dart';
 import '../../../data/repositories/profile_repository.dart';
 import '../../../data/repositories/session_repository.dart';
 import '../../dialogue/dialogue_service.dart';
@@ -56,16 +57,16 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('기록을 이 폰에 남겨 둘까?'),
-        content: const Text('이 폰 안에만 남는다. 어디로도 보내지 않는다.'),
+        title: Text(context.l10n.sessionDoneConsentTitle),
+        content: Text(context.l10n.sessionDoneConsentBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('안 남길래'),
+            child: Text(context.l10n.sessionDoneConsentDecline),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('남겨 둬'),
+            child: Text(context.l10n.sessionDoneConsentAccept),
           ),
         ],
       ),
@@ -145,7 +146,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
         body: Center(
           child: TextButton(
             onPressed: () => context.go(Routes.home),
-            child: const Text('돌아가기'),
+            child: Text(context.l10n.sessionDoneBackButton),
           ),
         ),
       );
@@ -192,7 +193,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
 
                     // 기록 1줄 (FR-2.8). 저장을 거부했으면 남은 게 없다.
                     if (_discarded)
-                      Text('기록은 남기지 않았다.',
+                      Text(context.l10n.sessionDoneNotRecorded,
                           style: text.bodyMedium?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -208,7 +209,8 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
                     if (result.isValid) ...[
                       const SizedBox(height: 6),
                       Text(
-                        '+${meritForSession(practiced)} 공덕',
+                        context.l10n.sessionDoneMeritGained(
+                            meritForSession(practiced)),
                         style: text.bodyMedium?.copyWith(
                           color: Tokens.saffron,
                           fontWeight: FontWeight.w700,
@@ -222,7 +224,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
                       if (!_lineRequested)
                         OutlinedButton(
                           onPressed: _revealLine,
-                          child: const Text('선사 한마디 보기'),
+                          child: Text(context.l10n.sessionDoneRevealLineButton),
                         )
                       else if (_loadingLine)
                         const Center(child: CircularProgressIndicator())
@@ -234,7 +236,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => context.push(Routes.sessionRepeat),
-                        child: const Text('지난번 그 얘기'),
+                        child: Text(context.l10n.sessionDoneRepeatButton),
                       ),
                     ],
                   ],
@@ -245,7 +247,7 @@ class _SessionDoneScreenState extends ConsumerState<SessionDoneScreen> {
                     Tokens.gutter, 0, Tokens.gutter, Tokens.gutter),
                 child: FilledButton(
                   onPressed: _leave,
-                  child: const Text('나가기'),
+                  child: Text(context.l10n.sessionDoneLeaveButton),
                 ),
               ),
             ],
@@ -273,8 +275,10 @@ class _RecordLine extends StatelessWidget {
     final fg = Theme.of(context).colorScheme.onSurface;
     final label = [
       formatDuration(practicedSec),
-      completed ? '완주' : '중단',
-      if (!valid) '기록만',
+      completed
+          ? context.l10n.sessionDoneOutcomeCompleted
+          : context.l10n.sessionDoneOutcomeInterrupted,
+      if (!valid) context.l10n.sessionDoneRecordOnly,
     ].join(' · ');
 
     return Text(
@@ -311,7 +315,7 @@ class _SeonsaLine extends StatelessWidget {
         TextButton.icon(
           onPressed: () => shareDialogueCard(context, item.text),
           icon: const Icon(Icons.ios_share, size: 18),
-          label: const Text('나누기'),
+          label: Text(context.l10n.sessionDoneShareButton),
         ),
       ],
     );

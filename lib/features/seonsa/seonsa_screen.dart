@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../dialogue/share_card.dart';
 import '../home/home_controller.dart';
 import '../shell/app_shell.dart';
@@ -41,12 +42,12 @@ class SeonsaScreen extends ConsumerWidget {
                     const _SeonsaSeal(),
                     const SizedBox(height: 24),
                     Text(
-                      state.dailyCard?.text ?? '오늘은 할 말이 없다. 그런 날도 있다.',
+                      state.dailyCard?.text ?? context.l10n.seonsaNoCardToday,
                       style: text.displayMedium?.copyWith(height: 1.45),
                     ),
                     const SizedBox(height: 14),
                     Text(
-                      '하루 한 번',
+                      context.l10n.seonsaDailyOnce,
                       style: text.bodySmall
                           ?.copyWith(color: fg.withValues(alpha: 0.45)),
                     ),
@@ -65,7 +66,7 @@ class SeonsaScreen extends ConsumerWidget {
                       height: 52,
                       child: FilledButton(
                         onPressed: () => context.push(Routes.burn),
-                        child: const Text('번뇌 한 줄 적기'),
+                        child: Text(context.l10n.seonsaBurnButton),
                       ),
                     ),
                   ),
@@ -105,7 +106,7 @@ class _SeonsaSeal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        label: '선사',
+        label: context.l10n.seonsaSealSemantics,
         child: Container(
           width: 60,
           height: 60,

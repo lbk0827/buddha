@@ -7,15 +7,40 @@ import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../l10n/l10n.dart';
+
 /// 키캡 한 개. 그림([icon]) 또는 큰 글자([big]) 하나와, 아래 작은 [label].
 ///
 /// 글자는 그림에 굽지 않고 앱 글꼴로 쓴다. 그림 모델이 한글을 틀리게 그려서다.
 @immutable
 class KeycapKey {
-  const KeycapKey(this.id, this.label, {this.big, this.bigColor});
+  const KeycapKey(this.id, {this.big, this.bigColor});
 
   final String id;
-  final String label;
+
+  /// 키캡 밑 작은 글자. 문자열 테이블에서 [id] 로 찾는다.
+  String get label {
+    final l = L.current;
+    return switch (id) {
+      'merit' => l.playKeycapKeyMerit,
+      'worry' => l.playKeycapKeyWorry,
+      'nirvana' => l.playKeycapKeyNirvana,
+      'bulb' => l.playKeycapKeyBulb,
+      'clock' => l.playKeycapKeyClock,
+      'tomorrow' => l.playKeycapKeyTomorrow,
+      'meeting' => l.playKeycapKeyMeeting,
+      'battery' => l.playKeycapKeyBattery,
+      'campfire' => l.playKeycapKeyCampfire,
+      'breeze' => l.playKeycapKeyBreeze,
+      'lotus' => l.playKeycapKeyLotus,
+      'cloud' => l.playKeycapKeyCloud,
+      'rocket' => l.playKeycapKeyRocket,
+      'rebirth' => l.playKeycapKeyRebirth,
+      'gassho' => l.playKeycapKeyGassho,
+      'wallet' => l.playKeycapKeyWallet,
+      _ => id,
+    };
+  }
 
   /// 그림 대신 크게 찍는 글자(「+1」). null 이면 그림을 쓴다.
   final String? big;
@@ -44,16 +69,28 @@ class KeycapColors {
 /// 키링 하나 — 키캡 네 개가 한 줄.
 @immutable
 class KeycapRing {
-  const KeycapRing(this.name, this.colors, this.keys);
+  const KeycapRing(this.id, this.colors, this.keys);
 
-  final String name;
+  final String id;
+
+  /// 키링 이름(접근성 라벨). 문자열 테이블에서 [id] 로 찾는다.
+  String get name {
+    final l = L.current;
+    return switch (id) {
+      'today' => l.playKeycapRingToday,
+      'office' => l.playKeycapRingOffice,
+      'rest' => l.playKeycapRingRest,
+      'meme' => l.playKeycapRingMeme,
+      _ => id,
+    };
+  }
   final KeycapColors colors;
   final List<KeycapKey> keys;
 }
 
 const kKeycapRings = <KeycapRing>[
   KeycapRing(
-    '오늘의 수행',
+    'today',
     KeycapColors(
       top: Color(0xFFFBFAF7),
       wallTop: Color(0xFFECE8E1),
@@ -61,14 +98,14 @@ const kKeycapRings = <KeycapRing>[
       ink: Color(0xFF2B2420),
     ),
     [
-      KeycapKey('merit', '공덕', big: '+1', bigColor: Color(0xFFD98B2B)),
-      KeycapKey('worry', '번뇌', big: '-108', bigColor: Color(0xFFC0392B)),
-      KeycapKey('nirvana', '해탈'),
-      KeycapKey('bulb', '깨닫는 중'),
+      KeycapKey('merit', big: '+1', bigColor: Color(0xFFD98B2B)),
+      KeycapKey('worry', big: '-108', bigColor: Color(0xFFC0392B)),
+      KeycapKey('nirvana'),
+      KeycapKey('bulb'),
     ],
   ),
   KeycapRing(
-    '직장인 수행',
+    'office',
     KeycapColors(
       top: Color(0xFFF6EBD3),
       wallTop: Color(0xFFE8D9BA),
@@ -76,14 +113,14 @@ const kKeycapRings = <KeycapRing>[
       ink: Color(0xFF3A2E22),
     ),
     [
-      KeycapKey('clock', '칼퇴 성불'),
-      KeycapKey('tomorrow', '내일 깨닫자'),
-      KeycapKey('meeting', '회의 해탈'),
-      KeycapKey('battery', '멘탈 충전'),
+      KeycapKey('clock'),
+      KeycapKey('tomorrow'),
+      KeycapKey('meeting'),
+      KeycapKey('battery'),
     ],
   ),
   KeycapRing(
-    '쉼',
+    'rest',
     KeycapColors(
       top: Color(0xFFD6E3C1),
       wallTop: Color(0xFFC0D0A6),
@@ -91,14 +128,14 @@ const kKeycapRings = <KeycapRing>[
       ink: Color(0xFF26332B),
     ),
     [
-      KeycapKey('campfire', '멍 때리기'),
-      KeycapKey('breeze', '숨 고르기'),
-      KeycapKey('lotus', '자비 충전'),
-      KeycapKey('cloud', '지나간다'),
+      KeycapKey('campfire'),
+      KeycapKey('breeze'),
+      KeycapKey('lotus'),
+      KeycapKey('cloud'),
     ],
   ),
   KeycapRing(
-    '밈',
+    'meme',
     KeycapColors(
       top: Color(0xFFF9D9DF),
       wallTop: Color(0xFFF0C0CA),
@@ -106,10 +143,10 @@ const kKeycapRings = <KeycapRing>[
       ink: Color(0xFF52202E),
     ),
     [
-      KeycapKey('rocket', '극락 가즈아'),
-      KeycapKey('rebirth', '윤회 중'),
-      KeycapKey('gassho', '성불하십쇼'),
-      KeycapKey('wallet', '무소유'),
+      KeycapKey('rocket'),
+      KeycapKey('rebirth'),
+      KeycapKey('gassho'),
+      KeycapKey('wallet'),
     ],
   ),
 ];
@@ -979,7 +1016,9 @@ class _KeycapBoardState extends State<KeycapBoard>
       height: 2 * r,
       child: Semantics(
         button: true,
-        label: k.big == null ? k.label : '${k.label} ${k.big}',
+        label: k.big == null
+            ? k.label
+            : context.l10n.playKeycapKeyWithBigSemantics(k.label, k.big!),
         onTap: () {
           _keys[i]
             ..down(-1)
@@ -1078,7 +1117,9 @@ class KeycapRingPicker extends StatelessWidget {
           Semantics(
             button: true,
             selected: i == selected,
-            label: '키링 ${kKeycapRings[i].name}',
+            label: context.l10n.playKeycapRingSemantics(
+              kKeycapRings[i].name,
+            ),
             excludeSemantics: true,
             child: InkResponse(
               onTap: () => onSelect(i),

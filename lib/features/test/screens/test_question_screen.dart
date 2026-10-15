@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../l10n/l10n.dart';
 import '../test_controller.dart';
 
 /// 문항 화면. 진행 표시는 염주, 심화는 점선 염주 (라우트 표).
@@ -51,7 +52,7 @@ class TestQuestionScreen extends ConsumerWidget {
               if (q.deep)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Text('조금 더 물어도 되겠나',
+                  child: Text(context.l10n.testQuestionDeepNotice,
                       style: text.bodyMedium?.copyWith(
                           color: Theme.of(context)
                               .colorScheme
@@ -99,7 +100,7 @@ class TestQuestionScreen extends ConsumerWidget {
                         .answer(q.id, null);
                     _go(context, ref);
                   },
-                  child: const Text('건너뛰기'),
+                  child: Text(context.l10n.testQuestionSkip),
                 ),
               ),
               if (q.deep)
@@ -109,7 +110,7 @@ class TestQuestionScreen extends ConsumerWidget {
                       ref.read(testControllerProvider.notifier).declineDeep();
                       context.pushReplacement(Routes.testResult);
                     },
-                    child: const Text('여기까지 할게요'),
+                    child: Text(context.l10n.testQuestionStopHere),
                   ),
                 ),
             ],

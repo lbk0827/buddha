@@ -8,6 +8,7 @@ import '../../data/content/content_repository.dart';
 import '../../data/content/models.dart';
 import '../../data/repositories/dialogue_repository.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../../l10n/l10n.dart';
 import '../avatar/avatar_equip.dart';
 import '../gate/temple_gate.dart';
 import '../ordination/dharma_rank.dart';
@@ -125,16 +126,17 @@ final homeStateProvider = FutureProvider<TempleHomeState>((ref) async {
 });
 
 String _pickGreeting(ContentBundle content, bool firstVisit) {
+  final fallback = firstVisit
+      ? L.current.homeGreetingFallbackFirst
+      : L.current.homeGreetingFallback;
   final items = content.forScreen('home_greeting');
-  if (items.isEmpty) {
-    return firstVisit ? '왔네. 천천히 봐라. 급한 건 없다.' : '왔네.';
-  }
+  if (items.isEmpty) return fallback;
   final firstOnly =
       items.where((d) => d.requires.contains('firstSession')).toList();
   final pool = firstVisit
       ? (firstOnly.isNotEmpty ? firstOnly : items)
       : items.where((d) => !d.requires.contains('firstSession')).toList();
-  if (pool.isEmpty) return firstVisit ? '왔네. 천천히 봐라. 급한 건 없다.' : '왔네.';
+  if (pool.isEmpty) return fallback;
   return pool[Random().nextInt(pool.length)].text;
 }
 
@@ -169,5 +171,5 @@ Future<void> scheduleRevisitIfConsented(WidgetRef ref) async {
   final at = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 20);
   await ref
       .read(notificationServiceProvider)
-      .scheduleRevisit(at, '어제 등, 아직 켜져 있다.');
+      .scheduleRevisit(at, L.current.homeRevisitNotificationBody);
 }

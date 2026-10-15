@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../../data/content/models.dart';
 import '../session/session_controller.dart';
 
@@ -77,7 +78,7 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
                     ref.read(sessionControllerProvider.notifier).reset();
                     context.go(Routes.home);
                   },
-                  child: const Text('홈으로'),
+                  child: Text(context.l10n.safetyHomeButton),
                 ),
               ],
             ),

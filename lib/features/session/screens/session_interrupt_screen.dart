@@ -8,6 +8,7 @@ import '../../../app/providers.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/time_utils.dart';
+import '../../../l10n/l10n.dart';
 import '../session_controller.dart';
 import '../session_timing.dart';
 
@@ -71,17 +72,17 @@ class _SessionInterruptScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                Text('${formatDuration(practiced)} 쉬었다.',
+                Text(context.l10n.sessionInterruptRested(formatDuration(practiced)),
                     style: Theme.of(context).textTheme.displayMedium),
                 const Spacer(),
                 FilledButton(
                   onPressed: _resume,
-                  child: const Text('더 쉴래'),
+                  child: Text(context.l10n.sessionInterruptResumeButton),
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton(
                   onPressed: () => _stop(),
-                  child: const Text('오늘은 여기까지'),
+                  child: Text(context.l10n.sessionInterruptStopButton),
                 ),
               ],
             ),

@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../data/content/content_locale.dart';
+
 /// 부처님 말씀 한 구절 — 초기 경전을 현대 한국어로 풀어 쓴 것.
 ///
 /// 영어 대조문은 Bhikkhu Sujato 역(SuttaCentral, CC0). 한국어 풀이는 이 앱이
@@ -47,7 +49,7 @@ class BuddhaWord {
   String get citation => '$scripture $ref';
 }
 
-const kBuddhaWordsAsset = 'assets/content/buddha_words.json';
+const kBuddhaWordsFile = 'buddha_words.json';
 
 List<BuddhaWord> parseBuddhaWords(String raw) {
   final json = jsonDecode(raw) as Map<String, dynamic>;
@@ -59,7 +61,7 @@ List<BuddhaWord> parseBuddhaWords(String raw) {
 
 final buddhaWordsProvider = FutureProvider<List<BuddhaWord>>(
   (ref) async =>
-      parseBuddhaWords(await rootBundle.loadString(kBuddhaWordsAsset)),
+      parseBuddhaWords(await loadContentString(rootBundle, kBuddhaWordsFile)),
 );
 
 /// 하루 한 구절. 모든 구절을 한 번씩 돈 뒤에야 다시 나온다.

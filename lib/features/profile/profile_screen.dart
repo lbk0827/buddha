@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../avatar/avatar_equip.dart';
 import '../avatar/buddha_figure.dart';
 import '../avatar/halo_spin.dart';
@@ -21,7 +22,7 @@ class ProfileScreen extends ConsumerWidget {
     final fg = Theme.of(context).colorScheme.onSurface;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('프로필')),
+      appBar: AppBar(title: Text(context.l10n.profileTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
@@ -34,13 +35,14 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 130 * kHaloOverflow),
                   BuddhaFigure(equip: home?.equip ?? kDefaultEquip, size: 130),
                   const SizedBox(height: 10),
-                  Text(home?.dharmaName ?? '법명 없음',
+                  Text(home?.dharmaName ?? context.l10n.profileNoDharmaName,
                       style: text.displayMedium?.copyWith(fontSize: 26)),
                   const SizedBox(height: 2),
                   Text(
                     home == null
                         ? ''
-                        : '${home.station} · 엎기 ${home.bowCount}회',
+                        : context.l10n
+                            .profileRankLine(home.station, home.bowCount),
                     style: text.bodyMedium
                         ?.copyWith(color: fg.withValues(alpha: 0.55)),
                   ),
@@ -53,18 +55,18 @@ class ProfileScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 28),
             _Row(
-              title: '내 마음 알아보기',
-              subtitle: '16문항 · 2분',
+              title: context.l10n.profileTestTitle,
+              subtitle: context.l10n.profileTestSubtitle,
               onTap: () => context.push(Routes.test),
             ),
             _Row(
-              title: '기록',
-              subtitle: '엎어둔 날들',
+              title: context.l10n.profileRecordsTitle,
+              subtitle: context.l10n.profileRecordsSubtitle,
               onTap: () => context.push(Routes.records),
             ),
             _Row(
-              title: '설정',
-              subtitle: '알림 · 기록 저장 · 데이터 삭제',
+              title: context.l10n.profileSettingsTitle,
+              subtitle: context.l10n.profileSettingsSubtitle,
               onTap: () => context.push(Routes.settings),
             ),
           ],
@@ -91,7 +93,7 @@ class _NextRank extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        '${next.station}까지 $left회',
+        context.l10n.profileNextRank(next.station, left),
         style: const TextStyle(
             fontSize: 12, fontWeight: FontWeight.w600, color: Tokens.temple),
       ),

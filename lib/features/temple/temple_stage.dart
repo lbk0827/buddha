@@ -1,49 +1,43 @@
+import '../../l10n/l10n.dart';
+
 /// 절 성장. 인정일에만 반응하고, 미접속으로 차감되지 않는다 (FR-4.2).
 class TempleStage {
   final int index;
-  final String name;
   final int requiredCreditedDays;
-  final String arrivalLine;
 
   const TempleStage({
     required this.index,
-    required this.name,
     required this.requiredCreditedDays,
-    required this.arrivalLine,
   });
+
+  /// 건물 이름 (등 · 나무 · …).
+  String get name => switch (index) {
+        1 => L.current.templeStageNameLantern,
+        2 => L.current.templeStageNameTree,
+        3 => L.current.templeStageNameWall,
+        4 => L.current.templeStageNameBell,
+        5 => L.current.templeStageNameRoof,
+        _ => L.current.templeStageNameGate,
+      };
+
+  /// 그 단계가 생길 때 나오는 한 줄.
+  String get arrivalLine => switch (index) {
+        1 => L.current.templeStageArrivalLantern,
+        2 => L.current.templeStageArrivalTree,
+        3 => L.current.templeStageArrivalWall,
+        4 => L.current.templeStageArrivalBell,
+        5 => L.current.templeStageArrivalRoof,
+        _ => L.current.templeStageArrivalGate,
+      };
 }
 
 const List<TempleStage> kTempleStages = [
-  TempleStage(
-      index: 1,
-      name: '등',
-      requiredCreditedDays: 1,
-      arrivalLine: '등 하나 켜졌다.'),
-  TempleStage(
-      index: 2,
-      name: '나무',
-      requiredCreditedDays: 2,
-      arrivalLine: '마당에 나무 한 그루 섰다.'),
-  TempleStage(
-      index: 3,
-      name: '돌담',
-      requiredCreditedDays: 5,
-      arrivalLine: '돌담이 둘러졌다. 바람이 좀 덜 든다.'),
-  TempleStage(
-      index: 4,
-      name: '종',
-      requiredCreditedDays: 10,
-      arrivalLine: '종이 걸렸다. 아직 치지는 않았다.'),
-  TempleStage(
-      index: 5,
-      name: '지붕',
-      requiredCreditedDays: 20,
-      arrivalLine: '지붕이 올라갔다. 비는 이제 안 맞는다.'),
-  TempleStage(
-      index: 6,
-      name: '일주문',
-      requiredCreditedDays: 40,
-      arrivalLine: '일주문이 섰다. 여기부터 절이다.'),
+  TempleStage(index: 1, requiredCreditedDays: 1),
+  TempleStage(index: 2, requiredCreditedDays: 2),
+  TempleStage(index: 3, requiredCreditedDays: 5),
+  TempleStage(index: 4, requiredCreditedDays: 10),
+  TempleStage(index: 5, requiredCreditedDays: 20),
+  TempleStage(index: 6, requiredCreditedDays: 40),
 ];
 
 /// 인정일 누적 → 단계 (0 = 아직 아무것도 없는 빈 마당).
@@ -81,15 +75,34 @@ bool shouldShowFallenLeaves({
 }
 
 /// 법명 뒷 글자 (FR-4.8). 3단계 이상은 플래그 뒤.
+/// 법명을 이루는 저장값이라 한국어 그대로 둔다. 화면 표기는 [dharmaSyllableLabel].
 String? dharmaLastSyllable(int creditedDays) {
   if (creditedDays >= 7) return '사';
   if (creditedDays >= 1) return '견';
   return null;
 }
 
-const Map<String, String> kDharmaFirstSyllables = {
-  '관': '관세음 — 듣는 쪽',
-  '지': '지장 — 버티는 쪽',
-  '문': '문수 — 따지는 쪽',
-  '미': '미륵 — 기다리는 쪽',
-};
+/// 법명 글자(저장값) → 화면 표기.
+String dharmaSyllableLabel(String stored) => switch (stored) {
+      '관' => L.current.templeDharmaSyllableGwan,
+      '지' => L.current.templeDharmaSyllableJi,
+      '문' => L.current.templeDharmaSyllableMun,
+      '미' => L.current.templeDharmaSyllableMi,
+      '사' => L.current.templeDharmaSyllableSa,
+      '견' => L.current.templeDharmaSyllableGyeon,
+      _ => stored,
+    };
+
+/// 앞 글자 + 뒷 글자 법명의 화면 표기 (저장값을 받는다).
+String dharmaComposedName(String first, String last) =>
+    L.current.templeDharmaComposedName(
+        dharmaSyllableLabel(first), dharmaSyllableLabel(last));
+
+/// 법명 앞 글자 → 그 유래. 키는 프로필(dharmaFirst)에 저장되는 값이라 그대로 두고,
+/// 유래 설명만 문자열 테이블에서 온다.
+Map<String, String> get kDharmaFirstSyllables => {
+      '관': L.current.templeDharmaFirstGwan,
+      '지': L.current.templeDharmaFirstJi,
+      '문': L.current.templeDharmaFirstMun,
+      '미': L.current.templeDharmaFirstMi,
+    };

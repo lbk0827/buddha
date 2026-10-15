@@ -3,13 +3,15 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const exampleWishes = [
-  '우리 가족이 건강하고 평안하기를 바랍니다.',
-  '새로운 시작 앞에서 용기를 잃지 않게 해 주세요.',
-  '오늘도 누군가에게 다정한 사람이 되고 싶어요.',
-  '마음이 지친 모든 이에게 편안한 밤이 오기를.',
-  '오래 준비한 일이 좋은 결실을 맺기를 바랍니다.',
-];
+import '../../l10n/l10n.dart';
+
+List<String> get exampleWishes => [
+      L.current.wishesExampleFamily,
+      L.current.wishesExampleCourage,
+      L.current.wishesExampleKindness,
+      L.current.wishesExampleRestfulNight,
+      L.current.wishesExampleFruition,
+    ];
 
 class WishStore {
   WishStore(this.preferences);

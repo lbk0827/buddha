@@ -2,18 +2,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/l10n.dart';
+
 /// 놀이 탭에서 두드릴 악기.
 enum PlayInstrument {
   // 놀이 고르는 버튼은 이 순서로 놓인다.
-  keycap('키캡', '키캡을 꾹 눌렀다 떼면 도각 소리가 난다.'),
-  moktak('목탁', '화면을 톡 치면 목탁을 두드린다.'),
-  singingBowl('싱잉볼', '톡 치거나, 테두리를 따라 빙글빙글 문지른다.');
+  keycap,
+  moktak,
+  singingBowl;
 
-  const PlayInstrument(this.label, this.howTo);
-  final String label;
+  String get label => switch (this) {
+    keycap => L.current.playInstrumentKeycap,
+    moktak => L.current.playInstrumentMoktak,
+    singingBowl => L.current.playInstrumentSingingBowl,
+  };
 
   /// 놀이 방법 한 줄.
-  final String howTo;
+  String get howTo => switch (this) {
+    keycap => L.current.playHowToKeycap,
+    moktak => L.current.playHowToMoktak,
+    singingBowl => L.current.playHowToSingingBowl,
+  };
 }
 
 /// 마지막에 고른 악기. 다음에 놀이 탭을 열면 그 악기로 시작한다.

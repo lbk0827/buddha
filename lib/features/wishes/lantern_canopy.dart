@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
+
 /// A single ticker and canvas for the whole canopy, including hanging papers.
 class LanternCanopy extends StatefulWidget {
   const LanternCanopy({
@@ -48,7 +50,7 @@ class _LanternCanopyState extends State<LanternCanopy>
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: '연등에 달린 소원 보기',
+    label: context.l10n.wishesCanopySemantics,
     child: GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: widget.onTap,

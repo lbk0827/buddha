@@ -8,16 +8,18 @@ import '../../app/theme.dart';
 import '../../data/db/database.dart';
 import '../../data/repositories/worry_repository.dart';
 import '../dialogue/dialogue_service.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 import '../safety/safety_detector.dart';
 import 'burn_animation.dart';
 
 /// 탐·진·치 (v3 죽비). 강제하지 않는다.
-const Map<String, String> kWorryKinds = {
-  'greed': '탐 · 욕심',
-  'anger': '진 · 화',
-  'delusion': '치 · 답답',
-};
+/// 키는 DB 에 저장되는 값이라 그대로 두고, 표시 이름만 문자열 테이블에서 온다.
+Map<String, String> get kWorryKinds => {
+      'greed': L.current.worryKindGreed,
+      'anger': L.current.worryKindAnger,
+      'delusion': L.current.worryKindDelusion,
+    };
 
 enum _Step { write, zukbi, burning }
 
@@ -48,6 +50,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
   Future<void> _submit() async {
     final body = _controller.text.trim();
     if (body.isEmpty || _busy) return;
+    final l10n = context.l10n;
     setState(() => _busy = true);
 
     // 위기 신호는 입력 시점에 판정한다 (SA-1).
@@ -72,7 +75,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
           pool: 'after_worry:${_poolFor(_kind)}',
           chip: _kind,
         );
-    final text = line?.text ?? '그게 번뇌냐. 적었으면 반은 지난 거다.';
+    final text = line?.text ?? l10n.worryZukbiFallback;
     await ref.read(worryRepositoryProvider).attachSeonsaLine(worry.id, text);
 
     if (!mounted) return;
@@ -95,6 +98,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
   Future<void> _rebut() async {
     final worry = _worry;
     if (worry == null || _busy) return;
+    final l10n = context.l10n;
     setState(() => _busy = true);
 
     final count = await ref.read(worryRepositoryProvider).rebut(worry.id);
@@ -106,7 +110,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
     if (!mounted) return;
     setState(() {
       _rebuttals = count;
-      _seonsaLine = line?.text ?? '반박도 번뇌다. 그만하고 태워라.';
+      _seonsaLine = line?.text ?? l10n.worryRebuttalFallback;
       _busy = false;
     });
   }
@@ -152,19 +156,20 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
   }
 
   Widget _buildWrite() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '오늘 뭐가\n제일 짜증났어?',
+          l10n.worryWriteTitle,
           style: Theme.of(context)
               .textTheme
               .displayMedium
               ?.copyWith(color: Tokens.ivory, height: 1.3),
         ),
         const SizedBox(height: 6),
-        const Text('한 줄만 적어. 태우면 공덕이 된다.',
-            style: TextStyle(color: Color(0xFFA39B90), fontSize: 14)),
+        Text(l10n.worryWriteSubtitle,
+            style: const TextStyle(color: Color(0xFFA39B90), fontSize: 14)),
         const SizedBox(height: 28),
 
         // 종이 쪽지
@@ -186,8 +191,8 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('번뇌 한 줄',
-                    style: TextStyle(fontSize: 11, color: Color(0xFF6B5F52))),
+                Text(l10n.worryNoteLabel,
+                    style: const TextStyle(fontSize: 11, color: Color(0xFF6B5F52))),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _controller,
@@ -200,7 +205,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
                       fontWeight: FontWeight.w700,
                       color: Tokens.ink,
                       height: 1.4),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     isDense: true,
                     counterText: '',
                     filled: false,
@@ -208,7 +213,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
-                    hintText: '한 줄이면 충분하다',
+                    hintText: l10n.worryNoteHint,
                   ),
                 ),
               ],
@@ -238,7 +243,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
           height: 56,
           child: FilledButton(
             onPressed: _busy ? null : _submit,
-            child: const Text('죽비 받기'),
+            child: Text(l10n.worrySubmitButton),
           ),
         ),
       ],
@@ -246,6 +251,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
   }
 
   Widget _buildZukbi() {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -278,7 +284,9 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
             ),
             const SizedBox(width: 10),
             Text(
-              _rebuttals == 0 ? '선사 · 방금' : '선사 · 죽비 ${_rebuttals + 1}회',
+              _rebuttals == 0
+                  ? l10n.worrySeonsaJustNow
+                  : l10n.worrySeonsaZukbiCount(_rebuttals + 1),
               style: const TextStyle(color: Color(0xFFA39B90), fontSize: 12),
             ),
           ],
@@ -297,10 +305,10 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
           ),
         ),
         const Spacer(),
-        const Text(
-          '받아들이면 태워진다. 반박하면 죽비 한 번 더.',
+        Text(
+          l10n.worryZukbiHint,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Color(0xFFA39B90), fontSize: 12),
+          style: const TextStyle(color: Color(0xFFA39B90), fontSize: 12),
         ),
         const SizedBox(height: 10),
         Row(
@@ -310,7 +318,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
                 height: 56,
                 child: FilledButton(
                   onPressed: _busy ? null : _burn,
-                  child: const Text('인정. 태운다'),
+                  child: Text(l10n.worryBurnButton),
                 ),
               ),
             ),
@@ -324,7 +332,7 @@ class _BurnScreenState extends ConsumerState<BurnScreen> {
                   foregroundColor: Tokens.ivory,
                   side: const BorderSide(color: Color(0xFF4A423B)),
                 ),
-                child: const Text('반박'),
+                child: Text(l10n.worryRebutButton),
               ),
             ),
           ],
@@ -341,7 +349,7 @@ class _BurnCount extends ConsumerWidget {
     return Text(
       home == null
           ? ''
-          : '오늘 ${home.burnedToday}개 태움 · 누적 ${home.burnedCount} / 108',
+          : context.l10n.worryBurnCount(home.burnedToday, home.burnedCount),
       style: const TextStyle(color: Color(0xFFA39B90), fontSize: 13),
     );
   }
@@ -352,6 +360,7 @@ class _MeritHint extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final burnedToday = ref.watch(homeStateProvider).value?.burnedToday ?? 0;
     final merit = WorryRepository.meritForBurn(burnedToday);
+    final l10n = context.l10n;
     const base = TextStyle(fontSize: 13, color: Color(0xFFD9D0C3), height: 1.4);
     const strong = TextStyle(color: Tokens.ivory, fontWeight: FontWeight.w700);
     return Container(
@@ -370,14 +379,14 @@ class _MeritHint extends ConsumerWidget {
               text: TextSpan(
                 style: base,
                 children: merit > 0
-                    ? [
-                        const TextSpan(text: '태우면 '),
-                        TextSpan(text: '+$merit 공덕', style: strong),
-                        const TextSpan(text: ' · 108개 채우면 「108번뇌 완파」'),
-                      ]
-                    : const [
-                        TextSpan(text: '오늘 공덕은 다 받았다. '),
-                        TextSpan(text: '태우는 건 된다.', style: strong),
+                    ? _spansAround(
+                        l10n.worryMeritHint(_mark),
+                        TextSpan(
+                            text: l10n.worryMeritAmount(merit), style: strong),
+                      )
+                    : [
+                        TextSpan(text: '${l10n.worryMeritDoneLead} '),
+                        TextSpan(text: l10n.worryMeritDoneTail, style: strong),
                       ],
               ),
             ),
@@ -386,6 +395,21 @@ class _MeritHint extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// 문장 안 강조 조각 자리를 표시하는 글자. 번역문 어디에 와도 그 자리에 끼운다.
+const _mark = '\u0001';
+
+/// [template] 의 [_mark] 자리에 [strong] 을 끼워 한 문장을 이룬다.
+List<InlineSpan> _spansAround(String template, TextSpan strong) {
+  final i = template.indexOf(_mark);
+  if (i < 0) return [TextSpan(text: template)];
+  return [
+    if (i > 0) TextSpan(text: template.substring(0, i)),
+    strong,
+    if (i + _mark.length < template.length)
+      TextSpan(text: template.substring(i + _mark.length)),
+  ];
 }
 
 class _KindChip extends StatelessWidget {

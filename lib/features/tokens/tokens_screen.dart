@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 import '../home/home_controller.dart';
 import 'token_catalog.dart';
 
@@ -25,9 +26,10 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
     final home = ref.watch(homeStateProvider);
     final text = Theme.of(context).textTheme;
     final fg = Theme.of(context).colorScheme.onSurface;
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('증표')),
+      appBar: AppBar(title: Text(l10n.tokensTitle)),
       body: SafeArea(
         bottom: false,
         child: home.when(
@@ -50,10 +52,10 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
                     padding: const EdgeInsets.fromLTRB(
                         Tokens.gutter, 16, Tokens.gutter, 32),
                     children: [
-                      Text('비움의 증표', style: text.displayMedium),
+                      Text(l10n.tokensHeading, style: text.displayMedium),
                       const SizedBox(height: 6),
                       Text(
-                        '돈으로만은 못 산다. 수행 이력이 열쇠다.',
+                        l10n.tokensSubtitle,
                         style: text.bodyMedium
                             ?.copyWith(color: fg.withValues(alpha: 0.6)),
                       ),
@@ -63,19 +65,19 @@ class _TokensScreenState extends ConsumerState<TokensScreen> {
                       Row(
                         children: [
                           _Filter(
-                            label: '전체',
+                            label: l10n.tokensFilterAll,
                             selected: _filter == 0,
                             onTap: () => setState(() => _filter = 0),
                           ),
                           const SizedBox(width: 8),
                           _Filter(
-                            label: '해제됨 $unlockedCount',
+                            label: l10n.tokensFilterUnlocked(unlockedCount),
                             selected: _filter == 1,
                             onTap: () => setState(() => _filter = 1),
                           ),
                           const SizedBox(width: 8),
                           _Filter(
-                            label: '시즌',
+                            label: l10n.tokensFilterSeason,
                             selected: _filter == 2,
                             onTap: () => setState(() => _filter = 2),
                           ),
@@ -115,6 +117,7 @@ class _Stats extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final fg = Theme.of(context).colorScheme.onSurface;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -125,11 +128,14 @@ class _Stats extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _Stat(label: '엎기', value: '${state.bowCount}'),
+          _Stat(label: l10n.tokensStatBows, value: '${state.bowCount}'),
           _Divider(color: fg.withValues(alpha: 0.08)),
-          _Stat(label: '태운 번뇌', value: '${state.burnedCount}'),
+          _Stat(
+              label: l10n.tokensStatBurned, value: '${state.burnedCount}'),
           _Divider(color: fg.withValues(alpha: 0.08)),
-          _Stat(label: '절 문 연속', value: '${state.gate.streakDays}일'),
+          _Stat(
+              label: l10n.tokensStatGateStreak,
+              value: l10n.tokensStatDays(state.gate.streakDays)),
         ],
       ),
     );
@@ -295,7 +301,7 @@ class _TokenCard extends StatelessWidget {
           ),
           const SizedBox(height: 3),
           Text(
-            unlocked ? '해제됨' : token.progressLabel(stats),
+            unlocked ? context.l10n.tokensCardUnlocked : token.progressLabel(stats),
             style: TextStyle(
               fontSize: 11,
               fontWeight: unlocked ? FontWeight.w700 : null,

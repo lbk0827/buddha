@@ -3,6 +3,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 
 /// 공유 카드 (FR-3.7, FR-6.4).
 /// 번뇌 원문은 절대 들어가지 않는다. 한마디 + 앱명만 담는다.
@@ -55,9 +56,9 @@ class ShareCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                '부처핸섬',
-                style: TextStyle(
+              Text(
+                context.l10n.appTitle,
+                style: const TextStyle(
                   fontSize: 26,
                   color: Tokens.ink,
                   fontWeight: FontWeight.w700,
@@ -78,6 +79,7 @@ Future<void> shareDialogueCard(
   String? caption,
 }) async {
   final messenger = ScaffoldMessenger.of(context);
+  final l10n = context.l10n;
   try {
     final bytes = await ScreenshotController().captureFromWidget(
       ShareCard(line: line, caption: caption),
@@ -92,6 +94,6 @@ Future<void> shareDialogueCard(
       ),
     );
   } catch (e) {
-    messenger.showSnackBar(SnackBar(content: Text('나누기에 실패했다. $e')));
+    messenger.showSnackBar(SnackBar(content: Text(l10n.dialogueShareFailed('$e'))));
   }
 }

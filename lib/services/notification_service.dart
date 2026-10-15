@@ -4,6 +4,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../l10n/l10n.dart';
+
 /// 세션 종료 알림과 재방문 알림 (FR-2.3, FR-7).
 /// 종료 알림은 동의 없이 예약하고, 시스템 권한이 거부되면 앱 내 진동만 남는다.
 class NotificationService {
@@ -16,20 +18,24 @@ class NotificationService {
   static const int sessionEndId = 1001;
   static const int revisitId = 2001;
 
-  static const _sessionChannel = AndroidNotificationDetails(
+  // 채널 이름·설명은 안드로이드 설정 화면에 보이므로 문자열 테이블에서 온다.
+  // BuildContext 가 없어 [L.current] 를 쓴다.
+  static AndroidNotificationDetails get _sessionChannel =>
+      AndroidNotificationDetails(
     'session_end',
-    '수행 종료',
-    channelDescription: '수행이 끝났을 때 진동으로 알린다.',
+    L.current.notificationSessionChannelName,
+    channelDescription: L.current.notificationSessionChannelDescription,
     importance: Importance.high,
     priority: Priority.high,
     playSound: false,
     enableVibration: true,
   );
 
-  static const _revisitChannel = AndroidNotificationDetails(
+  static AndroidNotificationDetails get _revisitChannel =>
+      AndroidNotificationDetails(
     'revisit',
-    '다시 오기',
-    channelDescription: '가끔 등이 켜져 있다고 알린다.',
+    L.current.notificationRevisitChannelName,
+    channelDescription: L.current.notificationRevisitChannelDescription,
     importance: Importance.defaultImportance,
     priority: Priority.defaultPriority,
     playSound: false,
@@ -87,10 +93,10 @@ class NotificationService {
     try {
       await _plugin.zonedSchedule(
         id: sessionEndId,
-        title: '끝났다.',
-        body: body ?? '천천히 돌아와라.',
+        title: L.current.notificationSessionEndTitle,
+        body: body ?? L.current.notificationSessionEndBody,
         scheduledDate: tz.TZDateTime.from(at, tz.local),
-        notificationDetails: const NotificationDetails(
+        notificationDetails: NotificationDetails(
           android: _sessionChannel,
           iOS: DarwinNotificationDetails(presentSound: false),
         ),
@@ -116,10 +122,10 @@ class NotificationService {
     try {
       await _plugin.zonedSchedule(
         id: revisitId,
-        title: '부처핸섬',
+        title: L.current.appTitle,
         body: body,
         scheduledDate: tz.TZDateTime.from(at, tz.local),
-        notificationDetails: const NotificationDetails(
+        notificationDetails: NotificationDetails(
           android: _revisitChannel,
           iOS: DarwinNotificationDetails(presentSound: false),
         ),

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../app/theme.dart';
+import '../../l10n/l10n.dart';
 
 /// 연등에 매단 쪽지를 태운다. 원문은 기록에 남고 화면에서만 사라진다.
 class BurnAway extends StatefulWidget {
@@ -41,7 +42,7 @@ class _BurnAwayState extends State<BurnAway>
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: '번뇌를 적은 쪽지가 연등 아래에서 타오릅니다',
+    label: context.l10n.worryBurnSemantics,
     child: ExcludeSemantics(
       child: SizedBox(
         width: 340,
@@ -281,7 +282,7 @@ class BurnOverlay extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '연등에 번뇌를 내려놓습니다',
+              context.l10n.worryBurnOverlayTitle,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),
@@ -293,7 +294,7 @@ class BurnOverlay extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '쪽지는 재가 되고, 마음에는 빛이 남기를.',
+              context.l10n.worryBurnOverlayBlessing,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium,
             ),

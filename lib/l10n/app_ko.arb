@@ -1,0 +1,2546 @@
+{
+  "@@locale": "ko",
+  "appTitle": "부처핸섬",
+  "@appTitle": {
+    "description": "앱 이름. 홈 화면 아이콘 밑, 작업 전환기, 공유 카드에 나온다."
+  },
+  "avatarSlotBuddha": "부처",
+  "@avatarSlotBuddha": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「부처(살 재질)」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotHead": "머리",
+  "@avatarSlotHead": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「머리」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotRobe": "가사",
+  "@avatarSlotRobe": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「가사(승복)」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotFace": "얼굴",
+  "@avatarSlotFace": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「얼굴」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotMouth": "입",
+  "@avatarSlotMouth": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「입」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotNeck": "목",
+  "@avatarSlotNeck": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「목」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotFeet": "발",
+  "@avatarSlotFeet": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「발」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotSeat": "대좌",
+  "@avatarSlotSeat": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「대좌(앉는 자리)」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarSlotHalo": "후광",
+  "@avatarSlotHalo": {
+    "description": "옷장 화면 위쪽 슬롯 탭 이름이자 아이템 시트의 부위 표시. 부처님 캐릭터의 「후광」 꾸미기 칸. 탭에 들어가므로 아주 짧게(한두 단어)."
+  },
+  "avatarItemBuddhaFlesh": "살빛 부처",
+  "@avatarItemBuddhaFlesh": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_flesh). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemBuddhaStone": "돌부처",
+  "@avatarItemBuddhaStone": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_stone). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemBuddhaPorcelain": "백자부처",
+  "@avatarItemBuddhaPorcelain": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_porcelain). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemBuddhaJade": "옥부처",
+  "@avatarItemBuddhaJade": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_jade). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemBuddhaPink": "핑꾸부처",
+  "@avatarItemBuddhaPink": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_pink). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemBuddhaGold": "황금부처",
+  "@avatarItemBuddhaGold": {
+    "description": "꾸미기 아이템 이름 (슬롯: 부처(살 재질), id buddha_gold). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadShaved": "민머리",
+  "@avatarItemHeadShaved": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_shaved). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadNabal": "나발",
+  "@avatarItemHeadNabal": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_nabal). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadBamboo": "삿갓",
+  "@avatarItemHeadBamboo": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_bamboo). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadStraw": "밀짚모자",
+  "@avatarItemHeadStraw": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_straw). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadBeanie": "비니",
+  "@avatarItemHeadBeanie": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_beanie). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHeadBucket": "버킷햇",
+  "@avatarItemHeadBucket": {
+    "description": "꾸미기 아이템 이름 (슬롯: 머리, id head_bucket). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemRobeSaffron": "황토 가사",
+  "@avatarItemRobeSaffron": {
+    "description": "꾸미기 아이템 이름 (슬롯: 가사(승복), id robe_saffron). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemRobeTemple": "먹물 가사",
+  "@avatarItemRobeTemple": {
+    "description": "꾸미기 아이템 이름 (슬롯: 가사(승복), id robe_temple). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemRobeAsh": "잿빛 가사",
+  "@avatarItemRobeAsh": {
+    "description": "꾸미기 아이템 이름 (슬롯: 가사(승복), id robe_ash). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemRobeCrimson": "홍가사",
+  "@avatarItemRobeCrimson": {
+    "description": "꾸미기 아이템 이름 (슬롯: 가사(승복), id robe_crimson). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemRobeLavender": "라벤더 가사",
+  "@avatarItemRobeLavender": {
+    "description": "꾸미기 아이템 이름 (슬롯: 가사(승복), id robe_lavender). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccGlasses": "안경",
+  "@avatarItemAccGlasses": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_glasses). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccSunglasses": "동그란 선글라스",
+  "@avatarItemAccSunglasses": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_sunglasses). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccTrafficlight": "신호등 선글라스",
+  "@avatarItemAccTrafficlight": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_trafficlight). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccPinkshades": "핑크 선글라스",
+  "@avatarItemAccPinkshades": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_pinkshades). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccTargetpatch": "과녁 안대",
+  "@avatarItemAccTargetpatch": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_targetpatch). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccSnorkel": "물안경 스노클",
+  "@avatarItemAccSnorkel": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_snorkel). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccVr": "VR 고글",
+  "@avatarItemAccVr": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_vr). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccCucumber": "오이 팩",
+  "@avatarItemAccCucumber": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_cucumber). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccSkigoggles": "스키 고글",
+  "@avatarItemAccSkigoggles": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_skigoggles). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccHeartshades": "하트 선글라스",
+  "@avatarItemAccHeartshades": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_heartshades). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccPartystars": "별 파티 안경",
+  "@avatarItemAccPartystars": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_partystars). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccCybervisor": "사이버 바이저",
+  "@avatarItemAccCybervisor": {
+    "description": "꾸미기 아이템 이름 (슬롯: 얼굴, id acc_cybervisor). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccBeads": "단주",
+  "@avatarItemAccBeads": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_beads). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccNeckphones": "목에 건 헤드폰",
+  "@avatarItemAccNeckphones": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_neckphones). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccGoldbeads": "금빛 단주",
+  "@avatarItemAccGoldbeads": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_goldbeads). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccBib": "턱받이",
+  "@avatarItemAccBib": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_bib). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccNeckpillow": "목베개",
+  "@avatarItemAccNeckpillow": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_neckpillow). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccLei": "꽃목걸이",
+  "@avatarItemAccLei": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_lei). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccGoldchain": "금 체인",
+  "@avatarItemAccGoldchain": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_goldchain). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccFilmcamera": "필름 카메라",
+  "@avatarItemAccFilmcamera": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_filmcamera). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemAccNeckphonesMint": "민트 헤드폰",
+  "@avatarItemAccNeckphonesMint": {
+    "description": "꾸미기 아이템 이름 (슬롯: 목, id acc_neckphones_mint). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthBubblegum": "풍선껌",
+  "@avatarItemMouthBubblegum": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_bubblegum). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthPacifier": "쪽쪽이",
+  "@avatarItemMouthPacifier": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_pacifier). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthBungeoppang": "붕어빵",
+  "@avatarItemMouthBungeoppang": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_bungeoppang). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthTteokkochi": "떡꼬치",
+  "@avatarItemMouthTteokkochi": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_tteokkochi). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthWhistle": "호루라기",
+  "@avatarItemMouthWhistle": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_whistle). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthMustache": "콧수염",
+  "@avatarItemMouthMustache": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_mustache). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthLollipop": "소용돌이 사탕",
+  "@avatarItemMouthLollipop": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_lollipop). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemMouthGrillz": "금니 웃음",
+  "@avatarItemMouthGrillz": {
+    "description": "꾸미기 아이템 이름 (슬롯: 입, id mouth_grillz). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemFeetSneakers": "흰 운동화",
+  "@avatarItemFeetSneakers": {
+    "description": "꾸미기 아이템 이름 (슬롯: 발, id feet_sneakers). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemFeetFlippers": "오리발",
+  "@avatarItemFeetFlippers": {
+    "description": "꾸미기 아이템 이름 (슬롯: 발, id feet_flippers). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemFeetSlippers": "슬리퍼와 흰 양말",
+  "@avatarItemFeetSlippers": {
+    "description": "꾸미기 아이템 이름 (슬롯: 발, id feet_slippers). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemFeetHightops": "빨간 스니커즈",
+  "@avatarItemFeetHightops": {
+    "description": "꾸미기 아이템 이름 (슬롯: 발, id feet_hightops). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemFeetPlatformboots": "통굽 부츠",
+  "@avatarItemFeetPlatformboots": {
+    "description": "꾸미기 아이템 이름 (슬롯: 발, id feet_platformboots). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemSeatLotus": "연꽃 대좌",
+  "@avatarItemSeatLotus": {
+    "description": "꾸미기 아이템 이름 (슬롯: 대좌(앉는 자리), id seat_lotus). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemSeatSkateboard": "스케이트보드",
+  "@avatarItemSeatSkateboard": {
+    "description": "꾸미기 아이템 이름 (슬롯: 대좌(앉는 자리), id seat_skateboard). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemSeatBathstool": "목욕탕 의자",
+  "@avatarItemSeatBathstool": {
+    "description": "꾸미기 아이템 이름 (슬롯: 대좌(앉는 자리), id seat_bathstool). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemSeatRobovac": "로봇청소기",
+  "@avatarItemSeatRobovac": {
+    "description": "꾸미기 아이템 이름 (슬롯: 대좌(앉는 자리), id seat_robovac). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemSeatKickboard": "킥보드",
+  "@avatarItemSeatKickboard": {
+    "description": "꾸미기 아이템 이름 (슬롯: 대좌(앉는 자리), id seat_kickboard). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloRing": "후광",
+  "@avatarItemHaloRing": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_ring). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloOpen": "OPEN 간판",
+  "@avatarItemHaloOpen": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_open). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloWifi": "와이파이",
+  "@avatarItemHaloWifi": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_wifi). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloLoading": "로딩 중",
+  "@avatarItemHaloLoading": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_loading). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloLp": "LP 후광",
+  "@avatarItemHaloLp": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_lp). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloDiscoball": "디스코볼",
+  "@avatarItemHaloDiscoball": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_discoball). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarItemHaloNeon": "네온 링",
+  "@avatarItemHaloNeon": {
+    "description": "꾸미기 아이템 이름 (슬롯: 후광, id halo_neon). 옷장 칸 아래 이름표, 구매 시트 제목, 접근성 라벨에 나온다. 장난스러운 물건 이름. 짧게."
+  },
+  "avatarFigureSemantics": "내 부처님",
+  "@avatarFigureSemantics": {
+    "description": "접근성 라벨. 화면에 그려진 사용자의 부처님 캐릭터 그림(절 화면, 꾸미기 화면 등)을 스크린 리더가 읽는 이름."
+  },
+  "avatarWardrobeSavedSnack": "갈아입었다.",
+  "@avatarWardrobeSavedSnack": {
+    "description": "꾸미기(옷장) 화면에서 「입는다!」로 새 차림을 저장한 뒤 뜨는 스낵바. 반말 혼잣말투, 담담하게."
+  },
+  "avatarWardrobeTabAll": "전체",
+  "@avatarWardrobeTabAll": {
+    "description": "꾸미기 화면 슬롯 탭 맨 앞 탭. 모든 부위의 아이템을 다 보여 준다. 아주 짧게."
+  },
+  "avatarWardrobeOwnedOnly": "가진 것만",
+  "@avatarWardrobeOwnedOnly": {
+    "description": "꾸미기 화면 스위치 옆 라벨. 켜면 이미 가진 아이템만 그리드에 보인다. 짧게."
+  },
+  "avatarWardrobeRevert": "되돌리기",
+  "@avatarWardrobeRevert": {
+    "description": "꾸미기 화면 텍스트 버튼. 입어 보던 것을 버리고 저장된 차림으로 돌아간다. 바뀐 게 있을 때만 보인다."
+  },
+  "avatarWardrobeEmptyOwned": "여기엔 가진 게 없다.",
+  "@avatarWardrobeEmptyOwned": {
+    "description": "꾸미기 화면 그리드가 비었을 때(「가진 것만」을 켰는데 이 부위에 가진 아이템이 없음) 가운데 나오는 문장. 반말 혼잣말투."
+  },
+  "avatarWardrobeItemOwned": "가짐",
+  "@avatarWardrobeItemOwned": {
+    "description": "꾸미기 화면 아이템 칸 이름 아래 작은 글씨. 이미 가진 아이템이라는 표시. 아주 짧게."
+  },
+  "avatarWardrobeItemPrice": "공덕 {cost}",
+  "@avatarWardrobeItemPrice": {
+    "description": "꾸미기 화면 아이템 칸 이름 아래 작은 글씨. 아직 안 가진 아이템의 값. 공덕은 앱 안 포인트 이름. 아주 짧게.",
+    "placeholders": {
+      "cost": {
+        "type": "int"
+      }
+    }
+  },
+  "avatarWardrobeWearButton": "입는다!",
+  "@avatarWardrobeWearButton": {
+    "description": "꾸미기 화면 아래 떠 있는 작은 알약 버튼. 입어 보던 차림을 저장한다. 신나는 반말, 아주 짧게."
+  },
+  "avatarBuySheetTitle": "지를까?",
+  "@avatarBuySheetTitle": {
+    "description": "안 가진 아이템을 눌렀을 때 아래에서 올라오는 구매 시트의 제목. 충동구매를 장난스럽게 묻는 반말. 짧게."
+  },
+  "avatarBuySheetShortOfMerit": "공덕이 {shortfall} 모자란다.",
+  "@avatarBuySheetShortOfMerit": {
+    "description": "구매 시트에서 공덕(앱 안 포인트)이 모자랄 때 구매 버튼 대신 나오는 문장. shortfall 은 모자란 공덕 수. 반말 혼잣말투.",
+    "placeholders": {
+      "shortfall": {
+        "type": "int"
+      }
+    }
+  },
+  "avatarMeritPriceSemantics": "공덕 {cost}",
+  "@avatarMeritPriceSemantics": {
+    "description": "접근성 라벨. 구매 시트의 공덕 아이콘+숫자(값 표시와 구매 버튼)를 스크린 리더가 읽는 문장. 공덕은 앱 안 포인트 이름.",
+    "placeholders": {
+      "cost": {
+        "type": "int"
+      }
+    }
+  },
+  "shopTitle": "공덕",
+  "@shopTitle": {
+    "description": "공덕 상점 화면 앱바 제목. 공덕은 앱 안 포인트 이름(불교의 공덕). 짧게."
+  },
+  "shopEarnSection": "공덕 받기",
+  "@shopEarnSection": {
+    "description": "공덕 상점 첫 구역 제목. 아래에 하루 보상·광고·걸음 보상이 나온다."
+  },
+  "shopBundleSection": "공덕 묶음",
+  "@shopBundleSection": {
+    "description": "공덕 상점 둘째 구역 제목. 돈으로 사는 공덕 묶음 카드들이 나온다."
+  },
+  "shopDailyRewardTitle": "오늘의 공덕",
+  "@shopDailyRewardTitle": {
+    "description": "공덕 상점 「공덕 받기」 첫 줄 제목. 하루 한 번 받는 보상."
+  },
+  "shopDailyRewardDescription": "하루 한 번, 절에 들르면 받는다.",
+  "@shopDailyRewardDescription": {
+    "description": "「오늘의 공덕」 아래 설명. 절은 앱의 홈 탭. 반말 서술체."
+  },
+  "shopSteps5kTitle": "오천 보 공덕",
+  "@shopSteps5kTitle": {
+    "description": "공덕 상점 걸음 보상 줄 제목. 오늘 5,000보를 걸으면 받는 보상."
+  },
+  "shopSteps5kDescription": "오늘 5,000보 넘게 걸으면 받는다.",
+  "@shopSteps5kDescription": {
+    "description": "「오천 보 공덕」 아래 설명. 반말 서술체."
+  },
+  "shopSteps10kTitle": "만 보 공덕",
+  "@shopSteps10kTitle": {
+    "description": "공덕 상점 걸음 보상 줄 제목. 오늘 10,000보를 걸으면 받는 보상."
+  },
+  "shopSteps10kDescription": "오늘 10,000보 넘게 걸으면 받는다.",
+  "@shopSteps10kDescription": {
+    "description": "「만 보 공덕」 아래 설명. 반말 서술체."
+  },
+  "shopAdRewardTitle": "광고 보고 공덕 받기",
+  "@shopAdRewardTitle": {
+    "description": "공덕 상점 광고 보상 줄 제목. 광고를 보면 공덕을 준다(아직 준비 중)."
+  },
+  "shopAdRewardDescription": "광고 하나에 공덕 {merit}. 하루 {views}번까지.",
+  "@shopAdRewardDescription": {
+    "description": "광고 보상 줄 설명. merit 은 광고 하나에 받는 공덕, views 는 하루 최대 횟수.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      },
+      "views": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAdComingSoon": "광고는 아직 준비 중이다.",
+  "@shopAdComingSoon": {
+    "description": "광고 보상 버튼을 눌렀을 때 뜨는 스낵바. 광고 연동 전이라 막혀 있다. 반말 서술체."
+  },
+  "shopPaymentComingSoon": "결제는 아직 준비 중이다.",
+  "@shopPaymentComingSoon": {
+    "description": "공덕 묶음 카드를 눌렀을 때 뜨는 스낵바. 결제 연동 전이라 막혀 있다. 반말 서술체."
+  },
+  "shopLinkStepsButton": "걸음 연결",
+  "@shopLinkStepsButton": {
+    "description": "걸음 보상 줄 오른쪽 알약 버튼. 건강 앱 걸음 수 읽기를 허락받는다. 짧게(버튼 최소 폭 84)."
+  },
+  "shopStepsLinkFailed": "걸음 수를 못 읽었다. 건강 앱에서 허락하면 보인다.",
+  "@shopStepsLinkFailed": {
+    "description": "걸음 연결에 실패했을 때 스낵바. 건강 앱(Health Connect / 건강) 권한 안내. 반말 서술체."
+  },
+  "shopStepsWalking": "걷는 중",
+  "@shopStepsWalking": {
+    "description": "걸음 보상 버튼 자리. 걸음 수를 아직 못 읽었을 때. 짧게."
+  },
+  "shopStepsCount": "{steps}보",
+  "@shopStepsCount": {
+    "description": "걸음 보상 버튼 자리. 오늘 걸은 걸음 수(아직 조건 미달). steps 는 이미 천 단위 쉼표로 꾸민 숫자 문자열(예: 3,214). 짧게.",
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
+  "shopClaimed": "받았다",
+  "@shopClaimed": {
+    "description": "보상 받기 알약 버튼. 오늘 이미 받았다는 표시(눌리지 않음). 짧게."
+  },
+  "shopNotYet": "아직",
+  "@shopNotYet": {
+    "description": "보상 받기 알약 버튼. 조건을 아직 못 채웠다는 표시(눌리지 않음). 짧게."
+  },
+  "playInstrumentKeycap": "키캡",
+  "@playInstrumentKeycap": {
+    "description": "놀이 탭 아래 악기 고르기 버튼의 접근성 라벨. 기계식 키보드 키캡(눌러서 소리 내는 장난감). 짧은 명사."
+  },
+  "playInstrumentMoktak": "목탁",
+  "@playInstrumentMoktak": {
+    "description": "놀이 탭 아래 악기 고르기 버튼의 접근성 라벨. 불교 의식에서 두드리는 나무 악기(moktak, wooden fish). 짧은 명사."
+  },
+  "playInstrumentSingingBowl": "싱잉볼",
+  "@playInstrumentSingingBowl": {
+    "description": "놀이 탭 아래 악기 고르기 버튼의 접근성 라벨. 문지르거나 쳐서 울리는 놋쇠 그릇(singing bowl). 짧은 명사."
+  },
+  "playHowToKeycap": "키캡을 꾹 눌렀다 떼면 도각 소리가 난다.",
+  "@playHowToKeycap": {
+    "description": "놀이 탭에서 키캡을 골랐을 때 악기 밑에 나오는 놀이 방법 한 줄. 반말 서술체(~다). 한 줄에 들어가게 짧게. '도각'은 키를 누르는 소리 의성어."
+  },
+  "playHowToMoktak": "화면을 톡 치면 목탁을 두드린다.",
+  "@playHowToMoktak": {
+    "description": "놀이 탭에서 목탁을 골랐을 때 악기 밑에 나오는 놀이 방법 한 줄. 반말 서술체(~다). 한 줄에 들어가게 짧게."
+  },
+  "playHowToSingingBowl": "톡 치거나, 테두리를 따라 빙글빙글 문지른다.",
+  "@playHowToSingingBowl": {
+    "description": "놀이 탭에서 싱잉볼을 골랐을 때 악기 밑에 나오는 놀이 방법 한 줄. 반말 서술체(~다). 한 줄에 들어가게 짧게."
+  },
+  "playBeadsRoundDone": "염주 한 바퀴를 돌았다. 공덕 +{merit}",
+  "@playBeadsRoundDone": {
+    "description": "놀이 탭 악기 밑 염주 줄. 염주(108알)를 한 바퀴 다 돌린 순간 강조색으로 잠깐 나온다. merit 은 받은 공덕(앱 안 포인트) 수. 반말 서술체. 한 줄.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "playBeadsMeritDoneToday": "오늘 {beads}알 · 오늘 공덕은 받았다",
+  "@playBeadsMeritDoneToday": {
+    "description": "놀이 탭 악기 밑 염주 줄. 오늘 받을 수 있는 공덕(앱 안 포인트)을 이미 받은 뒤에 나온다. beads 는 오늘 센 염주 알 수. '·' 는 구분점. 한 줄.",
+    "placeholders": {
+      "beads": {
+        "type": "int"
+      }
+    }
+  },
+  "playBeadsProgress": "염주 {beads} / {perRound} · 다 돌면 공덕 {merit}",
+  "@playBeadsProgress": {
+    "description": "놀이 탭 악기 밑 염주 줄(평소). beads 는 이번 바퀴에서 센 알 수, perRound 는 한 바퀴 알 수(108), merit 은 한 바퀴를 다 돌면 받는 공덕(앱 안 포인트). '·' 는 구분점. 한 줄.",
+    "placeholders": {
+      "beads": {
+        "type": "int"
+      },
+      "perRound": {
+        "type": "int"
+      },
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "playKeycapRingSemantics": "키링 {name}",
+  "@playKeycapRingSemantics": {
+    "description": "키캡 놀이에서 키링(키캡 네 개 묶음)을 고르는 작은 색 버튼의 접근성 라벨. name 은 키링 이름(playKeycapRing... 키).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playKeycapKeyWithBigSemantics": "{label} {big}",
+  "@playKeycapKeyWithBigSemantics": {
+    "description": "키캡 한 개의 접근성 라벨 — 그림 대신 큰 글자(「+1」, 「-108」 같은 기호·숫자)를 찍은 키캡일 때. label 은 키캡 밑 작은 글자(playKeycapKey... 키), big 은 큰 글자. 그림 키캡은 label 만 읽는다.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "big": {
+        "type": "String"
+      }
+    }
+  },
+  "playKeycapRingToday": "오늘의 수행",
+  "@playKeycapRingToday": {
+    "description": "키링 이름(화면에는 안 보이고 접근성 라벨로 읽힌다). 불교 수행을 장난스럽게 비튼 키캡 묶음."
+  },
+  "playKeycapRingOffice": "직장인 수행",
+  "@playKeycapRingOffice": {
+    "description": "키링 이름(접근성 라벨). 회사원 생활을 수행에 빗댄 농담 키캡 묶음."
+  },
+  "playKeycapRingRest": "쉼",
+  "@playKeycapRingRest": {
+    "description": "키링 이름(접근성 라벨). 쉬기 · 멍때리기 주제의 키캡 묶음. 아주 짧게."
+  },
+  "playKeycapRingMeme": "밈",
+  "@playKeycapRingMeme": {
+    "description": "키링 이름(접근성 라벨). 인터넷 밈 말투 키캡 묶음. 아주 짧게."
+  },
+  "playKeycapKeyMerit": "공덕",
+  "@playKeycapKeyMerit": {
+    "description": "키캡 윗면 아래쪽 작은 글자. 큰 「+1」 위에 붙는다. 공덕(merit, 앱 안 포인트). 키캡이 작아 2~4자 정도로 아주 짧게."
+  },
+  "playKeycapKeyWorry": "번뇌",
+  "@playKeycapKeyWorry": {
+    "description": "키캡 작은 글자. 큰 「-108」 과 함께. 번뇌(108 번뇌, worldly desires). 아주 짧게."
+  },
+  "playKeycapKeyNirvana": "해탈",
+  "@playKeycapKeyNirvana": {
+    "description": "키캡 작은 글자. 해탈(nirvana, liberation). 아주 짧게."
+  },
+  "playKeycapKeyBulb": "깨닫는 중",
+  "@playKeycapKeyBulb": {
+    "description": "키캡 작은 글자. 전구 그림 밑. '깨달음 로딩 중' 같은 농담. 아주 짧게."
+  },
+  "playKeycapKeyClock": "칼퇴 성불",
+  "@playKeycapKeyClock": {
+    "description": "키캡 작은 글자. 시계 그림 밑. 정시 퇴근(칼퇴)을 성불에 빗댄 직장인 농담. 아주 짧게."
+  },
+  "playKeycapKeyTomorrow": "내일 깨닫자",
+  "@playKeycapKeyTomorrow": {
+    "description": "키캡 작은 글자. 깨달음을 내일로 미루는 농담. 아주 짧게."
+  },
+  "playKeycapKeyMeeting": "회의 해탈",
+  "@playKeycapKeyMeeting": {
+    "description": "키캡 작은 글자. 회의에서 벗어나고 싶은 직장인 농담. 아주 짧게."
+  },
+  "playKeycapKeyBattery": "멘탈 충전",
+  "@playKeycapKeyBattery": {
+    "description": "키캡 작은 글자. 배터리 그림 밑. 정신력 충전. 아주 짧게."
+  },
+  "playKeycapKeyCampfire": "멍 때리기",
+  "@playKeycapKeyCampfire": {
+    "description": "키캡 작은 글자. 모닥불 그림 밑. 불멍처럼 멍하니 쉬기. 아주 짧게."
+  },
+  "playKeycapKeyBreeze": "숨 고르기",
+  "@playKeycapKeyBreeze": {
+    "description": "키캡 작은 글자. 바람 그림 밑. 숨을 가다듬기. 아주 짧게."
+  },
+  "playKeycapKeyLotus": "자비 충전",
+  "@playKeycapKeyLotus": {
+    "description": "키캡 작은 글자. 연꽃 그림 밑. 자비(compassion) 충전. 아주 짧게."
+  },
+  "playKeycapKeyCloud": "지나간다",
+  "@playKeycapKeyCloud": {
+    "description": "키캡 작은 글자. 구름 그림 밑. '이 또한 지나가리라'의 느낌. 아주 짧게."
+  },
+  "playKeycapKeyRocket": "극락 가즈아",
+  "@playKeycapKeyRocket": {
+    "description": "키캡 작은 글자. 로켓 그림 밑. '가즈아'는 '가자'를 들뜬 밈 말투로 쓴 것. 아주 짧게."
+  },
+  "playKeycapKeyRebirth": "윤회 중",
+  "@playKeycapKeyRebirth": {
+    "description": "키캡 작은 글자. 윤회(rebirth) 진행 중이라는 농담. 아주 짧게."
+  },
+  "playKeycapKeyGassho": "성불하십쇼",
+  "@playKeycapKeyGassho": {
+    "description": "키캡 작은 글자. 합장 그림 밑. 스님 인사 '성불하십시오'를 줄인 밈 말투. 아주 짧게."
+  },
+  "playKeycapKeyWallet": "무소유",
+  "@playKeycapKeyWallet": {
+    "description": "키캡 작은 글자. 빈 지갑 그림 밑. 무소유(non-possession)를 텅 빈 지갑 농담으로. 아주 짧게."
+  },
+  "coreDurationSeconds": "{seconds}초",
+  "@coreDurationSeconds": {
+    "description": "세션 시간 표기(1분 미만). 명상 끝·중단 화면, 기록, 달력에 쓰인다. 예: 40초.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "coreDurationMinutes": "{minutes}분",
+  "@coreDurationMinutes": {
+    "description": "세션 시간 표기(딱 맞는 분). 예: 3분.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "coreDurationMinutesSeconds": "{minutes}분 {seconds}초",
+  "@coreDurationMinutesSeconds": {
+    "description": "세션 시간 표기(분과 초). 예: 1분 40초.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "coreCumulativeMinutes": "{minutes}분",
+  "@coreCumulativeMinutes": {
+    "description": "기록 화면 「누적」 숫자(1시간 미만). 예: 12분.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "coreCumulativeHours": "{hours}시간",
+  "@coreCumulativeHours": {
+    "description": "기록 화면 「누적」 숫자(딱 맞는 시간). 예: 2시간.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "coreCumulativeHoursMinutes": "{hours}시간 {minutes}분",
+  "@coreCumulativeHoursMinutes": {
+    "description": "기록 화면 「누적」 숫자. 예: 12시간 30분.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "coreWeekdayShortMonday": "월",
+  "@coreWeekdayShortMonday": {
+    "description": "요일 한 글자 약칭(Monday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortTuesday": "화",
+  "@coreWeekdayShortTuesday": {
+    "description": "요일 한 글자 약칭(Tuesday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortWednesday": "수",
+  "@coreWeekdayShortWednesday": {
+    "description": "요일 한 글자 약칭(Wednesday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortThursday": "목",
+  "@coreWeekdayShortThursday": {
+    "description": "요일 한 글자 약칭(Thursday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortFriday": "금",
+  "@coreWeekdayShortFriday": {
+    "description": "요일 한 글자 약칭(Friday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortSaturday": "토",
+  "@coreWeekdayShortSaturday": {
+    "description": "요일 한 글자 약칭(Saturday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayShortSunday": "일",
+  "@coreWeekdayShortSunday": {
+    "description": "요일 한 글자 약칭(Sunday). 달력 요일 머리줄 칸에 들어간다 — 아주 짧게(1~3자)."
+  },
+  "coreWeekdayLongMonday": "월요일",
+  "@coreWeekdayLongMonday": {
+    "description": "요일 전체 이름(Monday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongTuesday": "화요일",
+  "@coreWeekdayLongTuesday": {
+    "description": "요일 전체 이름(Tuesday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongWednesday": "수요일",
+  "@coreWeekdayLongWednesday": {
+    "description": "요일 전체 이름(Wednesday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongThursday": "목요일",
+  "@coreWeekdayLongThursday": {
+    "description": "요일 전체 이름(Thursday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongFriday": "금요일",
+  "@coreWeekdayLongFriday": {
+    "description": "요일 전체 이름(Friday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongSaturday": "토요일",
+  "@coreWeekdayLongSaturday": {
+    "description": "요일 전체 이름(Saturday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "coreWeekdayLongSunday": "일요일",
+  "@coreWeekdayLongSunday": {
+    "description": "요일 전체 이름(Sunday). 달력 날짜 상세 시트 제목에 쓰인다."
+  },
+  "sessionWorryChipWork": "일",
+  "@sessionWorryChipWork": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 일·직장. 칩이라 짧게."
+  },
+  "sessionWorryChipPeople": "사람",
+  "@sessionWorryChipPeople": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 사람 관계. 칩이라 짧게."
+  },
+  "sessionWorryChipMoney": "돈",
+  "@sessionWorryChipMoney": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 돈. 칩이라 짧게."
+  },
+  "sessionWorryChipFamily": "가족",
+  "@sessionWorryChipFamily": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 가족. 칩이라 짧게."
+  },
+  "sessionWorryChipBody": "몸",
+  "@sessionWorryChipBody": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 몸·건강. 칩이라 짧게."
+  },
+  "sessionWorryChipEtc": "그냥",
+  "@sessionWorryChipEtc": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 딱히 분류 없음. 칩이라 짧게."
+  },
+  "sessionWorryChipHeavy": "많이 힘들다",
+  "@sessionWorryChipHeavy": {
+    "description": "명상 준비 화면 「어느 쪽 일인가?」 주제 칩, 기록 화면 한 줄에도 나온다. 뜻: 많이 힘들다 — 위기에 가까운 상태, 가볍지 않은 말투로. 칩이라 짧게."
+  },
+  "sessionSetupTitle": "마음 비우기",
+  "@sessionSetupTitle": {
+    "description": "명상 준비 화면 앱바 제목."
+  },
+  "sessionSetupInfoTooltip": "마음 비우기란",
+  "@sessionSetupInfoTooltip": {
+    "description": "명상 준비 화면 앱바 (i) 버튼 툴팁·접근성 라벨."
+  },
+  "sessionSetupInfoTitle": "마음 비우기란",
+  "@sessionSetupInfoTitle": {
+    "description": "명상 준비 화면 (i) 버튼을 누르면 뜨는 설명 다이얼로그 제목."
+  },
+  "sessionSetupInfoBody": "잠깐은, 아무것도 안 해도 된다.\n\n시작을 누르고 폰을 엎어 두어라.\n생각이 떠올라도 괜찮다. 비우려고 애쓰진 말고.\n\n쉬는 동안 공덕도 쌓인다. 1분에 10씩.\n중간에 폰을 들면, 더 쉴지 여기까지 할지 고르면 된다.",
+  "@sessionSetupInfoBody": {
+    "description": "명상 설명 다이얼로그 본문. 선사가 툭 던지는 반말. 줄바꿈 유지. 「공덕」은 앱 재화 이름."
+  },
+  "sessionSetupInfoClose": "닫기",
+  "@sessionSetupInfoClose": {
+    "description": "명상 설명 다이얼로그 닫기 버튼."
+  },
+  "sessionSetupLengthQuestion": "얼마나 쉴까?",
+  "@sessionSetupLengthQuestion": {
+    "description": "명상 준비 화면 시간 고르기 제목. 반말."
+  },
+  "sessionSetupLengthOption": "{minutes}분",
+  "@sessionSetupLengthOption": {
+    "description": "명상 준비 화면 시간 선택 버튼(1·3·5·10분). 네 개가 한 줄에 들어가니 짧게.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionSetupWorryQuestion": "마음에 걸리는 게 있나?",
+  "@sessionSetupWorryQuestion": {
+    "description": "명상 준비 화면 번뇌 입력칸 제목. 반말."
+  },
+  "sessionSetupWorryHelp": "적으면 시작할 때 태워 준다. 안 적어도 된다.",
+  "@sessionSetupWorryHelp": {
+    "description": "번뇌 입력칸 위 안내. 적은 글은 시작할 때 불타는 연출로 사라진다."
+  },
+  "sessionSetupWorryHint": "한 줄이면 된다",
+  "@sessionSetupWorryHint": {
+    "description": "번뇌 입력칸 힌트(placeholder)."
+  },
+  "sessionSetupChipQuestion": "어느 쪽 일인가?",
+  "@sessionSetupChipQuestion": {
+    "description": "명상 준비 화면 주제 칩 묶음 제목. 반말."
+  },
+  "sessionSetupRepeatTitle": "지난번 그 얘기",
+  "@sessionSetupRepeatTitle": {
+    "description": "명상 준비 화면 스위치 제목. 켜면 끝난 뒤 지난번에 적은 고민이 요즘 어떤지 묻는다."
+  },
+  "sessionSetupRepeatSubtitle": "켜 두면 끝나고 나서, 지난번에 적은 일이 요즘은 어떤지 묻는다.",
+  "@sessionSetupRepeatSubtitle": {
+    "description": "「지난번 그 얘기」 스위치 설명."
+  },
+  "sessionSetupSoundTitle": "소리",
+  "@sessionSetupSoundTitle": {
+    "description": "명상 준비 화면 소리 켜기 스위치 제목."
+  },
+  "sessionSetupSkipWorryButton": "안 적고 시작",
+  "@sessionSetupSkipWorryButton": {
+    "description": "명상 준비 화면 아래 왼쪽 버튼. 번뇌 입력을 비우고 바로 시작."
+  },
+  "sessionSetupStartButton": "시작",
+  "@sessionSetupStartButton": {
+    "description": "명상 준비 화면 아래 오른쪽 시작 버튼."
+  },
+  "sessionReadyPrompt": "{minutes}분이면 된다.\n이제 폰을 엎어 두자.\n진동이 오면 시작이다.",
+  "@sessionReadyPrompt": {
+    "description": "폰 엎기 안내 화면 큰 글씨. 세 줄 줄바꿈 유지. minutes 는 고른 분.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionReadyConfirmButton": "엎어 뒀다",
+  "@sessionReadyConfirmButton": {
+    "description": "폰 엎기 안내 화면 큰 버튼 — 감지가 안 될 때 사용자가 직접 엎었다고 알린다."
+  },
+  "sessionReadyLaterButton": "다음에 하기",
+  "@sessionReadyLaterButton": {
+    "description": "폰 엎기 안내 화면 아래 텍스트 버튼. 명상을 그만두고 홈으로."
+  },
+  "sessionReadyTimeoutSnack": "다음에 하자. 급한 건 없다.",
+  "@sessionReadyTimeoutSnack": {
+    "description": "폰 엎기 안내 화면에서 오래 아무것도 안 해 홈으로 돌아갈 때 뜨는 스낵바."
+  },
+  "sessionRunningStopButton": "멈추기",
+  "@sessionRunningStopButton": {
+    "description": "명상 중(어두운 화면) 아래 버튼."
+  },
+  "sessionInterruptRested": "{duration} 쉬었다.",
+  "@sessionInterruptRested": {
+    "description": "명상 중간에 폰을 들었을 때 화면 큰 글씨. duration 은 「3분」「1분 40초」 같은 시간 표기.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionInterruptResumeButton": "더 쉴래",
+  "@sessionInterruptResumeButton": {
+    "description": "중단 선택 화면 — 명상을 이어 가는 버튼."
+  },
+  "sessionInterruptStopButton": "오늘은 여기까지",
+  "@sessionInterruptStopButton": {
+    "description": "중단 선택 화면 — 여기서 끝내는 버튼."
+  },
+  "sessionCompletionLine": "{duration} 뒀다. 오늘은 여기까지.",
+  "@sessionCompletionLine": {
+    "description": "명상 끝 화면 큰 제목. 폰을 엎어 둔 시간을 인정하는 말. 깨달음·평가 문구 금지. duration 은 「3분」 같은 시간 표기.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionCompletionLineHeavy": "{duration} 뒀다. 그거면 됐다.",
+  "@sessionCompletionLineHeavy": {
+    "description": "명상 끝 화면 큰 제목 — 「많이 힘들다」 칩을 고른 경우. 유머 없이 담담하게.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionDoneConsentTitle": "기록을 이 폰에 남겨 둘까?",
+  "@sessionDoneConsentTitle": {
+    "description": "첫 명상 끝에 한 번 뜨는 기록 저장 동의 다이얼로그 제목."
+  },
+  "sessionDoneConsentBody": "이 폰 안에만 남는다. 어디로도 보내지 않는다.",
+  "@sessionDoneConsentBody": {
+    "description": "기록 저장 동의 다이얼로그 본문."
+  },
+  "sessionDoneConsentDecline": "안 남길래",
+  "@sessionDoneConsentDecline": {
+    "description": "기록 저장 동의 다이얼로그 거절 버튼."
+  },
+  "sessionDoneConsentAccept": "남겨 둬",
+  "@sessionDoneConsentAccept": {
+    "description": "기록 저장 동의 다이얼로그 수락 버튼."
+  },
+  "sessionDoneBackButton": "돌아가기",
+  "@sessionDoneBackButton": {
+    "description": "명상 끝 화면에 결과가 없을 때(예외 상황) 홈으로 가는 버튼."
+  },
+  "sessionDoneNotRecorded": "기록은 남기지 않았다.",
+  "@sessionDoneNotRecorded": {
+    "description": "명상 끝 화면 — 기록 저장을 거절했을 때 기록 한 줄 대신."
+  },
+  "sessionDoneOutcomeCompleted": "완주",
+  "@sessionDoneOutcomeCompleted": {
+    "description": "명상 끝 화면 기록 한 줄의 항목(예: 3분 · 완주). 끝까지 했다."
+  },
+  "sessionDoneOutcomeInterrupted": "중단",
+  "@sessionDoneOutcomeInterrupted": {
+    "description": "명상 끝 화면 기록 한 줄의 항목(예: 3분 · 중단). 중간에 멈췄다."
+  },
+  "sessionDoneRecordOnly": "기록만",
+  "@sessionDoneRecordOnly": {
+    "description": "명상 끝 화면 기록 한 줄의 항목 — 너무 짧아 인정일·공덕에는 안 들어가고 기록만 남았다."
+  },
+  "sessionDoneMeritGained": "+{merit} 공덕",
+  "@sessionDoneMeritGained": {
+    "description": "명상 끝 화면 — 얻은 공덕(앱 재화). merit 는 숫자.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionDoneRevealLineButton": "선사 한마디 보기",
+  "@sessionDoneRevealLineButton": {
+    "description": "명상 끝 화면 버튼. 누르면 선사(스님)의 한마디 카드가 나온다."
+  },
+  "sessionDoneRepeatButton": "지난번 그 얘기",
+  "@sessionDoneRepeatButton": {
+    "description": "명상 끝 화면 텍스트 버튼 — 지난번 적은 고민을 다시 묻는 화면으로."
+  },
+  "sessionDoneLeaveButton": "나가기",
+  "@sessionDoneLeaveButton": {
+    "description": "명상 끝 화면 맨 아래 버튼."
+  },
+  "sessionDoneShareButton": "나누기",
+  "@sessionDoneShareButton": {
+    "description": "선사 한마디 카드 아래 공유 버튼."
+  },
+  "sessionRepeatTitle": "지난번 그 얘기",
+  "@sessionRepeatTitle": {
+    "description": "지난번 고민을 다시 묻는 화면 앱바 제목."
+  },
+  "sessionRepeatEmpty": "지난번에 적어 둔 번뇌가 없다.\n다음에 번뇌를 적고 엎어 두면, 그때 묻겠다.",
+  "@sessionRepeatEmpty": {
+    "description": "지난번 그 얘기 화면 — 예전에 적은 번뇌(고민)가 없을 때. 줄바꿈 유지."
+  },
+  "sessionRepeatPreviousLabel": "지난번엔 이 일이 마음에 걸렸다.",
+  "@sessionRepeatPreviousLabel": {
+    "description": "지난번 그 얘기 화면 — 예전 번뇌 글 위 작은 안내."
+  },
+  "sessionRepeatQuestion": "요즘은 어떤가?",
+  "@sessionRepeatQuestion": {
+    "description": "지난번 그 얘기 화면 질문. 반말."
+  },
+  "sessionRepeatChoiceSame": "아직 그대로다",
+  "@sessionRepeatChoiceSame": {
+    "description": "지난번 그 얘기 화면 선택지 1."
+  },
+  "sessionRepeatChoiceBetter": "조금 나아졌다",
+  "@sessionRepeatChoiceBetter": {
+    "description": "지난번 그 얘기 화면 선택지 2."
+  },
+  "sessionRepeatChoiceOther": "다른 일이 더 크다",
+  "@sessionRepeatChoiceOther": {
+    "description": "지난번 그 얘기 화면 선택지 3."
+  },
+  "sessionRepeatChoicePrivate": "말하고 싶지 않다",
+  "@sessionRepeatChoicePrivate": {
+    "description": "지난번 그 얘기 화면 선택지 4."
+  },
+  "sessionRepeatDoneButton": "됐다",
+  "@sessionRepeatDoneButton": {
+    "description": "지난번 그 얘기 화면 맨 아래 버튼. 홈으로."
+  },
+  "calendarTitle": "달력",
+  "@calendarTitle": {
+    "description": "달력 화면 앱바 제목."
+  },
+  "calendarPrevMonthTooltip": "지난달",
+  "@calendarPrevMonthTooltip": {
+    "description": "달력 화면 이전 달 버튼 툴팁·접근성 라벨."
+  },
+  "calendarNextMonthTooltip": "다음 달",
+  "@calendarNextMonthTooltip": {
+    "description": "달력 화면 다음 달 버튼 툴팁·접근성 라벨."
+  },
+  "calendarMonthTitle": "{year}년 {month}월",
+  "@calendarMonthTitle": {
+    "description": "달력 화면 위쪽 연월 표시. 예: 2026년 3월.",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarLoadError": "달력을 못 열었다.\n\n{error}",
+  "@calendarLoadError": {
+    "description": "달력 데이터를 못 읽었을 때. error 는 개발용 오류 문구.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarMonthNoMeditation": "명상 없음",
+  "@calendarMonthNoMeditation": {
+    "description": "달력 화면 오른쪽 위 이달 합계 — 이달 명상이 없을 때."
+  },
+  "calendarMonthMeditation": "명상 {duration}",
+  "@calendarMonthMeditation": {
+    "description": "달력 화면 오른쪽 위 이달 명상 합계. duration 은 「12분」 같은 시간 표기.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarMonthStepsUnit": " 보",
+  "@calendarMonthStepsUnit": {
+    "description": "달력 화면 오른쪽 위 이달 걸음 합계 숫자 뒤에 작게 붙는 단위(걸음). 앞 공백 포함 — 숫자는 따로 큰 글씨."
+  },
+  "calendarDayLabelDate": "{month}월 {day}일",
+  "@calendarDayLabelDate": {
+    "description": "달력 날짜 칸 접근성 라벨의 날짜 부분. 뒤에 걸음·명상이 쉼표로 이어진다.",
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarDayLabelSteps": "{steps}보",
+  "@calendarDayLabelSteps": {
+    "description": "달력 날짜 칸 접근성 라벨의 걸음 수. steps 는 자릿수 쉼표가 들어간 숫자.",
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarDayLabelMeditation": "명상 {duration}",
+  "@calendarDayLabelMeditation": {
+    "description": "달력 날짜 칸 접근성 라벨의 명상 시간.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarDayDetailTitle": "{month}월 {day}일 {weekday}",
+  "@calendarDayDetailTitle": {
+    "description": "달력 날짜를 누르면 뜨는 시트 제목. weekday 는 요일 전체 이름(예: 화요일). 예: 3월 14일 화요일.",
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarDetailStepsLabel": "걸음",
+  "@calendarDetailStepsLabel": {
+    "description": "날짜 상세 시트 왼쪽 항목 이름 — 걸음 수. 좁은 칸(56px)이라 짧게."
+  },
+  "calendarDetailStepsNotLinked": "연결 안 함",
+  "@calendarDetailStepsNotLinked": {
+    "description": "날짜 상세 시트 걸음 값 — 건강 앱 걸음 수를 연결하지 않았다."
+  },
+  "calendarDetailStepsNone": "기록 없음",
+  "@calendarDetailStepsNone": {
+    "description": "날짜 상세 시트 걸음 값 — 그날 걸음 기록이 없다."
+  },
+  "calendarDetailSteps": "{steps}보",
+  "@calendarDetailSteps": {
+    "description": "날짜 상세 시트 걸음 값. steps 는 자릿수 쉼표가 들어간 숫자.",
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarDetailMeditationLabel": "명상",
+  "@calendarDetailMeditationLabel": {
+    "description": "날짜 상세 시트 왼쪽 항목 이름 — 명상. 좁은 칸이라 짧게."
+  },
+  "calendarDetailMeditationNone": "안 했다",
+  "@calendarDetailMeditationNone": {
+    "description": "날짜 상세 시트 명상 값 — 그날 명상하지 않았다."
+  },
+  "calendarLinkStepsTitle": "걸음 수도 함께 볼까?",
+  "@calendarLinkStepsTitle": {
+    "description": "달력 아래 걸음 수 연결 카드 제목."
+  },
+  "calendarLinkStepsBody": "건강 앱의 걸음 수를 읽기만 한다. 어디로도 보내지 않는다.",
+  "@calendarLinkStepsBody": {
+    "description": "걸음 수 연결 카드 설명."
+  },
+  "calendarLinkStepsButton": "걸음 수 연결",
+  "@calendarLinkStepsButton": {
+    "description": "걸음 수 연결 카드 버튼."
+  },
+  "calendarLinkStepsFailed": "걸음 수를 못 읽었다. 건강 앱에서 허락하면 보인다.",
+  "@calendarLinkStepsFailed": {
+    "description": "걸음 수 연결이 실패했을 때 스낵바."
+  },
+  "recordsTitle": "기록",
+  "@recordsTitle": {
+    "description": "기록 화면 앱바 제목."
+  },
+  "recordsShowNumbers": "숫자 보기",
+  "@recordsShowNumbers": {
+    "description": "기록 화면 앱바 오른쪽 버튼 — 가린 합계 숫자를 다시 보인다."
+  },
+  "recordsHideNumbers": "숫자 가리기",
+  "@recordsHideNumbers": {
+    "description": "기록 화면 앱바 오른쪽 버튼 — 합계 숫자를 가린다."
+  },
+  "recordsEmpty": "아직 없다. 한 번 앉으면 여기 남는다.",
+  "@recordsEmpty": {
+    "description": "기록 화면 — 세션 기록이 하나도 없을 때."
+  },
+  "recordsStatCreditedDays": "인정일",
+  "@recordsStatCreditedDays": {
+    "description": "기록 화면 위 합계 이름 — 명상이 인정된 날 수."
+  },
+  "recordsStatCumulative": "누적",
+  "@recordsStatCumulative": {
+    "description": "기록 화면 위 합계 이름 — 누적 명상 시간."
+  },
+  "recordsOutcomeCompleted": "완주",
+  "@recordsOutcomeCompleted": {
+    "description": "기록 한 줄 항목(예: 3분 · 완주 · 타이머 · 일). 끝까지 했다."
+  },
+  "recordsOutcomeInterrupted": "중단",
+  "@recordsOutcomeInterrupted": {
+    "description": "기록 한 줄 항목. 중간에 멈췄다."
+  },
+  "recordsDetectionTimer": "타이머",
+  "@recordsDetectionTimer": {
+    "description": "기록 한 줄 항목 — 폰 엎기 감지 없이 타이머로 쟀다."
+  },
+  "recordsDetectionFlip": "엎음 감지",
+  "@recordsDetectionFlip": {
+    "description": "기록 한 줄 항목 — 폰을 엎은 것을 센서로 감지해 쟀다."
+  },
+  "profileTitle": "프로필",
+  "@profileTitle": {
+    "description": "프로필 화면 앱바 제목."
+  },
+  "profileNoDharmaName": "법명 없음",
+  "@profileNoDharmaName": {
+    "description": "프로필 화면 부처님 아래 — 아직 법명(불교식 이름)이 없을 때."
+  },
+  "profileRankLine": "{station} · 엎기 {count}회",
+  "@profileRankLine": {
+    "description": "프로필 화면 법명 아래 한 줄. station 은 지금 계급(승가 직위) 이름, count 는 폰을 엎은 횟수.",
+    "placeholders": {
+      "station": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileNextRank": "{station}까지 {left}회",
+  "@profileNextRank": {
+    "description": "프로필 화면 다음 계급까지 남은 엎기 횟수 알약. station 은 다음 계급 이름. 작은 알약이라 짧게.",
+    "placeholders": {
+      "station": {
+        "type": "String"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "profileTestTitle": "내 마음 알아보기",
+  "@profileTestTitle": {
+    "description": "프로필 화면 메뉴 — 마음 성향 테스트."
+  },
+  "profileTestSubtitle": "16문항 · 2분",
+  "@profileTestSubtitle": {
+    "description": "마음 테스트 메뉴 부제. 문항 수와 걸리는 시간."
+  },
+  "profileRecordsTitle": "기록",
+  "@profileRecordsTitle": {
+    "description": "프로필 화면 메뉴 — 기록 화면."
+  },
+  "profileRecordsSubtitle": "엎어둔 날들",
+  "@profileRecordsSubtitle": {
+    "description": "기록 메뉴 부제."
+  },
+  "profileSettingsTitle": "설정",
+  "@profileSettingsTitle": {
+    "description": "프로필 화면 메뉴 — 설정."
+  },
+  "profileSettingsSubtitle": "알림 · 기록 저장 · 데이터 삭제",
+  "@profileSettingsSubtitle": {
+    "description": "설정 메뉴 부제. 설정 안에 있는 것들."
+  },
+  "homeGreetingFallbackFirst": "왔네. 천천히 봐라. 급한 건 없다.",
+  "@homeGreetingFallbackFirst": {
+    "description": "절(홈) 탭 인사 — 콘텐츠 인사말이 없을 때, 처음 온 사람에게. 선사의 반말."
+  },
+  "homeGreetingFallback": "왔네.",
+  "@homeGreetingFallback": {
+    "description": "절(홈) 탭 인사 — 콘텐츠 인사말이 없을 때, 다시 온 사람에게."
+  },
+  "homeRevisitNotificationBody": "어제 등, 아직 켜져 있다.",
+  "@homeRevisitNotificationBody": {
+    "description": "명상 다음 날 저녁에 한 번 오는 재방문 알림 본문. 어제 켠 등불(마당의 등)이 아직 켜져 있다는 뜻."
+  },
+  "homeLoadError": "지금은 절 문이 안 열린다.\n\n{error}",
+  "@homeLoadError": {
+    "description": "절(홈) 탭을 못 열었을 때. error 는 개발용 오류 문구.",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMeditationButton": "명상",
+  "@homeMeditationButton": {
+    "description": "절(홈) 탭 왼쪽 아래 둥근 버튼 라벨 — 명상 시작. 짧게."
+  },
+  "homeCalendarButton": "달력",
+  "@homeCalendarButton": {
+    "description": "절(홈) 탭 왼쪽 아래 둥근 버튼 라벨 — 달력. 짧게."
+  },
+  "homeMeritButton": "공덕",
+  "@homeMeritButton": {
+    "description": "절(홈) 탭 오른쪽 아래 둥근 버튼 라벨 — 공덕(재화) 상점. 짧게."
+  },
+  "homeBuddhaWordsLabel": "부처님 말씀",
+  "@homeBuddhaWordsLabel": {
+    "description": "절(홈) 탭 맨 아래 카드의 작은 머리말. 오늘의 부처님 말씀 한 줄이 아래 나온다."
+  },
+  "ordinationStationSami": "사미",
+  "@ordinationStationSami": {
+    "description": "법명 단계 0(갓 출가)의 신분. 프로필에 「사미 · 엎기 3회」처럼 법명 옆에 붙는다. 불교 수행자 계급 이름, 짧게."
+  },
+  "ordinationStationDaesa": "대사",
+  "@ordinationStationDaesa": {
+    "description": "법명 단계 1(엎기 30회)의 신분. 「대사까지 12회」처럼도 쓰인다. 불교 존칭, 짧게."
+  },
+  "ordinationStationSeonsa": "선사",
+  "@ordinationStationSeonsa": {
+    "description": "법명 단계 2(엎기 108회)의 신분. 선(禪) 스승을 뜻하는 존칭, 짧게."
+  },
+  "ordinationStationJosa": "조사",
+  "@ordinationStationJosa": {
+    "description": "법명 단계 3(엎기 500회)의 신분. 한 종파를 연 큰 스승을 뜻하는 존칭, 짧게."
+  },
+  "ordinationRankNameDaesa": "{name}대사",
+  "@ordinationRankNameDaesa": {
+    "description": "단계 1 법명 표기. name 은 사용자 법명(예: 무념) — 한국어에선 바로 뒤에 존칭을 붙여 「무념대사」. 다른 언어는 존칭 위치를 자유롭게.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ordinationRankNameSeonsa": "{name}선사",
+  "@ordinationRankNameSeonsa": {
+    "description": "단계 2 법명 표기. name 은 사용자 법명. 예: 「무념선사」.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ordinationRankNameJosa": "{name}조사",
+  "@ordinationRankNameJosa": {
+    "description": "단계 3 법명 표기. name 은 사용자 법명. 예: 「무념조사」.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ordinationMeaningMunyeom": "생각이 없는 게 아니라, 생각에 끌려가지 않는다는 뜻",
+  "@ordinationMeaningMunyeom": {
+    "description": "법명 「무념(無念)」의 뜻풀이. 출가 화면에서 법명 아래 한 줄로 나온다. 담백한 반말 서술, 마침표 없음."
+  },
+  "ordinationMeaningMusim": "마음을 없앤 게 아니라, 마음에 머물지 않는다는 뜻",
+  "@ordinationMeaningMusim": {
+    "description": "법명 「무심(無心)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningJeokjo": "고요히 비춘다. 가만히 있어도 보인다는 뜻",
+  "@ordinationMeaningJeokjo": {
+    "description": "법명 「적조(寂照)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningIlhyeon": "하나가 드러난다. 여럿을 좇지 않는다는 뜻",
+  "@ordinationMeaningIlhyeon": {
+    "description": "법명 「일현(一顯)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningHaean": "바다의 언덕. 파도를 보되 휩쓸리지 않는다는 뜻",
+  "@ordinationMeaningHaean": {
+    "description": "법명 「해안(海岸)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningCheongan": "맑은 눈. 흐려도 다시 맑아진다는 뜻",
+  "@ordinationMeaningCheongan": {
+    "description": "법명 「청안(淸眼)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningBowol": "보배로운 달. 이지러져도 다시 찬다는 뜻",
+  "@ordinationMeaningBowol": {
+    "description": "법명 「보월(寶月)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningJian": "지혜의 언덕. 몰라도 딛고 선다는 뜻",
+  "@ordinationMeaningJian": {
+    "description": "법명 「지안(智岸)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningHyeonu": "드러난 벗. 혼자가 아니라는 뜻",
+  "@ordinationMeaningHyeonu": {
+    "description": "법명 「현우(顯友)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "ordinationMeaningBeopun": "법의 구름. 형체 없이 덮는다는 뜻",
+  "@ordinationMeaningBeopun": {
+    "description": "법명 「법운(法雲)」의 뜻풀이. 출가 화면 한 줄, 마침표 없음."
+  },
+  "onboardingOrdainStepProgress": "{step} / {total} · 30초 컷",
+  "@onboardingOrdainStepProgress": {
+    "description": "출가(온보딩) 화면 오른쪽 위 진행 표시. step/total 은 단계 번호. 「30초 컷」은 금방 끝난다는 가벼운 말투.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingOrdainTitle": "일단 출가부터\n하고 시작하자.",
+  "@onboardingOrdainTitle": {
+    "description": "출가 화면 큰 제목. 두 줄(\\n). 가볍게 권하는 반말."
+  },
+  "onboardingOrdainSubtitle": "안 믿어도 된다. 이름 하나 받고 가는 거다.",
+  "@onboardingOrdainSubtitle": {
+    "description": "출가 화면 제목 아래 부제. 종교를 강요하지 않는다는 반말."
+  },
+  "onboardingOrdainBeforeLabel": "중생 시절",
+  "@onboardingOrdainBeforeLabel": {
+    "description": "출가 화면에서 출가 전(왼쪽 사람 아이콘) 아래 작은 라벨. 「속세의 나」 정도의 농담."
+  },
+  "onboardingOrdainNameLabel": "법명 · {name}",
+  "@onboardingOrdainNameLabel": {
+    "description": "출가 화면에서 출가 후 부처 그림 아래 작은 라벨. name 은 받은 법명.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingOrdainRerollButton": "다른 이름",
+  "@onboardingOrdainRerollButton": {
+    "description": "출가 화면에서 법명을 다시 뽑는 작은 버튼."
+  },
+  "onboardingOrdainSubmitButton": "{name}{particle} 출가하기",
+  "@onboardingOrdainSubmitButton": {
+    "description": "출가 화면 맨 아래 큰 버튼. name 은 법명. 예: 「무념으로 출가하기」. particle: 한국어 조사(으로/로), 다른 언어는 안 써도 됨.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "particle": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingOrdainPrivacyNote": "기록은 이 폰 안에만 남는다. 서버로 보내지 않는다.",
+  "@onboardingOrdainPrivacyNote": {
+    "description": "출가 버튼 아래 작은 안내. 개인정보가 기기 밖으로 나가지 않는다는 약속."
+  },
+  "onboardingRankLadderTitle": "법명은 수행하면 진화한다",
+  "@onboardingRankLadderTitle": {
+    "description": "출가 화면의 법명 단계 표(무념 → 무념대사 → …) 위 작은 제목."
+  },
+  "onboardingCharacterTitle": "이름 하나 줄까.",
+  "@onboardingCharacterTitle": {
+    "description": "첫 완주 뒤 한 번 나오는 이름 제안 화면의 큰 제목. 반말."
+  },
+  "onboardingCharacterSubtitle": "안 받아도 된다. 나중에 설정에서 바꿔도 된다.",
+  "@onboardingCharacterSubtitle": {
+    "description": "이름 제안 화면 부제."
+  },
+  "onboardingCharacterOption": "{name} — {meaning}",
+  "@onboardingCharacterOption": {
+    "description": "이름 제안 화면의 선택지 버튼. name 은 두 글자 법명(예: 관견), meaning 은 앞 글자의 뜻(templeDharmaFirst…).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "meaning": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCharacterPickPrompt": "하나 골라라",
+  "@onboardingCharacterPickPrompt": {
+    "description": "이름 제안 화면 아래 버튼. 아직 아무것도 안 골랐을 때(비활성)."
+  },
+  "onboardingCharacterConfirm": "{name} 로 하겠다",
+  "@onboardingCharacterConfirm": {
+    "description": "이름 제안 화면 아래 버튼. name 은 고른 두 글자 법명. 한국어는 조사 「로」를 띄어 쓴 원래 문구 그대로.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingCharacterSkip": "건너뛰기",
+  "@onboardingCharacterSkip": {
+    "description": "이름 제안 화면에서 이름 없이 넘어가는 글자 버튼."
+  },
+  "templeStageNameLantern": "등",
+  "@templeStageNameLantern": {
+    "description": "절 마당 1단계 건물 이름: 등(등불, lantern). 절 화면 목록 제목, 「다음은 등」 등에 쓰인다. 짧게."
+  },
+  "templeStageNameTree": "나무",
+  "@templeStageNameTree": {
+    "description": "절 마당 2단계: 나무. 짧게."
+  },
+  "templeStageNameWall": "돌담",
+  "@templeStageNameWall": {
+    "description": "절 마당 3단계: 돌담(stone wall). 짧게."
+  },
+  "templeStageNameBell": "종",
+  "@templeStageNameBell": {
+    "description": "절 마당 4단계: 종(temple bell). 짧게."
+  },
+  "templeStageNameRoof": "지붕",
+  "@templeStageNameRoof": {
+    "description": "절 마당 5단계: 지붕. 짧게."
+  },
+  "templeStageNameGate": "일주문",
+  "@templeStageNameGate": {
+    "description": "절 마당 6단계: 일주문(절 입구의 기둥 한 줄짜리 문). 짧게."
+  },
+  "templeStageArrivalLantern": "등 하나 켜졌다.",
+  "@templeStageArrivalLantern": {
+    "description": "절 1단계(등)가 생길 때 명상 끝 화면과 「다음 변화 보기」 시트에 나오는 한 줄. 담담한 반말."
+  },
+  "templeStageArrivalTree": "마당에 나무 한 그루 섰다.",
+  "@templeStageArrivalTree": {
+    "description": "절 2단계(나무)가 생길 때 한 줄."
+  },
+  "templeStageArrivalWall": "돌담이 둘러졌다. 바람이 좀 덜 든다.",
+  "@templeStageArrivalWall": {
+    "description": "절 3단계(돌담)가 생길 때 한 줄."
+  },
+  "templeStageArrivalBell": "종이 걸렸다. 아직 치지는 않았다.",
+  "@templeStageArrivalBell": {
+    "description": "절 4단계(종)가 생길 때 한 줄."
+  },
+  "templeStageArrivalRoof": "지붕이 올라갔다. 비는 이제 안 맞는다.",
+  "@templeStageArrivalRoof": {
+    "description": "절 5단계(지붕)가 생길 때 한 줄."
+  },
+  "templeStageArrivalGate": "일주문이 섰다. 여기부터 절이다.",
+  "@templeStageArrivalGate": {
+    "description": "절 6단계(일주문)가 생길 때 한 줄."
+  },
+  "templeStageSymbolLantern": "어두운 데서 먼저 켜는 것. 밝히려는 마음이다.",
+  "@templeStageSymbolLantern": {
+    "description": "절 화면에서 「등」을 누르면 나오는 상징 한 줄(목록 부제와 시트 본문)."
+  },
+  "templeStageSymbolTree": "심은 사람은 그늘을 못 본다. 그래도 심는다.",
+  "@templeStageSymbolTree": {
+    "description": "절 화면 「나무」의 상징 한 줄."
+  },
+  "templeStageSymbolWall": "막으려는 게 아니라, 안쪽을 만들려는 것이다.",
+  "@templeStageSymbolWall": {
+    "description": "절 화면 「돌담」의 상징 한 줄."
+  },
+  "templeStageSymbolBell": "스스로 울지 않는다. 쳐야 운다.",
+  "@templeStageSymbolBell": {
+    "description": "절 화면 「종」의 상징 한 줄."
+  },
+  "templeStageSymbolRoof": "비를 없애는 게 아니라, 비 아래 앉을 자리를 만드는 것이다.",
+  "@templeStageSymbolRoof": {
+    "description": "절 화면 「지붕」의 상징 한 줄."
+  },
+  "templeStageSymbolGate": "기둥이 한 줄이다. 들어올 때 마음도 한 줄이라는 뜻이다.",
+  "@templeStageSymbolGate": {
+    "description": "절 화면 「일주문」의 상징 한 줄. 「한 줄」은 기둥이 일렬로 선 모양과 한마음을 겹친 말장난."
+  },
+  "templeDharmaFirstGwan": "관세음 — 듣는 쪽",
+  "@templeDharmaFirstGwan": {
+    "description": "이름 제안 화면에서 법명 앞 글자 「관」의 유래. 관세음보살 — 중생의 소리를 듣는 보살."
+  },
+  "templeDharmaFirstJi": "지장 — 버티는 쪽",
+  "@templeDharmaFirstJi": {
+    "description": "법명 앞 글자 「지」의 유래. 지장보살 — 끝까지 남아 버티는 보살."
+  },
+  "templeDharmaFirstMun": "문수 — 따지는 쪽",
+  "@templeDharmaFirstMun": {
+    "description": "법명 앞 글자 「문」의 유래. 문수보살 — 지혜(따져 보는 쪽)의 보살."
+  },
+  "templeDharmaFirstMi": "미륵 — 기다리는 쪽",
+  "@templeDharmaFirstMi": {
+    "description": "법명 앞 글자 「미」의 유래. 미륵보살 — 미래에 올 부처, 기다리는 쪽."
+  },
+  "templeScreenTitle": "절",
+  "@templeScreenTitle": {
+    "description": "절(사원) 화면 앱바 제목. 한 글자."
+  },
+  "templeEmptyYardLine": "아직 아무것도 없다. 한 번 앉으면 등이 하나 켜진다.",
+  "@templeEmptyYardLine": {
+    "description": "절 화면에 아직 아무 단계도 없을 때 마당 그림 아래 문장."
+  },
+  "templeNextChangeButton": "다음 변화 보기",
+  "@templeNextChangeButton": {
+    "description": "절 화면 아래 버튼. 다음에 생길 건물을 시트로 보여준다."
+  },
+  "templeNextStageTitle": "다음은 {name}",
+  "@templeNextStageTitle": {
+    "description": "「다음 변화 보기」 시트 제목. name 은 다음 단계 건물 이름(예: 돌담).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "templeNextStageRequirement": "인정일 {days}",
+  "@templeNextStageRequirement": {
+    "description": "「다음 변화 보기」 시트 맨 아래 작은 글씨. 그 단계가 열리는 인정일(수행으로 인정된 날) 수.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "templeYardEmptyLabel": "아직 빈 마당",
+  "@templeYardEmptyLabel": {
+    "description": "스크린 리더용: 절 마당 그림에 아무것도 없을 때."
+  },
+  "templeYardLabel": "마당에 {items}이 있다",
+  "@templeYardLabel": {
+    "description": "스크린 리더용: 절 마당 그림 설명. items 는 건물 이름을 쉼표로 이은 목록(예: 등, 나무, 돌담). 한국어 조사 「이」는 원래 문구 그대로 고정.",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "gateHeadlineVisited": "오늘 절 다녀왔다",
+  "@gateHeadlineVisited": {
+    "description": "메인 위 「절 문」 한 줄: 오늘 이미 수행했을 때."
+  },
+  "gateHeadlineClosingSoon": "절 문 곧 닫힌다",
+  "@gateHeadlineClosingSoon": {
+    "description": "메인 위 「절 문」 한 줄: 자정까지 2시간 안 남았는데 아직 안 왔을 때."
+  },
+  "gateHeadlineRemaining": "절 문 · {remaining} 남음",
+  "@gateHeadlineRemaining": {
+    "description": "메인 위 「절 문」 한 줄: 자정(문 닫힘)까지 남은 시간. remaining 은 「5:42」 같은 시:분.",
+    "placeholders": {
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "tokensTitle": "증표",
+  "@tokensTitle": {
+    "description": "증표(업적 배지) 화면 앱바 제목."
+  },
+  "tokensHeading": "비움의 증표",
+  "@tokensHeading": {
+    "description": "증표 화면 본문 큰 제목."
+  },
+  "tokensSubtitle": "돈으로만은 못 산다. 수행 이력이 열쇠다.",
+  "@tokensSubtitle": {
+    "description": "증표 화면 큰 제목 아래 부제."
+  },
+  "tokensFilterAll": "전체",
+  "@tokensFilterAll": {
+    "description": "증표 화면 필터 칩: 전부 보기."
+  },
+  "tokensFilterUnlocked": "해제됨 {count}",
+  "@tokensFilterUnlocked": {
+    "description": "증표 화면 필터 칩: 해제된 증표만. count 는 해제된 개수.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tokensFilterSeason": "시즌",
+  "@tokensFilterSeason": {
+    "description": "증표 화면 필터 칩: 시즌 한정 증표만."
+  },
+  "tokensStatBows": "엎기",
+  "@tokensStatBows": {
+    "description": "증표 화면 누적값 칸 라벨: 폰을 엎어 둔(수행한) 횟수. 아주 짧게."
+  },
+  "tokensStatBurned": "태운 번뇌",
+  "@tokensStatBurned": {
+    "description": "증표 화면 누적값 칸 라벨: 태운 번뇌 수. 아주 짧게."
+  },
+  "tokensStatGateStreak": "절 문 연속",
+  "@tokensStatGateStreak": {
+    "description": "증표 화면 누적값 칸 라벨: 절 문을 지킨 연속 일수. 아주 짧게."
+  },
+  "tokensStatDays": "{days}일",
+  "@tokensStatDays": {
+    "description": "증표 화면 「절 문 연속」 값. days 는 일수.",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "tokensCardUnlocked": "해제됨",
+  "@tokensCardUnlocked": {
+    "description": "증표 카드 아래 상태: 이미 열린 증표."
+  },
+  "tokensProgressNoCondition": "조건 없음",
+  "@tokensProgressNoCondition": {
+    "description": "증표 카드 아래 상태: 조건 없이 주는(시즌) 증표인데 아직 안 열렸을 때."
+  },
+  "tokensProgress": "{current} / {goal}",
+  "@tokensProgress": {
+    "description": "증표 카드 아래 진척. current 는 지금 값, goal 은 목표.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "tokensNameBurn108": "108번뇌 완파",
+  "@tokensNameBurn108": {
+    "description": "증표 이름: 번뇌 108개를 태움. 카드 한 줄(말줄임) — 짧게."
+  },
+  "tokensRequirementBurn108": "번뇌 108개 태움",
+  "@tokensRequirementBurn108": {
+    "description": "증표 「108번뇌 완파」의 조건 문구."
+  },
+  "tokensNameBow100": "엎기 100회",
+  "@tokensNameBow100": {
+    "description": "증표 이름: 폰 엎어두기 100회. 짧게."
+  },
+  "tokensRequirementBow100": "엎어두기 100회",
+  "@tokensRequirementBow100": {
+    "description": "증표 「엎기 100회」의 조건 문구."
+  },
+  "tokensNameGate30": "무결(無缺)",
+  "@tokensNameGate30": {
+    "description": "증표 이름: 절 문을 30일 지킴. 「흠 없음」을 뜻하는 한자어. 짧게."
+  },
+  "tokensRequirementGate30": "절 문 30일 안 닫힘",
+  "@tokensRequirementGate30": {
+    "description": "증표 「무결」의 조건 문구."
+  },
+  "tokensNameFirst": "첫 엎기",
+  "@tokensNameFirst": {
+    "description": "증표 이름: 처음으로 폰을 엎어 둠. 짧게."
+  },
+  "tokensRequirementFirst": "한 번 엎어두면",
+  "@tokensRequirementFirst": {
+    "description": "증표 「첫 엎기」의 조건 문구."
+  },
+  "tokensNameMerit1000": "공덕 천",
+  "@tokensNameMerit1000": {
+    "description": "증표 이름: 공덕(앱 포인트) 1,000. 짧게."
+  },
+  "tokensRequirementMerit1000": "공덕 1,000",
+  "@tokensRequirementMerit1000": {
+    "description": "증표 「공덕 천」의 조건 문구."
+  },
+  "tokensNameWinter": "동지 한정 · 탱화",
+  "@tokensNameWinter": {
+    "description": "시즌 증표 이름: 동지(겨울) 한정 탱화(불화). 짧게."
+  },
+  "tokensRequirementWinter": "시즌 증표",
+  "@tokensRequirementWinter": {
+    "description": "시즌 증표의 조건 문구."
+  },
+  "shellTabTemple": "절",
+  "@shellTabTemple": {
+    "description": "하단 탭 라벨(스크린 리더/툴팁): 메인 절 화면. 아주 짧게."
+  },
+  "shellTabWardrobe": "꾸미기",
+  "@shellTabWardrobe": {
+    "description": "하단 탭 라벨: 부처 꾸미기(옷장). 아주 짧게."
+  },
+  "shellTabPlay": "놀이",
+  "@shellTabPlay": {
+    "description": "하단 탭 라벨: 놀이(목탁·싱잉볼 등). 아주 짧게."
+  },
+  "shellTabSeonsa": "선사",
+  "@shellTabSeonsa": {
+    "description": "하단 탭 라벨: 선사(하루 한마디 해 주는 스승 캐릭터). 아주 짧게."
+  },
+  "shellTabWishes": "소원",
+  "@shellTabWishes": {
+    "description": "하단 탭 라벨: 소원. 아주 짧게."
+  },
+  "shellTopBarTokensTooltip": "증표",
+  "@shellTopBarTokensTooltip": {
+    "description": "탭 상단바 오른쪽 둥근 버튼 툴팁: 증표 화면으로."
+  },
+  "shellTopBarProfileTooltip": "프로필",
+  "@shellTopBarProfileTooltip": {
+    "description": "탭 상단바 오른쪽 둥근 버튼 툴팁: 프로필 화면으로."
+  },
+  "shellMeritSemantics": "공덕 {merit}",
+  "@shellMeritSemantics": {
+    "description": "스크린 리더용: 상단바 왼쪽 공덕(앱 포인트) 알약. merit 은 공덕 수.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "seonsaNoCardToday": "오늘은 할 말이 없다. 그런 날도 있다.",
+  "@seonsaNoCardToday": {
+    "description": "선사 탭: 오늘의 한마디가 없을 때 큰 글씨로 대신 나오는 말. 선사의 무심한 반말."
+  },
+  "seonsaDailyOnce": "하루 한 번",
+  "@seonsaDailyOnce": {
+    "description": "선사 탭: 한마디 아래 작은 글씨. 답은 하루 한 번만 나온다는 뜻."
+  },
+  "seonsaBurnButton": "번뇌 한 줄 적기",
+  "@seonsaBurnButton": {
+    "description": "선사 탭 아래 큰 버튼. 고민 한 줄을 적어 태우는 화면으로 간다."
+  },
+  "seonsaSealSemantics": "선사",
+  "@seonsaSealSemantics": {
+    "description": "스크린 리더용: 선사 탭의 붉은 낙관(喝) 그림."
+  },
+  "safetyHomeButton": "홈으로",
+  "@safetyHomeButton": {
+    "description": "위기 안내 화면 맨 아래 글자 버튼. 평문, 캐릭터 말투 없음."
+  },
+  "rootsTitle": "말씀의 뿌리",
+  "@rootsTitle": {
+    "description": "말씀의 뿌리(선사 한마디의 출처를 단계별로 펼치는) 화면 앱바 제목."
+  },
+  "rootsNotOpenYet": "아직 열리지 않은 말이다.",
+  "@rootsNotOpenYet": {
+    "description": "말씀의 뿌리 화면: 찾는 항목이 없거나 아직 공개되지 않았을 때."
+  },
+  "rootsWhyButton": "왜 그런데",
+  "@rootsWhyButton": {
+    "description": "말씀의 뿌리 1단계 버튼: 해설 펼치기. 툭 던지는 반말 질문."
+  },
+  "rootsSourceButton": "어디서 나온 말인데",
+  "@rootsSourceButton": {
+    "description": "말씀의 뿌리 2단계 버튼: 경전 출처 펼치기. 반말 질문."
+  },
+  "rootsWorryButton": "한 줄 적고 3분",
+  "@rootsWorryButton": {
+    "description": "말씀의 뿌리 아래 버튼: 고민 한 줄 적고 3분 명상 시작."
+  },
+  "rootsParaphraseNote": "현대어로 풀었다",
+  "@rootsParaphraseNote": {
+    "description": "경전 인용 상자 아래 작은 글씨. 원문이 아니라 의역이라는 표시(숨기지 않는다)."
+  },
+  "rootsContextHeading": "맥락",
+  "@rootsContextHeading": {
+    "description": "말씀의 뿌리 3단계 소제목: 원래 맥락."
+  },
+  "rootsTraditionHeading": "전통 노트",
+  "@rootsTraditionHeading": {
+    "description": "말씀의 뿌리 3단계 소제목: 종파·전통별 해석 메모."
+  },
+  "rootsViewOriginal": "원문 보기",
+  "@rootsViewOriginal": {
+    "description": "말씀의 뿌리 3단계 글자 버튼: 경전 원문 웹페이지를 연다."
+  },
+  "settingsTitle": "설정",
+  "@settingsTitle": {
+    "description": "설정 화면 앱바 제목."
+  },
+  "settingsSectionVoice": "음성 안내",
+  "@settingsSectionVoice": {
+    "description": "설정 섹션 라벨: 명상 중 음성 안내 양."
+  },
+  "settingsVoiceNone": "없음",
+  "@settingsVoiceNone": {
+    "description": "음성 안내 선택지: 없음."
+  },
+  "settingsVoiceMinimal": "최소",
+  "@settingsVoiceMinimal": {
+    "description": "음성 안내 선택지: 최소."
+  },
+  "settingsVoiceDefault": "기본",
+  "@settingsVoiceDefault": {
+    "description": "음성 안내 선택지: 기본."
+  },
+  "settingsSectionNotifications": "알림",
+  "@settingsSectionNotifications": {
+    "description": "설정 섹션 라벨: 알림."
+  },
+  "settingsRevisitTitle": "다시 오라는 알림",
+  "@settingsRevisitTitle": {
+    "description": "설정 스위치 제목: 재방문 알림 동의."
+  },
+  "settingsRevisitSubtitle": "동의하면 다음 날 1회, 이후 주 1회 이하.",
+  "@settingsRevisitSubtitle": {
+    "description": "재방문 알림 스위치 설명: 알림 빈도 약속."
+  },
+  "settingsSectionPractice": "수행",
+  "@settingsSectionPractice": {
+    "description": "설정 섹션 라벨: 수행(명상) 관련."
+  },
+  "settingsSambaeTitle": "삼배 의식",
+  "@settingsSambaeTitle": {
+    "description": "설정 스위치 제목: 명상 시작 때 세 번 절하는 의식을 켤지."
+  },
+  "settingsDetectionTitle": "감지 방식",
+  "@settingsDetectionTitle": {
+    "description": "설정 항목 제목: 폰 엎음 감지 방식(타이머/센서). 개발 플래그가 켜졌을 때만 보인다."
+  },
+  "settingsSectionRecords": "기록",
+  "@settingsSectionRecords": {
+    "description": "설정 섹션 라벨: 기록."
+  },
+  "settingsHideNumbersTitle": "숫자 가리기",
+  "@settingsHideNumbersTitle": {
+    "description": "설정 스위치 제목: 숫자(인정일·연속) 감추기."
+  },
+  "settingsHideNumbersSubtitle": "인정일·연속 숫자를 감춘다.",
+  "@settingsHideNumbersSubtitle": {
+    "description": "숫자 가리기 스위치 설명."
+  },
+  "settingsStoreRecordsTitle": "기록을 기기에 저장",
+  "@settingsStoreRecordsTitle": {
+    "description": "설정 스위치 제목: 수행 기록을 기기에 저장하는 데 동의."
+  },
+  "settingsStoreRecordsSubtitle": "서버로 보내지 않는다.",
+  "@settingsStoreRecordsSubtitle": {
+    "description": "기록 저장 스위치 설명: 기기 밖으로 안 나간다는 약속."
+  },
+  "settingsSectionMore": "그 밖에",
+  "@settingsSectionMore": {
+    "description": "설정 섹션 라벨: 기타."
+  },
+  "settingsProfileItem": "프로필",
+  "@settingsProfileItem": {
+    "description": "설정 목록 항목: 프로필 화면으로."
+  },
+  "settingsTokensItem": "증표",
+  "@settingsTokensItem": {
+    "description": "설정 목록 항목: 증표(업적 배지) 화면으로."
+  },
+  "settingsCreditsItem": "출처",
+  "@settingsCreditsItem": {
+    "description": "설정 목록 항목: 출처(크레딧·라이선스) 화면으로."
+  },
+  "settingsCreditsItemSubtitle": "앱에 쓴 소리·글꼴을 만든 사람들과 라이선스.",
+  "@settingsCreditsItemSubtitle": {
+    "description": "설정의 「출처」 항목 설명."
+  },
+  "settingsSectionData": "데이터",
+  "@settingsSectionData": {
+    "description": "설정 섹션 라벨: 데이터."
+  },
+  "settingsWipeTitle": "데이터 삭제",
+  "@settingsWipeTitle": {
+    "description": "설정 항목(빨간 글씨): 기기의 모든 데이터 삭제."
+  },
+  "settingsWipeSubtitle": "기기에 있는 전부. 되돌릴 수 없다.",
+  "@settingsWipeSubtitle": {
+    "description": "데이터 삭제 항목 설명."
+  },
+  "settingsWipeDialogTitle": "전부 지울까",
+  "@settingsWipeDialogTitle": {
+    "description": "데이터 삭제 확인 대화상자 제목. 반말 질문, 물음표 없음."
+  },
+  "settingsWipeDialogBody": "기록·번뇌·테스트 결과·절이 모두 사라진다. 되돌릴 수 없다.",
+  "@settingsWipeDialogBody": {
+    "description": "데이터 삭제 확인 대화상자 본문."
+  },
+  "settingsWipeCancel": "아니",
+  "@settingsWipeCancel": {
+    "description": "데이터 삭제 확인 대화상자 취소 버튼. 반말."
+  },
+  "settingsWipeConfirm": "지운다",
+  "@settingsWipeConfirm": {
+    "description": "데이터 삭제 확인 대화상자 확인 버튼(빨간 글씨)."
+  },
+  "settingsCreditsTitle": "출처",
+  "@settingsCreditsTitle": {
+    "description": "출처(크레딧) 화면 앱바 제목."
+  },
+  "settingsCreditMoktakUse": "목탁 소리",
+  "@settingsCreditMoktakUse": {
+    "description": "출처 화면 항목 제목: 목탁 소리에 쓴 저작물."
+  },
+  "settingsCreditMoktakNotice": "김용배의 '목탁소리(이미지)'은 CC BY 라이선스로 제공됩니다.",
+  "@settingsCreditMoktakNotice": {
+    "description": "목탁 소리 저작물의 출처 표시 문구. 한국저작권위원회 공유마당이 안내한 문구라 한국어는 한 글자도 바꾸지 않는다(조사 「은」 포함 원문 그대로). 다른 언어는 저작자(김용배)·작품명('목탁소리(이미지)')·CC BY 를 그대로 살려 옮긴다."
+  },
+  "settingsCreditMoktakChanges": "두 번째 타 하나만 잘라 끝을 부드럽게 줄임.",
+  "@settingsCreditMoktakChanges": {
+    "description": "목탁 소리 원본에서 손댄 것(CC BY 의무 고지). 메모체."
+  },
+  "settingsCreditGonguSite": "한국저작권위원회 공유마당",
+  "@settingsCreditGonguSite": {
+    "description": "목탁 소리 원본이 있는 사이트 이름(Korea Copyright Commission 의 Gongu Madang). 뒤에 URL 이 따로 붙는다."
+  },
+  "settingsCreditBowlUse": "싱잉볼 소리",
+  "@settingsCreditBowlUse": {
+    "description": "출처 화면 항목 제목: 싱잉볼 소리에 쓴 저작물."
+  },
+  "settingsCreditBowlNotice": "{author}의 “{work1}”와 “{work2}” · CC0 1.0.",
+  "@settingsCreditBowlNotice": {
+    "description": "싱잉볼 소리 출처 표시. author 는 저작자 아이디, work1/work2 는 원본 파일 이름(번역하지 않음).",
+    "placeholders": {
+      "author": {
+        "type": "String"
+      },
+      "work1": {
+        "type": "String"
+      },
+      "work2": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCreditBowlChanges": "앱에 맞게 음량 조정, 모노 변환 및 반복 구간 편집.",
+  "@settingsCreditBowlChanges": {
+    "description": "싱잉볼 소리 원본에서 손댄 것. 메모체."
+  },
+  "settingsCreditKeycapUse": "키캡 소리",
+  "@settingsCreditKeycapUse": {
+    "description": "출처 화면 항목 제목: 키캡(기계식 키보드) 소리에 쓴 저작물."
+  },
+  "settingsCreditKeycapNotice": "{author}의 “{work}” · CC0 1.0.",
+  "@settingsCreditKeycapNotice": {
+    "description": "키캡 소리 출처 표시. author 는 저작자 아이디, work 는 원본 이름(번역하지 않음).",
+    "placeholders": {
+      "author": {
+        "type": "String"
+      },
+      "work": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCreditKeycapChanges": "누름·뗌 소리를 한 타씩 잘라 음량 조정.",
+  "@settingsCreditKeycapChanges": {
+    "description": "키캡 소리 원본에서 손댄 것. 메모체."
+  },
+  "settingsCreditFontUse": "글꼴 — {family}",
+  "@settingsCreditFontUse": {
+    "description": "출처 화면 항목 제목: 글꼴. family 는 글꼴 이름(Noto Sans KR / 고운바탕).",
+    "placeholders": {
+      "family": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCreditFontGowunBatang": "고운바탕",
+  "@settingsCreditFontGowunBatang": {
+    "description": "글꼴 Gowun Batang 의 표시 이름. 다른 언어는 「Gowun Batang」."
+  },
+  "settingsCreditFontOflNote": "SIL Open Font License 1.1. 앱에 쓰는 글자만 남겨 용량을 줄임.",
+  "@settingsCreditFontOflNote": {
+    "description": "글꼴 출처의 둘째 줄: 라이선스 이름(번역하지 않음)과, 쓰는 글자만 남겨 줄였다는 수정 고지."
+  },
+  "settingsOpenSourceLicenses": "오픈소스 라이선스",
+  "@settingsOpenSourceLicenses": {
+    "description": "출처 화면 맨 아래 항목: 오픈소스 라이선스 전문 화면을 연다."
+  },
+  "ordinationNameMunyeom": "무념",
+  "@ordinationNameMunyeom": {
+    "description": "법명 「무념(無念)」의 화면 표기. 프로필에는 한국어 「무념」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Munyeom)을 권장."
+  },
+  "ordinationNameMusim": "무심",
+  "@ordinationNameMusim": {
+    "description": "법명 「무심(無心)」의 화면 표기. 프로필에는 한국어 「무심」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Musim)을 권장."
+  },
+  "ordinationNameJeokjo": "적조",
+  "@ordinationNameJeokjo": {
+    "description": "법명 「적조(寂照)」의 화면 표기. 프로필에는 한국어 「적조」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Jeokjo)을 권장."
+  },
+  "ordinationNameIlhyeon": "일현",
+  "@ordinationNameIlhyeon": {
+    "description": "법명 「일현(一顯)」의 화면 표기. 프로필에는 한국어 「일현」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Ilhyeon)을 권장."
+  },
+  "ordinationNameHaean": "해안",
+  "@ordinationNameHaean": {
+    "description": "법명 「해안(海岸)」의 화면 표기. 프로필에는 한국어 「해안」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Haean)을 권장."
+  },
+  "ordinationNameCheongan": "청안",
+  "@ordinationNameCheongan": {
+    "description": "법명 「청안(淸眼)」의 화면 표기. 프로필에는 한국어 「청안」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Cheongan)을 권장."
+  },
+  "ordinationNameBowol": "보월",
+  "@ordinationNameBowol": {
+    "description": "법명 「보월(寶月)」의 화면 표기. 프로필에는 한국어 「보월」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Bowol)을 권장."
+  },
+  "ordinationNameJian": "지안",
+  "@ordinationNameJian": {
+    "description": "법명 「지안(智岸)」의 화면 표기. 프로필에는 한국어 「지안」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Jian)을 권장."
+  },
+  "ordinationNameHyeonu": "현우",
+  "@ordinationNameHyeonu": {
+    "description": "법명 「현우(顯友)」의 화면 표기. 프로필에는 한국어 「현우」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Hyeonu)을 권장."
+  },
+  "ordinationNameBeopun": "법운",
+  "@ordinationNameBeopun": {
+    "description": "법명 「법운(法雲)」의 화면 표기. 프로필에는 한국어 「법운」로 저장되고 이 값은 보여 줄 때만 쓴다. 다른 언어는 음역(예: Beopun)을 권장."
+  },
+  "templeDharmaSyllableGwan": "관",
+  "@templeDharmaSyllableGwan": {
+    "description": "법명을 이루는 한 글자 「관」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Gwan)."
+  },
+  "templeDharmaSyllableJi": "지",
+  "@templeDharmaSyllableJi": {
+    "description": "법명을 이루는 한 글자 「지」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Ji)."
+  },
+  "templeDharmaSyllableMun": "문",
+  "@templeDharmaSyllableMun": {
+    "description": "법명을 이루는 한 글자 「문」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Mun)."
+  },
+  "templeDharmaSyllableMi": "미",
+  "@templeDharmaSyllableMi": {
+    "description": "법명을 이루는 한 글자 「미」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Mi)."
+  },
+  "templeDharmaSyllableSa": "사",
+  "@templeDharmaSyllableSa": {
+    "description": "법명을 이루는 한 글자 「사」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Sa)."
+  },
+  "templeDharmaSyllableGyeon": "견",
+  "@templeDharmaSyllableGyeon": {
+    "description": "법명을 이루는 한 글자 「견」의 화면 표기. 저장값은 한국어 그대로. 다른 언어는 음역(예: Gyeon)."
+  },
+  "templeDharmaComposedName": "{first}{last}",
+  "@templeDharmaComposedName": {
+    "description": "앞 글자와 뒷 글자를 붙인 법명 (예: 관견). 한국어는 붙여 쓴다. 음역하는 언어는 띄우거나 하이픈을 넣어도 된다.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDebugSection": "디버그",
+  "@settingsDebugSection": {
+    "description": "설정 화면 섹션 제목. 개발 빌드에서만 보인다 (번역 우선순위 낮음)."
+  },
+  "settingsDebugAddMerit": "공덕 {amount} 더 받기",
+  "@settingsDebugAddMerit": {
+    "description": "개발 빌드 전용: 공덕을 더하는 항목.",
+    "placeholders": {
+      "amount": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsDebugCurrentMerit": "지금 공덕 {merit}",
+  "@settingsDebugCurrentMerit": {
+    "description": "개발 빌드 전용: 지금 공덕 표시.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "testCheckinTitle": "오늘의 체크인",
+  "@testCheckinTitle": {
+    "description": "오늘의 체크인 화면(문항 하나로 오늘 수행 길이를 고른다) 상단바 제목."
+  },
+  "testCheckinQuestion": "오늘은 어느 쪽이냐",
+  "@testCheckinQuestion": {
+    "description": "오늘의 체크인 화면 큰 질문. 무뚝뚝한 반말(선사 말투), 물음표 없이 끝낸다."
+  },
+  "testCheckinOptionShort": "짧게 끊고 싶다",
+  "@testCheckinOptionShort": {
+    "description": "오늘의 체크인 보기 1. 고르면 3분 수행으로 간다. 짧은 반말 독백."
+  },
+  "testCheckinOptionCompany": "누구 옆에 있고 싶다",
+  "@testCheckinOptionCompany": {
+    "description": "오늘의 체크인 보기 2. 고르면 3분 수행으로 간다. 짧은 반말 독백."
+  },
+  "testCheckinOptionMove": "몸을 움직이고 싶다",
+  "@testCheckinOptionMove": {
+    "description": "오늘의 체크인 보기 3. 고르면 3분 수행으로 간다. 짧은 반말 독백."
+  },
+  "testCheckinOptionLong": "조용히 오래 있고 싶다",
+  "@testCheckinOptionLong": {
+    "description": "오늘의 체크인 보기 4. 고르면 10분 수행으로 간다. 짧은 반말 독백."
+  },
+  "testCheckinSkip": "건너뛰기",
+  "@testCheckinSkip": {
+    "description": "오늘의 체크인 화면 아래 텍스트 버튼. 고르지 않고 홈으로 간다."
+  },
+  "testIntroTitle": "내 마음의 보살 찾기",
+  "@testIntroTitle": {
+    "description": "심리 테스트 소개 화면 상단바 제목. 테스트 이름."
+  },
+  "testIntroEmpty": "아직 문항이 없다.",
+  "@testIntroEmpty": {
+    "description": "심리 테스트 소개 화면. 문항 콘텐츠를 못 읽었을 때 가운데 나오는 문장."
+  },
+  "testIntroHeadline": "맞히는 게 아니다.\n요즘의 너를 보는 거다.",
+  "@testIntroHeadline": {
+    "description": "심리 테스트 소개 화면 큰 제목, 두 줄(\\n 줄바꿈 유지). 반말. 정답 맞히기가 아니라 요즘 상태를 본다는 뜻."
+  },
+  "testIntroBasis": "기준은 \"{basis}\".",
+  "@testIntroBasis": {
+    "description": "심리 테스트 소개 화면. 어느 시기를 기준으로 답할지 알려 준다. basis 는 콘텐츠에서 온 기간 문구(예: 최근 한 달의 나).",
+    "placeholders": {
+      "basis": {
+        "type": "String"
+      }
+    }
+  },
+  "testIntroQuestionCount": "{count}문항. 답하기 싫은 건 건너뛰어도 된다.",
+  "@testIntroQuestionCount": {
+    "description": "심리 테스트 소개 화면 안내. count 는 기본 문항 수.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "testIntroStart": "시작",
+  "@testIntroStart": {
+    "description": "심리 테스트 소개 화면 아래 큰 버튼. 첫 문항으로 간다."
+  },
+  "testQuestionDeepNotice": "조금 더 물어도 되겠나",
+  "@testQuestionDeepNotice": {
+    "description": "심리 테스트 심화 문항 위에 작게 붙는 문구. 물음표 없는 반말 의문."
+  },
+  "testQuestionSkip": "건너뛰기",
+  "@testQuestionSkip": {
+    "description": "심리 테스트 문항 화면 아래 텍스트 버튼. 이 문항에 답하지 않고 다음으로."
+  },
+  "testQuestionStopHere": "여기까지 할게요",
+  "@testQuestionStopHere": {
+    "description": "심리 테스트 심화 문항에서만 보이는 텍스트 버튼. 심화를 거절하고 바로 결과로 간다. 사용자 입장 존댓말."
+  },
+  "testResultTitle": "결과",
+  "@testResultTitle": {
+    "description": "심리 테스트 결과 화면 상단바 제목. 유형 이름이 없을 때 결과 제목으로도 쓴다."
+  },
+  "testResultAnswerCount": "응답 {answered} / 건너뜀 {skipped}",
+  "@testResultAnswerCount": {
+    "description": "심리 테스트 결과 화면 제목 아래 작은 회색 줄. 답한 문항 수와 건너뛴 문항 수.",
+    "placeholders": {
+      "answered": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "testResultShare": "나누기",
+  "@testResultShare": {
+    "description": "심리 테스트 결과 화면 공유 버튼(공유 아이콘 옆). 한마디 카드를 이미지로 공유한다."
+  },
+  "testResultRecoveryTitle": "회복은 이렇게",
+  "@testResultRecoveryTitle": {
+    "description": "심리 테스트 결과 화면 섹션 제목. 아래에 회복 방향 설명이 온다."
+  },
+  "testResultRecoveryTie": "둘 다 비슷하게 나왔다. 어느 쪽이 더 너 같냐.",
+  "@testResultRecoveryTie": {
+    "description": "심리 테스트 결과 화면. 회복 방향 두 개가 동점일 때 라디오 버튼 위에 나온다. 반말."
+  },
+  "testResultSymbol": "상징",
+  "@testResultSymbol": {
+    "description": "심리 테스트 결과 화면 맨 아래 접힌 펼침 목록 제목. 펼치면 보살의 상징 설명."
+  },
+  "testResultStartThreeMinutes": "3분 시작",
+  "@testResultStartThreeMinutes": {
+    "description": "심리 테스트 결과 화면 큰 버튼. 수행(명상) 설정 화면으로 간다."
+  },
+  "testResultAppliedSnack": "프로필에 넣었다.",
+  "@testResultAppliedSnack": {
+    "description": "심리 테스트 결과를 프로필에 적용한 뒤 뜨는 스낵바. 반말."
+  },
+  "testResultApplyToProfile": "프로필에 적용",
+  "@testResultApplyToProfile": {
+    "description": "심리 테스트 결과 화면 외곽선 버튼. 결과를 프로필 기본값에 넣는다."
+  },
+  "testResultRetry": "다시 하기",
+  "@testResultRetry": {
+    "description": "심리 테스트 결과 화면 텍스트 버튼. 처음부터 다시."
+  },
+  "testResultMixedTitle": "두 쪽이 섞여 있다",
+  "@testResultMixedTitle": {
+    "description": "심리 테스트 결과 제목. 두 유형이 섞인 경우."
+  },
+  "testResultMixedLine": "하나로 안 묶인다. 그게 틀린 건 아니다.",
+  "@testResultMixedLine": {
+    "description": "심리 테스트 결과 제목(두 쪽이 섞여 있다) 아래 한마디. 공유 카드에도 들어간다. 반말."
+  },
+  "testResultTendencyTitle": "한쪽으로 기운다",
+  "@testResultTendencyTitle": {
+    "description": "심리 테스트 결과 제목. 한 방향만 뚜렷한 경우."
+  },
+  "testResultTendencyLine": "아직 한 방향만 뚜렷하다.",
+  "@testResultTendencyLine": {
+    "description": "심리 테스트 결과 제목(한쪽으로 기운다) 아래 한마디. 공유 카드에도 들어간다."
+  },
+  "testResultInsufficientTitle": "아직 모르겠다",
+  "@testResultInsufficientTitle": {
+    "description": "심리 테스트 결과 제목. 답한 문항이 모자라 판정을 보류한 경우."
+  },
+  "testResultInsufficientLine": "답이 모자란다. 더 답하면 보인다.",
+  "@testResultInsufficientLine": {
+    "description": "심리 테스트 결과 제목(아직 모르겠다) 아래 한마디. 공유 카드에도 들어간다."
+  },
+  "testResultScatteredTitle": "고르게 흩어져 있다",
+  "@testResultScatteredTitle": {
+    "description": "심리 테스트 결과 제목. 답이 고르게 흩어져 판정을 보류한 경우."
+  },
+  "testResultScatteredLine": "한쪽으로 안 쏠린다. 요즘이 그런 때다.",
+  "@testResultScatteredLine": {
+    "description": "심리 테스트 결과 제목(고르게 흩어져 있다) 아래 한마디. 공유 카드에도 들어간다."
+  },
+  "testResultFeelQuestion": "나 같냐?",
+  "@testResultFeelQuestion": {
+    "description": "심리 테스트 결과 화면 맨 아래. 결과가 자기 같은지 동그라미 5개로 매기게 묻는다. 짧은 반말."
+  },
+  "testResultFeelThanks": "그래. 참고하겠다.",
+  "@testResultFeelThanks": {
+    "description": "심리 테스트 결과 화면. 동그라미 점수를 누른 뒤 그 자리에 나오는 답. 짧은 반말."
+  },
+  "worryKindGreed": "탐 · 욕심",
+  "@worryKindGreed": {
+    "description": "번뇌 태우기 화면 번뇌 종류 칩 1. 불교 삼독 중 탐(貪). 「한 글자 · 풀이」 꼴, 칩이라 짧게."
+  },
+  "worryKindAnger": "진 · 화",
+  "@worryKindAnger": {
+    "description": "번뇌 태우기 화면 번뇌 종류 칩 2. 불교 삼독 중 진(瞋). 「한 글자 · 풀이」 꼴, 칩이라 짧게."
+  },
+  "worryKindDelusion": "치 · 답답",
+  "@worryKindDelusion": {
+    "description": "번뇌 태우기 화면 번뇌 종류 칩 3. 불교 삼독 중 치(癡). 「한 글자 · 풀이」 꼴, 칩이라 짧게."
+  },
+  "worryZukbiFallback": "그게 번뇌냐. 적었으면 반은 지난 거다.",
+  "@worryZukbiFallback": {
+    "description": "번뇌를 적고 「죽비 받기」를 누르면 나오는 선사의 한마디. 대사 콘텐츠에서 고를 게 없을 때 쓰는 기본 대사. 퉁명스러운 선사 반말."
+  },
+  "worryRebuttalFallback": "반박도 번뇌다. 그만하고 태워라.",
+  "@worryRebuttalFallback": {
+    "description": "「반박」을 누르면 나오는 선사의 한마디. 대사 콘텐츠에서 고를 게 없을 때 쓰는 기본 대사. 퉁명스러운 선사 반말."
+  },
+  "worryWriteTitle": "오늘 뭐가\n제일 짜증났어?",
+  "@worryWriteTitle": {
+    "description": "번뇌 태우기 첫 화면 큰 제목, 두 줄(\\n 줄바꿈 유지). 친구에게 묻는 반말."
+  },
+  "worryWriteSubtitle": "한 줄만 적어. 태우면 공덕이 된다.",
+  "@worryWriteSubtitle": {
+    "description": "번뇌 태우기 첫 화면 제목 아래 작은 안내. 반말."
+  },
+  "worryNoteLabel": "번뇌 한 줄",
+  "@worryNoteLabel": {
+    "description": "번뇌 태우기 화면의 종이 쪽지 맨 위 작은 라벨."
+  },
+  "worryNoteHint": "한 줄이면 충분하다",
+  "@worryNoteHint": {
+    "description": "번뇌 태우기 종이 쪽지 입력칸이 비었을 때 흐리게 보이는 힌트. 최대 80자 입력."
+  },
+  "worrySubmitButton": "죽비 받기",
+  "@worrySubmitButton": {
+    "description": "번뇌 태우기 첫 화면 아래 큰 버튼. 번뇌를 저장하고 선사의 한마디(죽비, 선원에서 깨우칠 때 치는 대나무 막대)를 받는다."
+  },
+  "worrySeonsaJustNow": "선사 · 방금",
+  "@worrySeonsaJustNow": {
+    "description": "죽비 화면. 선사의 한마디 위 작은 머리글(말한 사람 · 때). 첫 한마디일 때."
+  },
+  "worrySeonsaZukbiCount": "선사 · 죽비 {count}회",
+  "@worrySeonsaZukbiCount": {
+    "description": "죽비 화면. 반박해서 한마디를 다시 받았을 때의 작은 머리글. count 는 지금까지 받은 죽비 횟수(2 이상).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "worryZukbiHint": "받아들이면 태워진다. 반박하면 죽비 한 번 더.",
+  "@worryZukbiHint": {
+    "description": "죽비 화면 버튼 위 작은 안내. 「인정. 태운다」와 「반박」 버튼이 무엇을 하는지 알려 준다."
+  },
+  "worryBurnButton": "인정. 태운다",
+  "@worryBurnButton": {
+    "description": "죽비 화면 큰 버튼. 선사의 말을 받아들이고 쪽지를 태운다. 짧게."
+  },
+  "worryRebutButton": "반박",
+  "@worryRebutButton": {
+    "description": "죽비 화면 작은 버튼(폭 110). 선사에게 반박해 한마디를 한 번 더 받는다. 아주 짧게."
+  },
+  "worryBurnCount": "오늘 {today}개 태움 · 누적 {total} / 108",
+  "@worryBurnCount": {
+    "description": "번뇌 태우기 화면 상단바. 오늘 태운 번뇌 수와 지금까지 태운 수(108번뇌 목표).",
+    "placeholders": {
+      "today": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "worryMeritHint": "태우면 {amount} · 108개 채우면 「108번뇌 완파」",
+  "@worryMeritHint": {
+    "description": "번뇌 태우기 첫 화면 버튼 위 안내 상자. amount 자리에 굵은 글씨로 worryMeritAmount(예: +3 공덕)가 들어간다. 「108번뇌 완파」는 칭호 이름.",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "worryMeritAmount": "+{merit} 공덕",
+  "@worryMeritAmount": {
+    "description": "worryMeritHint 안에 굵게 들어가는 조각. 이번에 태우면 받는 공덕(앱 포인트) 수.",
+    "placeholders": {
+      "merit": {
+        "type": "int"
+      }
+    }
+  },
+  "worryMeritDoneLead": "오늘 공덕은 다 받았다.",
+  "@worryMeritDoneLead": {
+    "description": "번뇌 태우기 안내 상자. 오늘 받을 공덕을 다 받았을 때 앞 문장. 뒤에 worryMeritDoneTail 이 굵게 이어진다."
+  },
+  "worryMeritDoneTail": "태우는 건 된다.",
+  "@worryMeritDoneTail": {
+    "description": "번뇌 태우기 안내 상자. worryMeritDoneLead 뒤에 굵게 붙는 문장. 공덕은 없어도 태우기는 계속할 수 있다는 뜻."
+  },
+  "worryBurnSemantics": "번뇌를 적은 쪽지가 연등 아래에서 타오릅니다",
+  "@worryBurnSemantics": {
+    "description": "쪽지 태우는 애니메이션의 화면 읽기 프로그램(스크린 리더) 라벨. 존댓말 서술."
+  },
+  "worryBurnOverlayTitle": "연등에 번뇌를 내려놓습니다",
+  "@worryBurnOverlayTitle": {
+    "description": "쪽지 태우는 애니메이션 화면 위 제목. 존댓말 서술."
+  },
+  "worryBurnOverlayBlessing": "쪽지는 재가 되고, 마음에는 빛이 남기를.",
+  "@worryBurnOverlayBlessing": {
+    "description": "쪽지 태우는 애니메이션 화면 아래 축원 한 줄."
+  },
+  "wishesCanopySemantics": "연등에 달린 소원 보기",
+  "@wishesCanopySemantics": {
+    "description": "소원 탭의 연등 그림(누르면 소원을 읽는 시트가 열린다) 화면 읽기 프로그램 버튼 라벨."
+  },
+  "wishesExampleFamily": "우리 가족이 건강하고 평안하기를 바랍니다.",
+  "@wishesExampleFamily": {
+    "description": "연등을 누르면 보이는 예시 소원 1. 다른 사람이 쓴 것 같은 진지한 소원 한 줄."
+  },
+  "wishesExampleCourage": "새로운 시작 앞에서 용기를 잃지 않게 해 주세요.",
+  "@wishesExampleCourage": {
+    "description": "연등을 누르면 보이는 예시 소원 2. 다른 사람이 쓴 것 같은 진지한 소원 한 줄."
+  },
+  "wishesExampleKindness": "오늘도 누군가에게 다정한 사람이 되고 싶어요.",
+  "@wishesExampleKindness": {
+    "description": "연등을 누르면 보이는 예시 소원 3. 다른 사람이 쓴 것 같은 진지한 소원 한 줄."
+  },
+  "wishesExampleRestfulNight": "마음이 지친 모든 이에게 편안한 밤이 오기를.",
+  "@wishesExampleRestfulNight": {
+    "description": "연등을 누르면 보이는 예시 소원 4. 다른 사람이 쓴 것 같은 진지한 소원 한 줄."
+  },
+  "wishesExampleFruition": "오래 준비한 일이 좋은 결실을 맺기를 바랍니다.",
+  "@wishesExampleFruition": {
+    "description": "연등을 누르면 보이는 예시 소원 5. 다른 사람이 쓴 것 같은 진지한 소원 한 줄."
+  },
+  "wishesSavedSnack": "소원을 연등에 달았어요.",
+  "@wishesSavedSnack": {
+    "description": "소원 빌기 화면에서 저장한 뒤 뜨는 스낵바. 존댓말."
+  },
+  "wishesSaveError": "저장하지 못했어요. 다시 시도해 주세요.",
+  "@wishesSaveError": {
+    "description": "소원 빌기 화면 저장 실패 시 입력칸 아래 빨간 글씨. 존댓말."
+  },
+  "wishesWriteTitle": "소원 빌기",
+  "@wishesWriteTitle": {
+    "description": "소원 빌기(소원 적기) 화면 상단바 제목."
+  },
+  "wishesWriteHeadline": "모든 이의 소원이\n이루어지기를",
+  "@wishesWriteHeadline": {
+    "description": "소원 빌기 화면 큰 제목, 가운데 정렬 두 줄(\\n 줄바꿈 유지). 축원."
+  },
+  "wishesWriteHint": "마음속 소원을 적어 보세요",
+  "@wishesWriteHint": {
+    "description": "소원 빌기 입력칸이 비었을 때 흐리게 보이는 힌트. 최대 120자 입력. 존댓말."
+  },
+  "wishesStoredLocallyNote": "소원은 이 기기에 저장됩니다.",
+  "@wishesStoredLocallyNote": {
+    "description": "소원 빌기 화면 입력칸 아래 안내. 서버로 보내지 않는다는 뜻."
+  },
+  "wishesSaving": "소원을 다는 중…",
+  "@wishesSaving": {
+    "description": "소원 빌기 화면 아래 버튼. 저장하는 동안 잠깐 보이는 글자."
+  },
+  "wishesSubmitButton": "작성 완료",
+  "@wishesSubmitButton": {
+    "description": "소원 빌기 화면 아래 큰 버튼. 소원을 저장한다."
+  },
+  "wishesTabTapHint": "연등에 소원을 달아봐요",
+  "@wishesTabTapHint": {
+    "description": "소원 탭 아래 카드의 안내. 소원이 없으면 큰 줄, 있으면 소원 수 위 작은 줄."
+  },
+  "wishesTabMyCount": "내가 단 소원 {count}개",
+  "@wishesTabMyCount": {
+    "description": "소원 탭 아래 카드의 큰 줄. 내가 연등에 단 소원 수(1 이상).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wishesTabLoading": "소원을 불러오는 중",
+  "@wishesTabLoading": {
+    "description": "소원 탭 아래 카드의 큰 줄 자리. 저장된 소원을 읽는 동안."
+  },
+  "wishesTabLoadError": "소원을 불러오지 못했어요",
+  "@wishesTabLoadError": {
+    "description": "소원 탭 아래 카드의 큰 줄 자리. 저장된 소원을 못 읽었을 때."
+  },
+  "wishesTabWriteButton": "소원 빌기",
+  "@wishesTabWriteButton": {
+    "description": "소원 탭 아래 카드 오른쪽의 작은 버튼. 소원 적는 화면으로 간다."
+  },
+  "wishesEntryMyCount": "내가 올린 소원 {count}개",
+  "@wishesEntryMyCount": {
+    "description": "소원 줄(작은 소원 입구 위젯) 왼쪽 글자. 내가 올린 소원 수.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wishesEntryLoading": "소원을 불러오는 중",
+  "@wishesEntryLoading": {
+    "description": "소원 줄(작은 소원 입구 위젯) 왼쪽 글자. 저장된 소원을 읽는 동안."
+  },
+  "wishesEntryLoadError": "소원을 불러오지 못했어요",
+  "@wishesEntryLoadError": {
+    "description": "소원 줄(작은 소원 입구 위젯) 왼쪽 글자. 저장된 소원을 못 읽었을 때."
+  },
+  "wishesEntryWriteButton": "소원 빌기",
+  "@wishesEntryWriteButton": {
+    "description": "소원 줄(작은 소원 입구 위젯) 오른쪽 텍스트 버튼. 소원 적는 화면으로 간다."
+  },
+  "wishesReaderMineLabel": "내 소원",
+  "@wishesReaderMineLabel": {
+    "description": "연등을 눌러 여는 소원 읽기 시트의 작은 머리글. 내가 쓴 소원을 보는 중일 때."
+  },
+  "wishesReaderExampleLabel": "예시 소원",
+  "@wishesReaderExampleLabel": {
+    "description": "연등을 눌러 여는 소원 읽기 시트의 작은 머리글. 예시 소원을 보는 중일 때."
+  },
+  "wishesReaderOthersNote": "다른 사람의 소원은 공유 기능 연결 후 볼 수 있어요.",
+  "@wishesReaderOthersNote": {
+    "description": "소원 읽기 시트 안내. 아직 다른 사용자 소원은 볼 수 없다는 뜻. 존댓말."
+  },
+  "wishesReaderNext": "다른 소원 보기",
+  "@wishesReaderNext": {
+    "description": "소원 읽기 시트 외곽선 버튼. 다른 소원 하나를 무작위로 보여 준다."
+  },
+  "wishesReaderShowExamples": "예시 소원 보기",
+  "@wishesReaderShowExamples": {
+    "description": "소원 읽기 시트 텍스트 버튼. 내 소원을 보다가 예시 소원으로 바꾼다."
+  },
+  "wishesReaderShowMine": "내 소원 보기",
+  "@wishesReaderShowMine": {
+    "description": "소원 읽기 시트 텍스트 버튼. 예시 소원을 보다가 내가 쓴 소원으로 바꾼다."
+  },
+  "dialogueShareFailed": "나누기에 실패했다. {error}",
+  "@dialogueShareFailed": {
+    "description": "한마디 카드 이미지 공유가 실패했을 때 뜨는 스낵바. error 는 시스템 오류 메시지 원문(번역하지 않음).",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "dataTestFallbackBasis": "최근 한 달의 나",
+  "@dataTestFallbackBasis": {
+    "description": "심리 테스트 콘텐츠에 기준 기간이 빠졌을 때 쓰는 기본값. 소개 화면 「기준은 \"…\".」 따옴표 안에 들어간다."
+  },
+  "dataSafetyFallbackTitle": "잠깐 멈추자.",
+  "@dataSafetyFallbackTitle": {
+    "description": "위기 신호(자해·자살 암시)를 감지했을 때 뜨는 안전 화면 제목. 안전 콘텐츠 파일을 못 읽었을 때만 쓰는 내장 기본값. 따뜻한 반말."
+  },
+  "dataSafetyFallbackBody": "지금 많이 힘들어 보인다. 혼자 두고 싶지 않다. 아래 번호는 언제든 연결된다.",
+  "@dataSafetyFallbackBody": {
+    "description": "안전 화면 본문(내장 기본값). 아래에 상담 전화번호 목록이 온다. 판단하지 않는 따뜻한 반말. 번역 시 신중하게."
+  },
+  "dataSafetyFallbackPrimaryButton": "상담 연락처 보기",
+  "@dataSafetyFallbackPrimaryButton": {
+    "description": "안전 화면 주 버튼(내장 기본값). 상담 전화 목록을 보여 준다."
+  },
+  "dataSafetyFallbackSecondaryButton": "아니에요, 계속할게요",
+  "@dataSafetyFallbackSecondaryButton": {
+    "description": "안전 화면 보조 버튼(내장 기본값). 괜찮다며 하던 것으로 돌아간다. 사용자 입장 존댓말."
+  },
+  "dataSafetyFallbackSuicideHotline": "자살예방상담전화",
+  "@dataSafetyFallbackSuicideHotline": {
+    "description": "안전 화면 상담 전화 목록(내장 기본값)의 기관 이름. 한국 자살예방상담전화(109). 번호는 한국 것이라 다른 나라 판에서는 콘텐츠 파일로 대체된다."
+  },
+  "dataSafetyFallbackMentalHealthHotline": "정신건강위기상담전화",
+  "@dataSafetyFallbackMentalHealthHotline": {
+    "description": "안전 화면 상담 전화 목록(내장 기본값)의 기관 이름. 한국 정신건강위기상담전화(1577-0199)."
+  },
+  "dataSafetyFallbackAllDay": "24시간",
+  "@dataSafetyFallbackAllDay": {
+    "description": "안전 화면 상담 전화 목록(내장 기본값)의 운영 시간. 하루 종일 연결된다는 뜻."
+  },
+  "notificationSessionChannelName": "수행 종료",
+  "@notificationSessionChannelName": {
+    "description": "안드로이드 알림 채널 이름(시스템 설정 > 앱 알림에 보인다). 명상(수행)이 끝났을 때의 알림 묶음. 짧게."
+  },
+  "notificationSessionChannelDescription": "수행이 끝났을 때 진동으로 알린다.",
+  "@notificationSessionChannelDescription": {
+    "description": "안드로이드 알림 채널 설명(시스템 설정에 보인다). 수행 종료 채널."
+  },
+  "notificationRevisitChannelName": "다시 오기",
+  "@notificationRevisitChannelName": {
+    "description": "안드로이드 알림 채널 이름(시스템 설정 > 앱 알림에 보인다). 재방문을 권하는 알림 묶음. 짧게."
+  },
+  "notificationRevisitChannelDescription": "가끔 등이 켜져 있다고 알린다.",
+  "@notificationRevisitChannelDescription": {
+    "description": "안드로이드 알림 채널 설명(시스템 설정에 보인다). 재방문 채널. 등 = 연등(절의 등불)."
+  },
+  "notificationSessionEndTitle": "끝났다.",
+  "@notificationSessionEndTitle": {
+    "description": "수행(명상) 끝날 시각에 뜨는 알림 제목. 짧은 반말."
+  },
+  "notificationSessionEndBody": "천천히 돌아와라.",
+  "@notificationSessionEndBody": {
+    "description": "수행 종료 알림 본문 기본값(따로 정한 문장이 없을 때). 명상에서 천천히 깨어나라는 짧은 반말."
+  }
+}

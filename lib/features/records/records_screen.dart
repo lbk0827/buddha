@@ -6,6 +6,7 @@ import '../../app/theme.dart';
 import '../../core/time_utils.dart';
 import '../../data/db/database.dart';
 import '../../data/repositories/profile_repository.dart';
+import '../../l10n/l10n.dart';
 import '../session/screens/session_setup_screen.dart';
 
 /// 기록 화면 (FR-4.7). \[숫자 가리기\] 토글이 있다.
@@ -22,12 +23,14 @@ class RecordsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('기록'),
+        title: Text(context.l10n.recordsTitle),
         actions: [
           TextButton(
             onPressed: () =>
                 repo.setSetting(SettingKeys.hideNumbers, !hideNumbers),
-            child: Text(hideNumbers ? '숫자 보기' : '숫자 가리기'),
+            child: Text(hideNumbers
+                ? context.l10n.recordsShowNumbers
+                : context.l10n.recordsHideNumbers),
           ),
         ],
       ),
@@ -42,7 +45,7 @@ class RecordsScreen extends ConsumerWidget {
               if (list.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
-                  child: Text('아직 없다. 한 번 앉으면 여기 남는다.',
+                  child: Text(context.l10n.recordsEmpty,
                       style: Theme.of(context).textTheme.titleLarge),
                 ),
               for (final entry in _groupByDate(list).entries) ...[
@@ -78,8 +81,13 @@ class _Totals extends ConsumerWidget {
 
     return Row(
       children: [
-        Expanded(child: _Stat(label: '인정일', value: '$days')),
-        Expanded(child: _Stat(label: '누적', value: formatCumulative(total))),
+        Expanded(
+            child: _Stat(
+                label: context.l10n.recordsStatCreditedDays, value: '$days')),
+        Expanded(
+            child: _Stat(
+                label: context.l10n.recordsStatCumulative,
+                value: formatCumulative(total))),
       ],
     );
   }
@@ -117,8 +125,12 @@ class _SessionTile extends StatelessWidget {
     final fg = Theme.of(context).colorScheme.onSurface;
     final label = [
       formatDuration(session.practicedSec),
-      session.outcome == 'completed' ? '완주' : '중단',
-      session.detection == 'timer' ? '타이머' : '엎음 감지',
+      session.outcome == 'completed'
+          ? context.l10n.recordsOutcomeCompleted
+          : context.l10n.recordsOutcomeInterrupted,
+      session.detection == 'timer'
+          ? context.l10n.recordsDetectionTimer
+          : context.l10n.recordsDetectionFlip,
       if (session.worryChip != null) kWorryChips[session.worryChip] ?? '',
     ].where((e) => e.isNotEmpty).join(' · ');
 

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../app/router.dart';
+import '../../l10n/l10n.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -33,14 +34,15 @@ class WishEntry extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = ref.watch(wishCountProvider);
+    final l10n = context.l10n;
     return Row(
       children: [
         Expanded(
           child: Text(
             count.when(
-              data: (n) => '내가 올린 소원 $n개',
-              loading: () => '소원을 불러오는 중',
-              error: (_, _) => '소원을 불러오지 못했어요',
+              data: (n) => l10n.wishesEntryMyCount(n),
+              loading: () => l10n.wishesEntryLoading,
+              error: (_, _) => l10n.wishesEntryLoadError,
             ),
             style: Theme.of(context).textTheme.bodySmall,
           ),
@@ -48,7 +50,7 @@ class WishEntry extends ConsumerWidget {
         TextButton.icon(
           onPressed: () => context.push(Routes.wish),
           icon: const Icon(Icons.volunteer_activism_outlined, size: 20),
-          label: const Text('소원 빌기'),
+          label: Text(l10n.wishesEntryWriteButton),
         ),
       ],
     );
@@ -68,6 +70,7 @@ class _WishReaderState extends ConsumerState<_WishReader> {
   @override
   Widget build(BuildContext context) {
     final store = ref.watch(wishStoreProvider).value;
+    final l10n = context.l10n;
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -80,7 +83,7 @@ class _WishReaderState extends ConsumerState<_WishReader> {
               SvgPicture.asset('assets/wishes/lantern.svg', height: 90),
               const SizedBox(height: 16),
               Text(
-                mine ? '내 소원' : '예시 소원',
+                mine ? l10n.wishesReaderMineLabel : l10n.wishesReaderExampleLabel,
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               const SizedBox(height: 16),
@@ -99,8 +102,8 @@ class _WishReaderState extends ConsumerState<_WishReader> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                '다른 사람의 소원은 공유 기능 연결 후 볼 수 있어요.',
+              Text(
+                l10n.wishesReaderOthersNote,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -112,7 +115,7 @@ class _WishReaderState extends ConsumerState<_WishReader> {
                     random,
                   );
                 }),
-                child: const Text('다른 소원 보기'),
+                child: Text(l10n.wishesReaderNext),
               ),
               if (store != null && store.wishes.isNotEmpty)
                 TextButton(
@@ -124,7 +127,11 @@ class _WishReaderState extends ConsumerState<_WishReader> {
                       random,
                     );
                   }),
-                  child: Text(mine ? '예시 소원 보기' : '내 소원 보기'),
+                  child: Text(
+                    mine
+                        ? l10n.wishesReaderShowExamples
+                        : l10n.wishesReaderShowMine,
+                  ),
                 ),
             ],
           ),

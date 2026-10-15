@@ -1,3 +1,4 @@
+import 'package:bucheo_handsome/data/content/content_locale.dart';
 import 'package:bucheo_handsome/features/home/buddha_words.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +8,8 @@ void main() {
 
   late List<BuddhaWord> words;
   setUpAll(() async {
-    words = parseBuddhaWords(await rootBundle.loadString(kBuddhaWordsAsset));
+    words = parseBuddhaWords(
+        await rootBundle.loadString(contentAssetPath(kBuddhaWordsFile)));
   });
 
   group('부처님 말씀 데이터', () {

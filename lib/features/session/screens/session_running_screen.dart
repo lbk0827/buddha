@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/time_utils.dart';
+import '../../../l10n/l10n.dart';
 import '../session_controller.dart';
 
 /// 검은 화면 + 최소 정보. 기본 설정에서는 소리·진동이 없다 (FR-2.4).
@@ -117,8 +118,8 @@ class _SessionRunningScreenState extends ConsumerState<SessionRunningScreen>
                     if (!context.mounted) return;
                     context.push(Routes.sessionInterrupt);
                   },
-                  child: const Text('멈추기',
-                      style: TextStyle(color: Tokens.runningText)),
+                  child: Text(context.l10n.sessionRunningStopButton,
+                      style: const TextStyle(color: Tokens.runningText)),
                 ),
               ),
             ),

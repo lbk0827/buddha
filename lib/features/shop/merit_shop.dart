@@ -3,19 +3,33 @@
 /// 비교: 놀이(목탁·싱잉볼·키캡)마다 염주 한 바퀴에 10, 하루 최대 30. 꾸미기 아이템 150~1,500.
 library;
 
+import '../../l10n/l10n.dart';
+
 /// 하루 한 번 받는 보상.
 class DailyMeritReward {
   const DailyMeritReward({
     required this.id,
-    required this.title,
-    required this.description,
     required this.merit,
     this.minSteps,
   });
 
   final String id;
-  final String title;
-  final String description;
+
+  /// 화면에 나오는 이름과 설명. 문자열 테이블에서 id 로 찾는다.
+  String get title => switch (id) {
+    'daily' => L.current.shopDailyRewardTitle,
+    'steps5k' => L.current.shopSteps5kTitle,
+    'steps10k' => L.current.shopSteps10kTitle,
+    _ => id,
+  };
+
+  String get description => switch (id) {
+    'daily' => L.current.shopDailyRewardDescription,
+    'steps5k' => L.current.shopSteps5kDescription,
+    'steps10k' => L.current.shopSteps10kDescription,
+    _ => '',
+  };
+
   final int merit;
 
   /// 이만큼 걸은 날에만 받는다. null 이면 조건 없음.
@@ -24,23 +38,17 @@ class DailyMeritReward {
 
 const kDailyMerit = DailyMeritReward(
   id: 'daily',
-  title: '오늘의 공덕',
-  description: '하루 한 번, 절에 들르면 받는다.',
   merit: 30,
 );
 
 const kStepRewards = [
   DailyMeritReward(
     id: 'steps5k',
-    title: '오천 보 공덕',
-    description: '오늘 5,000보 넘게 걸으면 받는다.',
     merit: 50,
     minSteps: 5000,
   ),
   DailyMeritReward(
     id: 'steps10k',
-    title: '만 보 공덕',
-    description: '오늘 10,000보 넘게 걸으면 받는다.',
     merit: 100,
     minSteps: 10000,
   ),

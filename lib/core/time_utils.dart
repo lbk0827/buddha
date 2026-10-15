@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
+import '../l10n/l10n.dart';
+
 /// 한글 받침에 따라 조사를 고른다. "지안으로" / "무념으로" / "보월로".
 String withParticle(String word, String afterConsonant, String afterVowel) {
   if (word.isEmpty) return word + afterVowel;
@@ -20,6 +22,14 @@ String withRo(String word) {
   return '$word${finalIndex == 0 || finalIndex == 8 ? '로' : '으로'}';
 }
 
+/// [withParticle] 에서 조사만. 문자열 테이블 문장에 조사를 따로 넘길 때 쓴다
+/// (예: `"{name}{particle} 부를게요"`). 다른 언어 번역은 이 값을 안 써도 된다.
+String particleOf(String word, String afterConsonant, String afterVowel) =>
+    withParticle(word, afterConsonant, afterVowel).substring(word.length);
+
+/// [withRo] 에서 조사만 ("으로" / "로").
+String roOf(String word) => withRo(word).substring(word.length);
+
 final _dateKeyFormat = DateFormat('yyyy-MM-dd');
 
 /// 인정일 집계 키. 세션은 시작 시각의 로컬 날짜에 귀속된다 (FR-4.1).
@@ -36,16 +46,40 @@ int daysBetweenKeys(String a, String b) =>
 
 /// 세션 시간 표기. "3분", "1분 40초", "40초".
 String formatDuration(int seconds) {
-  if (seconds < 60) return '$seconds초';
+  final l = L.current;
+  if (seconds < 60) return l.coreDurationSeconds(seconds);
   final m = seconds ~/ 60;
   final s = seconds % 60;
-  return s == 0 ? '$m분' : '$m분 $s초';
+  return s == 0 ? l.coreDurationMinutes(m) : l.coreDurationMinutesSeconds(m, s);
 }
 
 /// 기록 화면 누적 시간. "12시간 30분".
 String formatCumulative(int seconds) {
+  final l = L.current;
   final h = seconds ~/ 3600;
   final m = (seconds % 3600) ~/ 60;
-  if (h == 0) return '$m분';
-  return m == 0 ? '$h시간' : '$h시간 $m분';
+  if (h == 0) return l.coreCumulativeMinutes(m);
+  return m == 0 ? l.coreCumulativeHours(h) : l.coreCumulativeHoursMinutes(h, m);
 }
+
+/// 요일 약칭 "월" … "일". [weekday] 는 [DateTime.weekday] (월=1 … 일=7).
+String weekdayShort(AppLocalizations l, int weekday) => switch (weekday) {
+      DateTime.monday => l.coreWeekdayShortMonday,
+      DateTime.tuesday => l.coreWeekdayShortTuesday,
+      DateTime.wednesday => l.coreWeekdayShortWednesday,
+      DateTime.thursday => l.coreWeekdayShortThursday,
+      DateTime.friday => l.coreWeekdayShortFriday,
+      DateTime.saturday => l.coreWeekdayShortSaturday,
+      _ => l.coreWeekdayShortSunday,
+    };
+
+/// 요일 이름 "월요일" … "일요일". [weekday] 는 [DateTime.weekday].
+String weekdayLong(AppLocalizations l, int weekday) => switch (weekday) {
+      DateTime.monday => l.coreWeekdayLongMonday,
+      DateTime.tuesday => l.coreWeekdayLongTuesday,
+      DateTime.wednesday => l.coreWeekdayLongWednesday,
+      DateTime.thursday => l.coreWeekdayLongThursday,
+      DateTime.friday => l.coreWeekdayLongFriday,
+      DateTime.saturday => l.coreWeekdayLongSaturday,
+      _ => l.coreWeekdayLongSunday,
+    };

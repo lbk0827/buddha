@@ -501,6 +501,33 @@ void main() {
       expect(find.byType(HaloSpin), findsNothing);
     });
 
+    testWidgets('신발을 신으면 대좌만 밑창만큼 내려 그린다', (tester) async {
+      // 그리는 순서: 대좌 → 몸 → (신발).
+      List<Rect> rects() => tester
+          .widgetList<Image>(find.byType(Image))
+          .map((w) => tester.getRect(find.byWidget(w)))
+          .toList();
+      final seat = kDefaultEquip.wear(AvatarSlot.seat, 'seat_lotus');
+      await tester.pumpWidget(_wrap(BuddhaFigure(equip: seat, size: 200)));
+      final [bare, body] = rects();
+      expect(bare, body);
+
+      final boots = wardrobeItem('feet_platformboots')!;
+      expect(boots.sole, greaterThan(0));
+      await tester.pumpWidget(
+        _wrap(
+          BuddhaFigure(
+            equip: seat.wear(AvatarSlot.feet, boots.id),
+            size: 200,
+          ),
+        ),
+      );
+      final [shod, shodBody, shoes] = rects();
+      expect(shod.top - bare.top, closeTo(boots.sole / 1024 * 200, 0.01));
+      expect(shodBody, body);
+      expect(shoes, body);
+    });
+
     testWidgets('기본 착용으로 그려진다', (tester) async {
       await tester.pumpWidget(_wrap(const BuddhaFigure()));
       expect(tester.takeException(), isNull);
@@ -574,11 +601,14 @@ void main() {
           .toList();
       // 후광·대좌·몸·물든 몸·발·머리·물든 머리·얼굴·목·입
       expect(boxes.length, 10);
-      // 후광(맨 앞)만 일부러 키우고 올린다(HaloFrame). 나머지는 모두 같아야 한다.
-      final body = boxes[1];
-      for (final r in boxes.skip(1)) {
+      // 후광(맨 앞)은 키우고 올리고(HaloFrame), 대좌(두 번째)는 신은 신발의
+      // 밑창만큼 내린다. 나머지는 모두 같아야 한다.
+      final body = boxes[2];
+      for (final r in boxes.skip(2)) {
         expect(r, body, reason: '레이어마다 사각형이 달라지면 정렬이 깨진다');
       }
+      final sole = wardrobeItem(equip.wornIn(AvatarSlot.feet))!.sole;
+      expect(boxes[1], body.shift(Offset(0, sole / 1024 * body.height)));
       // 정사각이어야 contain 결과가 모든 레이어에서 같다.
       expect(body.width, body.height);
 

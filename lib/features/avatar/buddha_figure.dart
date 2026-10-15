@@ -48,6 +48,7 @@ class BuddhaFigure extends StatelessWidget {
   ///   겹친다. 모자·가사는 아래 원래 레이어가 그대로 보인다.
   static List<AvatarLayer> layersOf(AvatarEquip equip) {
     final tint = wardrobeItem(equip.wornIn(AvatarSlot.buddha))?.tint;
+    final sole = wardrobeItem(equip.wornIn(AvatarSlot.feet))?.sole ?? 0;
     final layers = <AvatarLayer>[];
     for (final slot in AvatarSlot.values) {
       final item = wardrobeItem(equip.wornIn(slot));
@@ -60,6 +61,7 @@ class BuddhaFigure extends StatelessWidget {
           item.poppedPath,
           item.spin,
           slot == AvatarSlot.halo,
+          slot == AvatarSlot.seat ? sole : 0,
         ),
       );
       final skin = item.skinPath;
@@ -118,6 +120,11 @@ class BuddhaFigure extends StatelessWidget {
                         )
                       : image(layer.path),
                 )
+              else if (layer.drop != 0)
+                Transform.translate(
+                  offset: Offset(0, layer.drop / _spritePx * size),
+                  child: image(layer.path),
+                )
               else if (animate && layer.popped != null)
                 RepaintBoundary(
                   key: ValueKey('motion:${layer.path}'),
@@ -156,6 +163,7 @@ class AvatarLayer {
     this.popped,
     this.spin,
     this.halo = false,
+    this.drop = 0,
   ]);
 
   final String path;
@@ -164,6 +172,9 @@ class AvatarLayer {
   final Duration? spin;
   final bool halo;
 
+  /// 아래로 내려 그리는 양(1024 좌표). 신발을 신었을 때의 대좌.
+  final double drop;
+
   @override
   bool operator ==(Object other) =>
       other is AvatarLayer &&
@@ -171,10 +182,11 @@ class AvatarLayer {
       other.tint == tint &&
       other.popped == popped &&
       other.spin == spin &&
-      other.halo == halo;
+      other.halo == halo &&
+      other.drop == drop;
 
   @override
-  int get hashCode => Object.hash(path, tint, popped, spin, halo);
+  int get hashCode => Object.hash(path, tint, popped, spin, halo, drop);
 
   @override
   String toString() => tint == null ? path : '$path (재질)';

@@ -137,6 +137,11 @@ class WardrobeItem {
   /// 옷장 칸과 멈춘 화면에서는 돌지 않는다.
   final Duration? spin;
 
+  /// 신발 밑창이 맨발 발바닥보다 아래로 내려오는 양(1024 좌표).
+  /// 대좌는 맨발에 맞춰 놓여 있어서, 이 신발을 신으면 대좌를 이만큼 내려
+  /// 그린다. 안 그러면 밑창이 대좌 윗면을 덮어 발이 파묻혀 보인다.
+  final double sole;
+
   const WardrobeItem({
     required this.id,
     required this.name,
@@ -148,6 +153,7 @@ class WardrobeItem {
     this.tint,
     this.popped,
     this.spin,
+    this.sole = 0,
   });
 
   String get _base => file ?? id;
@@ -498,30 +504,35 @@ const List<WardrobeItem> kWardrobe = [
     name: '흰 운동화',
     slot: AvatarSlot.feet,
     meritCost: 600,
+    sole: 13,
   ),
   WardrobeItem(
     id: 'feet_flippers',
     name: '오리발',
     slot: AvatarSlot.feet,
     meritCost: 700,
+    sole: 35,
   ),
   WardrobeItem(
     id: 'feet_slippers',
     name: '슬리퍼와 흰 양말',
     slot: AvatarSlot.feet,
     meritCost: 500,
+    sole: 15,
   ),
   WardrobeItem(
     id: 'feet_hightops',
     name: '빨간 스니커즈',
     slot: AvatarSlot.feet,
     meritCost: 900,
+    sole: 5,
   ),
   WardrobeItem(
     id: 'feet_platformboots',
     name: '통굽 부츠',
     slot: AvatarSlot.feet,
     meritCost: 1000,
+    sole: 26,
   ),
 
   // 대좌
